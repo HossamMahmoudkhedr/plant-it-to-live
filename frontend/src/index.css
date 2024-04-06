@@ -40,8 +40,15 @@
 
 	/* General Colors */
 	--body: #fff9e3;
+	--body-50: #fff9e37d;
 	--white: #ffffff;
 	--black: #000000;
+}
+
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
 }
 
 h1,

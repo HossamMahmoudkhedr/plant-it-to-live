@@ -7,9 +7,9 @@ const Signup = () => {
 			sx={{
 				alignItems: 'center',
 				height: '100vh',
-				backgroundImage: `url(${require('../assets/images/tree.png')})`,
+				backgroundImage: `url(${require('../assets/images/toppng.com-trees-fog-field-horizon-grass-minimalism-2560x1080.jpg')})`,
 				backgroundSize: 'cover',
-				backgroundPositionY: '20%',
+				backgroundPosition: 'right',
 				position: 'relative',
 			}}>
 			<Box
@@ -20,7 +20,8 @@ const Signup = () => {
 					width: '100%',
 					height: '100%',
 					backgroundColor: 'black',
-					opacity: '25%',
+					opacity: '35%',
+					zIndex: '0',
 				}}></Box>
 		</Stack>
 	);

@@ -9,11 +9,11 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-
-class User  extends Authenticatable implements JWTSubject
+class User  extends Authenticatable implements JWTSubject , MustVerifyEmail
 {
-    use  HasFactory, Notifiable ,SoftDeletes ;
+    use  HasFactory, Notifiable  ;
 
     /**
      * The attributes that are mass assignable.
@@ -24,10 +24,14 @@ class User  extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
-        'Phone',
+        'phone',
         'b_date',
         'gender',
         'picture',
+        'google_id',
+        'created_at',
+        'updated_at',
+        'activated',
     ];
 
     /**
@@ -61,6 +65,6 @@ class User  extends Authenticatable implements JWTSubject
      */
     public function getJWTCustomClaims()
     {
-        return ['guard'=>'admin'];
+        return ['guard'=>'user'];
     }
 }

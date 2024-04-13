@@ -29,9 +29,9 @@ trait ApiResponse
             ],422);
     }
     //login errors
-   
+
     //failedResponses
-    public function falied($msg=null)
+    public function failed($msg=null)
     {
         if($msg===null)
             $msg="Try agian please ";

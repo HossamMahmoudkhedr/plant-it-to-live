@@ -30,9 +30,10 @@ Route::group(['prefix'=>'admin'],function()
 });
 Route::group(['prefix'=>'/'],function()
 {
+    Route::post('/activate', [UserController::class, 'activate'])->name('activate');
     Route::post('login',[UserController::class,'login']);//login
     Route::get('logout',[UserController::class,'logout']);//logout
-    Route::get('home',[UserController::class,'home']);//return  data
+    Route::post('signup',[UserController::class,'signup']);//return  data
    // Route::get('users',[UserController::class,'users']);//get all users
     Route::post('edit',[UserController::class,'edit']);//edit admin name and email
     //edit password

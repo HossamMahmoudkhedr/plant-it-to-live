@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Admin;
+use App\Mail\ResetPassword;
 use App\Traits\ApiResponse;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use App\Mail\UserAccountActivation;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
@@ -17,7 +20,7 @@ class UserController extends Controller
     use ApiResponse;
     public function __construct()
     {
-        $this->middleware('auth:user', ['except' => ['login','signup','activate']]);
+        $this->middleware('auth:user', ['except' => ['login','signup','activate','forgetpassword','resetpassword']]);
 
     }
     public function login(Request $request)
@@ -119,7 +122,59 @@ class UserController extends Controller
             return $this->failed();
         }
     }
+    public function forgetpassword(Request $request)//get email from the forget password
+    {
+        $validator=Validator::make($request->all(),
+        [
+            'email' => 'required|email|exists:users,email'
+        ]);
+        if($validator->fails())
+        {
+            return $this->validationerrors($validator->errors());
+        }
+        $user=User::where('email',$request->email)->first();
+        if(!$user)
+        {
+            return $this->failed('Email not found');
+        }
+        //token
+        $token = Str::random(64);
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $request->email],
+            ['token' => $token, 'created_at' => now()]
+        );
+        Mail::to($user->email)->send(new ResetPassword($name=$user->name,$token));
+        return $this->SuccessResponse("Password reset email sent successfully.");
 
+    }
+    public function resetpassword(Request $request)
+    {
+        $validator=Validator::make($request->all(),
+        [
+            'token' => 'required|exists:password_reset_tokens,token',
+            'password' => 'required|min:6',
+            'confirm_password'=>'required|required|min:6|same:password',
+        ]);
+        if($validator->fails())
+        {
+            return $this->validationerrors($validator->errors());
+        }
+        $data=DB::table('password_reset_tokens')->where('token',$request->token)->first();
+        if(!$data)
+        {
+            return $this->failed('Not found');
+        }
+        $user=User::where('email',$data->email)->first();
+        if(!$user)
+        {
+            return $this->failed('Email Not found');
+        }
+        $user->password = bcrypt($request->password);
+        $user->save();
+       DB::table('password_reset_tokens')->where('email',$user->email)->delete();
+       return $this->SuccessResponse("Password Saved successfully.");
+
+    }
     public function logout()
     {
         auth()->logout();

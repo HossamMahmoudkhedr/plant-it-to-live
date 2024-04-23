@@ -2,17 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\User;
 use App\Models\Admin;
 use App\Mail\ResetPassword;
 use App\Traits\ApiResponse;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Mail\UserAccountActivation;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Cookie;
+use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -20,7 +27,7 @@ class UserController extends Controller
     use ApiResponse;
     public function __construct()
     {
-        $this->middleware('auth:user', ['except' => ['login','signup','activate','forgetpassword','resetpassword']]);
+        $this->middleware('auth:user', ['except' => ['login','signup','activate','forgetpassword','resetpassword','redirectToGoogle','handleGoogleCallback']]);
 
     }
     public function login(Request $request)
@@ -58,7 +65,7 @@ class UserController extends Controller
             'name'=>'required|max:50|string',
             'email' => 'required|email|unique:users,email,id',
             'password' => 'required|min:6',
-            'confirm_password'=>'required|required|min:6|same:password',
+            'confirm_password'=>'required|required|same:password',
             'phone'=>'numeric|min:10',
             'b_date'=>'date|before_or_equal:' . $minAgeDate,
             'gender'=>'in:male,female,Male,Female',
@@ -82,14 +89,13 @@ class UserController extends Controller
          }
          if(isset($request->picture)) {
             $picture = $request->file('picture');
-            $fileName = time() . '_' .$request->name . rand(1,1000) . '.' . $picture->extension();
+            $fileName = time() . '_' .Str::random(10). rand(1,1000) . '.' . $picture->extension();
             $filePath = 'pictures/' . $fileName; // Relative path from the public directory
             $picture->move(public_path('pictures'), $fileName);
             // Get the base URL of your application
             $baseUrl = url('/');
             // Concatenate the base URL with the path to the uploaded image
             $fullPath = $baseUrl . '/' . $filePath;
-
             $user->picture = $fullPath;
         }
 
@@ -102,6 +108,76 @@ class UserController extends Controller
         else
           return $this->failed();
     }
+    public function edit(Request $request)
+     {
+        $minAgeDate = Carbon::now()->subYears(10)->format('Y-m-d');
+        $validator = Validator::make($request->all(), [
+            //
+            'name'=>'required|max:50|string',
+            'email' => 'required|email',
+            'phone'=>'numeric|min:10',
+            'b_date'=>'date|before_or_equal:' . $minAgeDate,
+            'gender'=>'in:male,female,Male,Female',
+            'picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+        if ($validator->fails()) {
+            // return $this->response($validator->errors(), 'Validation errors', 406);
+            return $this->validationerrors($validator->errors());
+         }
+         $user=User::find(Auth()->user()->id);
+         $user->name=$request->name;
+         $user->email=$request->email;
+         if(isset($request->phone)) $user->phone=$request->phone;
+         if(isset($request->b_date)) $user->b_date=$request->b_date;
+         if(isset($request->gender))
+         {
+            if($request->gender==='Male'||$request->gender==='male')
+                $user->gender= 1;
+            else  $user->gender= 0;
+         }
+         if(isset($request->picture)) {
+            $picture = $request->file('picture');
+            $fileName = time() . '_' .Str::random(10). rand(1,1000) . '.' . $picture->extension();
+            $filePath = 'pictures/' . $fileName; // Relative path from the public directory
+            $picture->move(public_path('pictures'), $fileName);
+            // Get the base URL of your application
+            $baseUrl = url('/');
+            // Concatenate the base URL with the path to the uploaded image
+            $fullPath = $baseUrl . '/' . $filePath;
+            $user->picture = $fullPath;
+        }
+        if($user->save())
+        {
+            return $this->SuccessResponse('','User Sucessfuly Updated');
+        }
+        return $this->failed();
+     }
+     public function user()
+     {
+        $user=User::find(Auth()->user()->id);
+       $user->makeHidden(['google_id','activated','created_at','updated_at']);
+        if($user)
+        {
+            if($user->gender==1)
+                $user->gender="male";
+            else if($user->gender==2)
+                $user->gender="female";
+            return $this->SuccessResponse($user,'All user data.');
+        }
+        return $this->failed();
+     }
+     public function delete()
+     {
+        $user=User::find(auth()->user()->id);
+        if (!$user) {
+            return $this->failed('User not found');
+        }
+        if( $user->delete())
+        {
+            return $this->SuccessResponse('','User Sucessfuly Deleted');
+        }
+        return $this->failed();
+     }
     public function activate(Request $request)
     {
         $token = $request->input('token');
@@ -175,10 +251,67 @@ class UserController extends Controller
        return $this->SuccessResponse("Password Saved successfully.");
 
     }
+    public function changepassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'oldpassword'=>'required',
+            'password' => 'required|min:6|confirmed',
+        ]);
+        if ($validator->fails()) {
+            // return $this->response($validator->errors(), 'Validation errors', 406);
+            return $this->validationerrors($validator->errors());
+         }
+         if($validator->validated()['oldpassword']===$validator->validated()['password'])
+            return $this->failed("The new password must not match the old password");
+         $user=User::find(Auth()->user()->id);
+         if(Hash::check($validator->validated()['oldpassword'], $user->password))
+           {
+                $user->password=bcrypt($validator->validated()['password']);
+                return  ($user->save())?  $this->SuccessResponse(null,"password is updated"):$this->failed("Try agin later");
+           }
+        else
+        {
+            return $this->failed("please check the old password");
+        }
+    }
     public function logout()
     {
         auth()->logout();
 
         return response()->json(['message' => 'Successfully loged out']);
     }
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function handleGoogleCallback()
+    {
+            // Retrieve user details from Google
+            $user = Socialite::driver('google')->user();
+            // Check if the user exists in your database or create a new user
+            $visitor = User::where('email', $user->getEmail())->first();
+            if (!$visitor) {
+                // If the user doesn't exist, create a new user
+                $visitor = new User();
+                $visitor->google_id=$user->getId();
+                $visitor->name = $user->getName();
+                $visitor->email = $user->getEmail();
+                $visitor->picture=$user->getAvatar();
+                $visitor->activated = true;
+                $visitor->save();
+            }
+            Auth::guard('user')->login($visitor);
+            $token = JWTAuth::fromUser($visitor);
+            return $this->SuccessResponse(['token' => $token])->withCookie(Cookie::make('token', $token,5));// here we will re
+    }
+    public function googlelog()
+    {
+        $user=Auth()->user();
+        $token = auth()->refresh();
+        return $this->SuccessResponse(['token' => $token]);
+    }
+
+
+
 }

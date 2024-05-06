@@ -1,10 +1,11 @@
 <?php
 
+use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
-use App\Traits\ApiResponse;
+use App\Http\Controllers\CroprecommendationController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -38,17 +39,21 @@ Route::group(['prefix'=>'admin'],function()
 });
 Route::group(['prefix'=>'/'],function()
 {
-    Route::post('activate', [UserController::class, 'activate'])->name('activate');//active user account using email
-    Route::post('forgetpassword', [UserController::class, 'forgetpassword']);//come from find email form
-    Route::post('resetpassword', [UserController::class, 'resetpassword'])->name('resetpassword');//
     Route::post('login',[UserController::class,'login']);//login
-    Route::get('logout',[UserController::class,'logout']);//logout
     Route::post('signup',[UserController::class,'signup']);//return  data
     Route::post('edit',[UserController::class,'edit']);//edit user name and email
     Route::get('delete',[UserController::class,'delete']);//delete user
     Route::get('user',[UserController::class,'user']);//return the user data
-    Route::get('googlelog',[UserController::class, 'googlelog'])->name('googlelog');
+    Route::get('logout',[UserController::class,'logout']);//logout
+//--------------------------------------------AI Integration-----------------------------------------------------------//
+    Route::Post('sendRequestToCropRecommendation',[CroprecommendationController::class,'sendRequestToCropRecommendation']);
+
+//---------------------------------------------------------------------------------------------------------------------//
+    Route::post('activate', [UserController::class, 'activate'])->name('activate');//active user account using email
+    Route::post('forgetpassword', [UserController::class, 'forgetpassword']);//come from find email form
+    Route::post('resetpassword', [UserController::class, 'resetpassword'])->name('resetpassword');//
+    //Route::get('googlelog',[UserController::class, 'googlelog'])->name('googlelog');
+    Route::get('auth/google', [UserController::class, 'redirectToGoogle'])->middleware('web');
+    Route::get('/auth/google/callback', [UserController::class, 'handleGoogleCallback'])->middleware('web');
 });
-Route::get('auth/google', [UserController::class, 'redirectToGoogle'])->middleware('web');
-Route::get('/auth/google/callback', [UserController::class, 'handleGoogleCallback'])->middleware('web');
 

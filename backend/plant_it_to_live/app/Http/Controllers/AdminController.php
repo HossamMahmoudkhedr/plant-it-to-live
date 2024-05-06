@@ -25,7 +25,7 @@ class AdminController extends Controller
     }
     public function home()
     {
-        $data=Admin::find(auth()->user()->id)->first();
+        $data=Admin::find(Auth()->user()->id);
         return $this->SuccessResponse($data);
     }
     public function login(Request $request)

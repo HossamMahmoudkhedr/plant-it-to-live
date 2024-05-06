@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
 use App\Models\User;
-use App\Models\Admin;
+//use App\Models\Admin;
 use App\Mail\ResetPassword;
 use App\Traits\ApiResponse;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
+//use Illuminate\Routing\Route;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -27,7 +26,7 @@ class UserController extends Controller
     use ApiResponse;
     public function __construct()
     {
-        $this->middleware('auth:user', ['except' => ['login','signup','activate','forgetpassword','resetpassword','redirectToGoogle','handleGoogleCallback']]);
+        $this->middleware('auth:user', ['except' => ['login','signup','activate','redirectToGoogle','resetpassword','handleGoogleCallback']]);
 
     }
     public function login(Request $request)
@@ -305,13 +304,4 @@ class UserController extends Controller
             $token = JWTAuth::fromUser($visitor);
             return $this->SuccessResponse(['token' => $token])->withCookie(Cookie::make('token', $token,5));// here we will re
     }
-    public function googlelog()
-    {
-        $user=Auth()->user();
-        $token = auth()->refresh();
-        return $this->SuccessResponse(['token' => $token]);
-    }
-
-
-
 }

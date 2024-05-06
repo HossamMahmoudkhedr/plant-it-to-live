@@ -1,0 +1,6 @@
+1-composer create-project laravel/laravel:^10 plant_it_to_live
+2-php artian migrate
+3-composer require tymon/jwt-auth
+4-php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\LaravelServiceProvider"
+5-php artisan jwt:secret
+6-composer require laravel/socialite

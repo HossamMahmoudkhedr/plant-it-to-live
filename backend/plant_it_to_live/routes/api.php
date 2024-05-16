@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DiseasesDetectionController;
 use App\Http\Controllers\CroprecommendationController;
 /*
 |--------------------------------------------------------------------------
@@ -47,7 +48,7 @@ Route::group(['prefix'=>'/'],function()
     Route::get('logout',[UserController::class,'logout']);//logout
 //--------------------------------------------AI Integration-----------------------------------------------------------//
     Route::Post('sendRequestToCropRecommendation',[CroprecommendationController::class,'sendRequestToCropRecommendation']);
-
+    Route::Post('sendRequestToDiseasesDetection',[DiseasesDetectionController::class,'sendRequestToDiseasesDetection']);
 //---------------------------------------------------------------------------------------------------------------------//
     Route::post('activate', [UserController::class, 'activate'])->name('activate');//active user account using email
     Route::post('forgetpassword', [UserController::class, 'forgetpassword']);//come from find email form

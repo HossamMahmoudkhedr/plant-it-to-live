@@ -12,7 +12,7 @@ class CroprecommendationController extends Controller
     use ApiResponse;
     public function __construct()
     {
-        $this->middleware('auth:user');
+        //$this->middleware('auth:user');
     }
     public function sendRequestToCropRecommendation(Request $request)
     {

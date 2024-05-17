@@ -1,12 +1,16 @@
 import { Box } from '@mui/material';
 import React from 'react';
 
-const RoseCircle = ({ width }) => {
+const RoseCircle = ({ width, left, top, right, bottom }) => {
 	return (
 		<Box
 			sx={{
 				width: width,
 				height: width,
+				top: top || 'unset',
+				left: left || 'unset',
+				right: right || 'unset',
+				bottom: bottom || 'unset',
 				backgroundColor: 'var(--rose)',
 				filter: 'blur(100px)',
 				borderRadius: '50%',

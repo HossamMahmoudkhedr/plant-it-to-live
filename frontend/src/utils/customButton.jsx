@@ -18,21 +18,25 @@ const CustomButton = ({
 	padding,
 	width,
 	border,
+	boxshadow,
 	restprops,
 }) => {
 	return (
 		<StyledButton
 			disableElevation
 			variant="contained"
-			background={background}
+			background={background || 'transparent'}
 			{...restprops}
 			sx={{
-				background: background,
+				background: background || 'transparent',
 				borderRadius: borderradius || '0',
 				border: border || 'none',
 				color: color,
 				padding: padding,
 				width: width,
+				fontWeight: 'inherit',
+				fontSize: 'inherit',
+				boxShadow: boxshadow,
 			}}>
 			{text}
 		</StyledButton>

@@ -49,15 +49,26 @@
 	padding: 0;
 	margin: 0;
 	box-sizing: border-box;
+	color: var(--black);
 }
 
 h1,
 h2,
-h3 {
+h3,
+span {
 	font-family: 'Inknut Antiqua', serif !important;
 }
 
 h4,
-p {
+p,
+a {
 	font-family: 'Inter', sans-serif !important;
+}
+
+ul li {
+	list-style: none;
+}
+
+a {
+	text-decoration: none;
 }

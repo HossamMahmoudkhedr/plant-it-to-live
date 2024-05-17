@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Admin;
+use Firebase\JWT\JWK;
 use App\Traits\ApiResponse;
 use Illuminate\Support\Str;
+use Tymon\JWTAuth\JWTGuard;
 use Illuminate\Http\Request;
 use App\Mail\AdminChangePassword;
 use Illuminate\Support\Facades\DB;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -131,7 +134,8 @@ class AdminController extends Controller
         $user->password = bcrypt($request->password);
         $user->save();
        DB::table('password_reset_tokens')->where('email',$user->email)->delete();
-       return $this->SuccessResponse("Password Saved successfully.");
+       $token= JWTAuth::fromUser($user);
+       return $this->SuccessResponse(['token'=>$token],"Password Saved successfully.");
 
     }
         public function changepassword(Request $request)

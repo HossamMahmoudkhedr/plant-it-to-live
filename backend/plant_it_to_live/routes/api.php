@@ -34,27 +34,26 @@ Route::group(['prefix'=>'admin'],function()
     Route::get('users',[AdminController::class,'users']);//get all users
     Route::post('edit',[AdminController::class,'edit']);//edit admin name and email
     Route::post('changepassword',[AdminController::class,'changepassword']);//change admin password using old password
-    Route::get('forgetpassword', [AdminController::class, 'forgetpassword']);//come from find email form
-    Route::post('resetpassword', [AdminController::class, 'resetpassword'])->name('adminresetpassword');//
-    //edit password
+    Route::get('forgetpassword', [AdminController::class, 'forgetpassword']);//send email to admin with url for reset password form
+    Route::post('resetpassword', [AdminController::class, 'resetpassword'])->name('adminresetpassword');//reset password form
 });
 Route::group(['prefix'=>'/'],function()
 {
-    Route::post('login',[UserController::class,'login']);//login
-    Route::post('signup',[UserController::class,'signup']);//return  data
+    Route::post('login',[UserController::class,'login']);//login user
+    Route::post('signup',[UserController::class,'signup']);//signup user
     Route::post('edit',[UserController::class,'edit']);//edit user name and email
     Route::get('delete',[UserController::class,'delete']);//delete user
     Route::get('user',[UserController::class,'user']);//return the user data
-    Route::get('logout',[UserController::class,'logout']);//logout
+    Route::get('logout',[UserController::class,'logout']);//logout the user
 //--------------------------------------------AI Integration-----------------------------------------------------------//
     Route::Post('sendRequestToCropRecommendation',[CroprecommendationController::class,'sendRequestToCropRecommendation']);
     Route::Post('sendRequestToDiseasesDetection',[DiseasesDetectionController::class,'sendRequestToDiseasesDetection']);
-//---------------------------------------------------------------------------------------------------------------------//
-    Route::post('activate', [UserController::class, 'activate'])->name('activate');//active user account using email
-    Route::post('forgetpassword', [UserController::class, 'forgetpassword']);//come from find email form
-    Route::post('resetpassword', [UserController::class, 'resetpassword'])->name('resetpassword');//
+//------------------------------------------------------Google---------------------------------------------------------------//
+    Route::get('activate', [UserController::class, 'activate'])->name('activate');//active user account
+    Route::post('forgetpassword', [UserController::class, 'forgetpassword']);//send email to user with url for reset password form
+    Route::post('resetpassword', [UserController::class, 'resetpassword'])->name('resetpassword');//reset password form
     //Route::get('googlelog',[UserController::class, 'googlelog'])->name('googlelog');
-    Route::get('auth/google', [UserController::class, 'redirectToGoogle'])->middleware('web');
+    Route::get('auth/google', [UserController::class, 'redirectToGoogle'])->middleware('web');//redir to google
     Route::get('/auth/google/callback', [UserController::class, 'handleGoogleCallback'])->middleware('web');
 });
 

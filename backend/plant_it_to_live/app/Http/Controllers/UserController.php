@@ -26,7 +26,7 @@ class UserController extends Controller
     use ApiResponse;
     public function __construct()
     {
-        $this->middleware('auth:user', ['except' => ['login','signup','activate','redirectToGoogle','resetpassword','handleGoogleCallback']]);
+        $this->middleware('auth:user', ['except' => ['login','signup','activate','forgetpassword','redirectToGoogle','resetpassword','handleGoogleCallback']]);
 
     }
     public function login(Request $request)
@@ -177,7 +177,7 @@ class UserController extends Controller
         }
         return $this->failed();
      }
-    public function activate(Request $request)
+    public function activate(Request $request)//get only the token from sent mail
     {
         $token = $request->input('token');
         $decryptedToken = Crypt::decryptString($token);
@@ -192,7 +192,9 @@ class UserController extends Controller
             }
             $user->activated = true;
             $user->save();
-            return $this->SuccessResponse('','Activated');
+            Auth::guard('user')->login($user);
+            $token = JWTAuth::fromUser($user);
+            return $this->SuccessResponse($token,'Activated');
         } else {
             return $this->failed();
         }
@@ -247,7 +249,8 @@ class UserController extends Controller
         $user->password = bcrypt($request->password);
         $user->save();
        DB::table('password_reset_tokens')->where('email',$user->email)->delete();
-       return $this->SuccessResponse("Password Saved successfully.");
+       $token= JWTAuth::fromUser($user);
+       return $this->SuccessResponse(['token'=>$token],"Password Saved successfully.");
 
     }
     public function changepassword(Request $request)
@@ -279,6 +282,7 @@ class UserController extends Controller
 
         return response()->json(['message' => 'Successfully loged out']);
     }
+    /************************************************************************************* */
     public function redirectToGoogle()
     {
         return Socialite::driver('google')->redirect();
@@ -302,6 +306,6 @@ class UserController extends Controller
             }
             Auth::guard('user')->login($visitor);
             $token = JWTAuth::fromUser($visitor);
-            return $this->SuccessResponse(['token' => $token])->withCookie(Cookie::make('token', $token,5));// here we will re
+            return $this->SuccessResponse(['token' => $token]);// here we will re
     }
 }

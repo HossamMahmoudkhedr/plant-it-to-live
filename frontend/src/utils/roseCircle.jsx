@@ -8,7 +8,7 @@ const RoseCircle = ({ width, left, top, right, bottom }) => {
 			component={motion.div}
 			initial={{ opacity: 0 }}
 			whileInView={{ opacity: 0.7 }}
-			transition={{ duration: 2 }}
+			transition={{ duration: 3, delay: 0.5, type: 'spring' }}
 			viewport={{ once: true }}
 			sx={{
 				width: width,

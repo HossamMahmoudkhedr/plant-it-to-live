@@ -52,7 +52,7 @@ const Hero = () => {
 									component={motion.div}
 									initial={{ y: 100, opacity: 0 }}
 									whileInView={{ y: 0, opacity: 1 }}
-									transition={{ duration: 2, delay: 0.3, type: 'spring' }}
+									transition={{ duration: 2, delay: 0.5, type: 'spring' }}
 									viewport={{ once: true }}>
 									<ImageFrame
 										imgheight="248px"
@@ -111,7 +111,7 @@ const Hero = () => {
 								component={motion.div}
 								initial={{ y: 100, opacity: 0 }}
 								whileInView={{ y: 0, opacity: 1 }}
-								transition={{ duration: 2, type: 'spring' }}
+								transition={{ duration: 2, delay: 0.7, type: 'spring' }}
 								viewport={{ once: true }}>
 								<ImageFrame
 									imgheight={{ xs: '320px', md: '350px', lg: '474px' }}
@@ -161,7 +161,7 @@ const Hero = () => {
 									component={motion.div}
 									initial={{ y: 100, opacity: 0 }}
 									whileInView={{ y: 0, opacity: 1 }}
-									transition={{ duration: 3, delay: 0.6, type: 'spring' }}
+									transition={{ duration: 3, delay: 1, type: 'spring' }}
 									viewport={{ once: true }}>
 									<ImageFrame
 										imgheight="281px"

@@ -209,7 +209,7 @@ const Features = () => {
 					component={motion.div}
 					initial={{ transform: 'scaleY(0)' }}
 					whileInView={{ transform: 'scaleY(1)' }}
-					transition={{ duration: 2, type: 'spring' }}
+					transition={{ duration: 1 }}
 					sx={{
 						width: { xs: '100%', lg: '50%' },
 						padding: '1.5rem 0',

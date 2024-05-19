@@ -13,7 +13,11 @@ const Aboutus = () => {
 				<Box sx={{ position: 'relative' }}>
 					<Box
 						component="span"
-						sx={{ position: 'absolute', top: '-1rem', left: '-10rem' }}>
+						sx={{
+							position: 'absolute',
+							top: '-1rem',
+							left: { xs: '-5rem', md: '-10rem' },
+						}}>
 						{icons.stars}
 					</Box>
 					<Heading text={'About Us'} />
@@ -24,21 +28,22 @@ const Aboutus = () => {
 					sx={{
 						color: 'var(--gray)',
 						textAlign: 'center',
-						width: '33.5%',
+						width: { xs: '100%', md: '60%', lg: '33.5%' },
 						lineHeight: '1.8',
 						position: 'relative',
 					}}>
 					<Box
+						component={'span'}
 						sx={{
 							position: 'absolute',
-							bottom: '-1rem',
-							right: '-7rem',
+							bottom: { xs: '-5rem', lg: '-1rem' },
+							right: { xs: '1rem', lg: '-7rem' },
 						}}>
 						{icons.leafs}
 					</Box>
 					<RoseCircle
 						top="-7rem"
-						right="-17rem"
+						right={{ xs: '2rem', lg: '-17rem' }}
 						width="226px"
 					/>
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do

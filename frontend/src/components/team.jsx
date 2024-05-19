@@ -17,7 +17,7 @@ const Team = () => {
 					sx={{
 						color: 'var(--dark-gray)',
 						textAlign: 'center',
-						width: '50%',
+						width: { xs: '100%', md: '70%', lg: '50%' },
 					}}>
 					{' '}
 					Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda

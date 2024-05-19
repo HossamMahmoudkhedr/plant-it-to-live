@@ -1,9 +1,15 @@
 import { Box } from '@mui/material';
 import React from 'react';
+import { motion } from 'framer-motion';
 
 const RoseCircle = ({ width, left, top, right, bottom }) => {
 	return (
 		<Box
+			component={motion.div}
+			initial={{ opacity: 0 }}
+			whileInView={{ opacity: 0.7 }}
+			transition={{ duration: 2 }}
+			viewport={{ once: true }}
 			sx={{
 				width: width,
 				height: width,

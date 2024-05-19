@@ -7,35 +7,37 @@ const Categories = () => {
 	return (
 		<Container
 			maxWidth="xl"
-			className="cont-padd">
+			className="cont-padd"
+			sx={{ padding: { xs: '0', md: '0 16px' } }}>
 			<Stack sx={{ alignItems: 'center', position: 'relative' }}>
 				<RoseCircle
 					bottom="0%"
-					right="0%"
-					width="380px"
+					right={{ xs: '10%', lg: '0%' }}
+					width={{ xs: '220px', lg: '380px' }}
 				/>
 				<RoseCircle
 					bottom="0%"
-					right="0%"
-					width="380px"
+					right={{ xs: '10%', lg: '0%' }}
+					width={{ xs: '220px', lg: '380px' }}
 				/>
 				<RoseCircle
-					top="5%"
+					top={{ xs: '0%', lg: '5%' }}
 					left="0%"
-					width="380px"
+					width={{ xs: '300px', lg: '380px' }}
 				/>
 				<RoseCircle
-					top="5%"
+					top={{ xs: '0%', lg: '5%' }}
 					left="0%"
-					width="380px"
+					width={{ xs: '300px', lg: '380px' }}
 				/>
 
 				<Stack
 					sx={{
 						background: 'var(--second-linear-background)',
-						width: '93%',
+						width: { xs: '100%', md: '93%' },
 						gap: '4rem',
 						overflow: 'hidden',
+						padding: { xs: ' 2rem 1rem ', lg: 'unset' },
 					}}>
 					{categories.map((category, index) => (
 						<Stack
@@ -44,8 +46,10 @@ const Categories = () => {
 								alignItems: 'center',
 								justifyContent: 'space-between',
 								flexDirection: {
+									xs: 'column',
 									lg: category.id % 2 !== 0 ? 'row-reverse' : 'row',
 								},
+								gap: { xs: '1.5rem', lg: 'unset' },
 
 								transform: {
 									lg:
@@ -60,9 +64,12 @@ const Categories = () => {
 							}}>
 							<Box
 								sx={{
-									border: '25px solid var(--light-green)',
-									width: '40%',
-									height: '500px',
+									border: {
+										xs: '15px solid var(--light-green)',
+										md: '25px solid var(--light-green)',
+									},
+									width: { xs: '100%', lg: '40%' },
+									height: { xs: '250px', lg: '500px' },
 								}}>
 								<img
 									style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -74,8 +81,8 @@ const Categories = () => {
 								sx={{
 									color: 'var(--white)',
 									gap: '1rem',
-									width: '40%',
-									padding: '0 4rem',
+									width: { xs: '100%', lg: '40%' },
+									padding: { xs: '0 1rem', md: '0 4rem' },
 								}}>
 								<Typography
 									variant="h4"

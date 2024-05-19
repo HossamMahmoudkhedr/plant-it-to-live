@@ -6,6 +6,7 @@ import Navbar from './navbar';
 import { Link } from 'react-router-dom';
 import CustomButton from '../utils/customButton';
 import { icons } from '../utils/icons';
+import { motion } from 'framer-motion';
 
 const Hero = () => {
 	return (
@@ -19,7 +20,7 @@ const Hero = () => {
 					marginBottom: '2rem',
 				}}>
 				<RoseCircle
-					width={'380px'}
+					width={{ xs: '223px', lg: '380px' }}
 					left="15%"
 					top="7%"
 				/>
@@ -27,10 +28,11 @@ const Hero = () => {
 					variant="h1"
 					sx={{
 						color: 'var(--dark-green)',
-						fontSize: '3rem',
+						fontSize: { xs: '2rem', md: '2.5rem' },
+						fontWeight: '600',
 						textAlign: 'center',
-						width: '32%',
-						lineHeight: '80px',
+						width: { xs: 'unset', lg: '32%' },
+						lineHeight: { xs: '60px', lg: '80px' },
 					}}>
 					Grow your health, Grow a garden
 				</Typography>
@@ -39,19 +41,28 @@ const Hero = () => {
 					spacing={10}>
 					<Grid
 						item
-						xs={4}>
+						sx={{ display: { xs: 'none', lg: 'block' } }}
+						lg={4}
+						xs={12}>
 						<Stack
 							direction="row"
 							sx={{ justifyContent: 'center', paddingTop: '3.5rem' }}>
 							<Stack sx={{ gap: '1rem', width: '227px', alignItems: 'center' }}>
-								<ImageFrame
-									imgheight="248px"
-									radius="0 70px 0 0 "
-									right="-10px"
-									childheight="232px"
-									top="5px"
-									image="brina-blum-LtofmaMoCFU-unsplash.jpg"
-								/>
+								<Box
+									component={motion.div}
+									initial={{ y: 100, opacity: 0 }}
+									whileInView={{ y: 0, opacity: 1 }}
+									transition={{ duration: 2, delay: 0.3, type: 'spring' }}
+									viewport={{ once: true }}>
+									<ImageFrame
+										imgheight="248px"
+										radius="0 70px 0 0 "
+										right="-10px"
+										childheight="93%"
+										top="5px"
+										image="brina-blum-LtofmaMoCFU-unsplash.jpg"
+									/>
+								</Box>
 
 								<Typography
 									variant="body1"
@@ -73,7 +84,8 @@ const Hero = () => {
 					</Grid>
 					<Grid
 						item
-						xs={4}>
+						lg={4}
+						xs={12}>
 						<Stack
 							sx={{
 								alignItems: 'center',
@@ -83,7 +95,11 @@ const Hero = () => {
 							}}>
 							<Box
 								component="span"
-								sx={{ position: 'absolute', top: '30px', right: '-130px' }}>
+								sx={{
+									position: 'absolute',
+									top: { xs: '-4rem', lg: '30px' },
+									right: { xs: '20%', lg: '-130px' },
+								}}>
 								{icons.stars}
 							</Box>
 							<Box
@@ -91,15 +107,23 @@ const Hero = () => {
 								sx={{ position: 'absolute', bottom: '180px', left: '-110px' }}>
 								{icons.stars}
 							</Box>
-							<ImageFrame
-								imgheight="474px"
-								imgwidth="454px"
-								radius="0 136px 0 0 "
-								right="-20px"
-								childheight="437px"
-								top="5px"
-								image="pexels-anna-nekrashevich-8988956.jpg"
-							/>
+							<Box
+								component={motion.div}
+								initial={{ y: 100, opacity: 0 }}
+								whileInView={{ y: 0, opacity: 1 }}
+								transition={{ duration: 2, type: 'spring' }}
+								viewport={{ once: true }}>
+								<ImageFrame
+									imgheight={{ xs: '320px', md: '350px', lg: '474px' }}
+									imgwidth={{ xs: '320px', md: '350px', lg: '454px' }}
+									childwidth="102%"
+									radius={{ xs: '50% 50% 0 0', lg: '0 136px 0 0 ' }}
+									right={{ xs: '5px', lg: '-20px' }}
+									childheight="101%"
+									top="5px"
+									image="pexels-anna-nekrashevich-8988956.jpg"
+								/>
+							</Box>
 							<Box
 								fontWeight="bold"
 								fontSize={'1.25rem'}>
@@ -117,7 +141,9 @@ const Hero = () => {
 					</Grid>
 					<Grid
 						item
-						xs={4}>
+						sx={{ display: { xs: 'none', lg: 'block' } }}
+						lg={4}
+						xs={12}>
 						<Stack
 							direction="row"
 							sx={{ justifyContent: 'center', position: 'relative' }}>
@@ -131,14 +157,21 @@ const Hero = () => {
 								{icons.leafs}
 							</Box>
 							<Stack sx={{ gap: '1.25rem', width: '227px' }}>
-								<ImageFrame
-									imgheight="281px"
-									radius="113.5px 113.5px 0 0 "
-									left="-15px"
-									childheight="281px"
-									top="-5px"
-									image="brina-blum-wATDAuB4Gto-unsplash.jpg"
-								/>
+								<Box
+									component={motion.div}
+									initial={{ y: 100, opacity: 0 }}
+									whileInView={{ y: 0, opacity: 1 }}
+									transition={{ duration: 3, delay: 0.6, type: 'spring' }}
+									viewport={{ once: true }}>
+									<ImageFrame
+										imgheight="281px"
+										radius="113.5px 113.5px 0 0 "
+										left="-15px"
+										childheight="100%"
+										top="-5px"
+										image="brina-blum-wATDAuB4Gto-unsplash.jpg"
+									/>
+								</Box>
 								<Stack>
 									<Typography
 										variant="body1"

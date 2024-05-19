@@ -4,7 +4,7 @@ import React from 'react';
 
 const StyledImage = styled(Box)`
 	position: relative;
-	border-radius: ${(props) => props.radius};
+	// border-radius: ${(props) => props.radius};
 	box-shadow: 0 0 7px 3px rgba(0, 0, 0, 0.25);
 
 	&::before {
@@ -37,7 +37,7 @@ const ImageFrame = ({
 	return (
 		<Box>
 			<StyledImage
-				radius={radius}
+				// radius={radius}
 				width={imgwidth}
 				height={imgheight}
 				left={left || 'unset'}
@@ -45,13 +45,20 @@ const ImageFrame = ({
 				bottom={bottom || 'unset'}
 				childwidth={childwidth || '100%'}
 				childheight={childheight || '100%'}
-				top={top || 'unset'}>
+				top={top || 'unset'}
+				sx={{
+					width: imgwidth,
+					height: imgheight,
+					right: right || 'unset',
+					borderRadius: radius,
+				}}>
 				<img
 					width="100%"
 					height="100%"
 					style={{ objectFit: 'cover', borderRadius: 'inherit' }}
 					src={require(`../assets/images/${image}`)}
 					alt=""
+					loading="lazy"
 				/>
 			</StyledImage>
 		</Box>

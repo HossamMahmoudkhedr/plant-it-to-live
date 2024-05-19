@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@300;400;500;600;700;800;900&family=Inter:wght@100..900&display=swap');
+
+:root {
+	/* Gradients */
+	--linear-background: linear-gradient(
+		49deg,
+		rgba(29, 82, 61, 1) 0%,
+		rgba(39, 94, 72, 1) 64%,
+		rgba(74, 122, 103, 1) 99%
+	);
+	--second-linear-background: linear-gradient(
+		180deg,
+		rgba(28, 81, 60, 1) 0%,
+		rgba(3, 90, 56, 1) 100%
+	);
+	--footer-linear-background: linear-gradient(
+		94deg,
+		rgba(34, 20, 21, 1) 0%,
+		rgba(59, 39, 41, 1) 93%
+	);
+
+	/* Green Color */
+	--very-light-green: #71cc49;
+	--light-green: #216147;
+	--dark-green: #1c513c;
+	--very-dark-green: #1b513c;
+
+	/* Gray Color */
+	--very-light-gray: #c0c0c0;
+	--light-gray: #b5b5b5;
+	--gray: #929292;
+	--dark-gray: #6e6e6e;
+
+	/* Chat Colors */
+	--rose: #f9bbb1;
+	--dark-rose: #eaa79c;
+	--peach: #efd1ba;
+	--orange: #f9ca7b;
+
+	/* General Colors */
+	--body: #fff9e3;
+	--body-50: #fff9e37d;
+	--white: #ffffff;
+	--black: #000000;
+}
+
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+	color: var(--black);
+}
+
+h1,
+h2,
+h3,
+span {
+	font-family: 'Inknut Antiqua', serif !important;
+}
+
+h4,
+p,
+a {
+	font-family: 'Inter', sans-serif !important;
+}
+
+ul li {
+	list-style: none;
+}
+
+a {
+	text-decoration: none;
+}

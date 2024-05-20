@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Plant;
 use App\Models\User;
 use App\Models\Admin;
 use Firebase\JWT\JWK;
@@ -161,6 +162,52 @@ class AdminController extends Controller
             {
                 return $this->failed("please check the old password");
             }
+        }
+        public function addplant(Request $request)
+        {
+            //['','','','','','','','','','','',''];
+            //validation
+            $validator=Validator::make($request->all(),[
+                'common_name'=>'required|string',
+                'scientific_name'=>'required|string',
+                'watering'=>'required|string',
+                'fertilizer'=>'required|string',
+                'sunlight'=>'required|string',
+                'pruning'=>'required|string',
+                'img'=>'required|image|mimes:jpeg,png,jpg,gif,svg',
+                'water_amount'=>'required|string',
+                'fertilizer_amount'=>'required|string',
+                'sun_per_day'=>'required|string',
+                'soil_salinty'=>'required|string',
+                'appropriate_season'=>'required|string',
+            ]);
+            if($validator->fails())
+            {
+                return $this->validationerrors($validator->errors());
+            }
+            $plant=new Plant();
+            $plant->common_name=$request->common_name;
+            $plant->scientific_name=$request->scientific_name;
+            $plant->watering=$request->watering;
+            $plant->fertilizer=$request->fertilizer;
+            $plant->sunlight=$request->sunlight;
+            $plant->pruning=$request->pruning;
+            $plant->water_amount=$request->water_amount;
+            $plant->fertilizer_amount=$request->fertilizer_amount;
+            $plant->sun_per_day=$request->sun_per_day;
+            $plant->soil_salinty=$request->soil_salinty;
+            $plant->appropriate_season=$request->appropriate_season;
+            $img=$request->file('img');
+            $filename=time().'.'.$img->getClientOriginalExtension();
+            $filepath='plantImges/'.$filename;
+            $img->move(public_path('plantImges'),$filename);
+            $baseUrl = url('/');
+            // Concatenate the base URL with the path to the uploaded image
+            $fullPath = $baseUrl . '/' . $filepath;
+            $plant->img = $fullPath;
+            $plant->admin_id=Auth()->user()->id;
+            $plant->save();
+            return $this->SuccessResponse($plant);
         }
 
     public function logout()

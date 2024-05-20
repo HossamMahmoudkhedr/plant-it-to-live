@@ -21,7 +21,10 @@ class Admin  extends Authenticatable implements JWTSubject
     protected $fillable= ['name','password','email','access_Key'];
     protected $hidden=['password','access_Key','created_at','updated_at'];
     //public $timestamps=false ;
-
+    public function plants ()
+    {
+        return $this->hasMany('App\Models\Plant','admin_id','id');
+    }
     public function getJWTIdentifier()
     {
         return $this->getKey();

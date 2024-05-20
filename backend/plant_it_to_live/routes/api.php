@@ -33,6 +33,7 @@ Route::group(['prefix'=>'admin'],function()
     Route::get('home',[AdminController::class,'home']);//return admin data
     Route::get('users',[AdminController::class,'users']);//get all users
     Route::post('edit',[AdminController::class,'edit']);//edit admin name and email
+    Route::post('addplant',[AdminController::class,'addplant']);//add new plant to the user
     Route::post('changepassword',[AdminController::class,'changepassword']);//change admin password using old password
     Route::get('forgetpassword', [AdminController::class, 'forgetpassword']);//send email to admin with url for reset password form
     Route::post('resetpassword', [AdminController::class, 'resetpassword'])->name('adminresetpassword');//reset password form
@@ -41,7 +42,7 @@ Route::group(['prefix'=>'/'],function()
 {
     Route::post('login',[UserController::class,'login']);//login user
     Route::post('signup',[UserController::class,'signup']);//signup user
-    Route::post('edit',[UserController::class,'edit']);//edit user name and email
+    Route::post('edit',[UserController::class,'edit']);//edit_user_name and email
     Route::get('delete',[UserController::class,'delete']);//delete user
     Route::get('user',[UserController::class,'user']);//return the user data
     Route::get('logout',[UserController::class,'logout']);//logout the user

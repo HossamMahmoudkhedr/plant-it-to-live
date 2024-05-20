@@ -8,7 +8,6 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use App\Traits\ApiResponse;
-use Illuminate\Support\Facades\Session;
 
 class SocialiteController extends Controller
 {

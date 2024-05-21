@@ -8,6 +8,36 @@ import CustomButton from '../utils/customButton';
 import { icons } from '../utils/icons';
 import { motion } from 'framer-motion';
 
+const imagesVariants = {
+	hidden: {
+		y: 100,
+		opacity: 0,
+	},
+	visible: {
+		y: 0,
+		opacity: 1,
+		transition: {
+			duration: 2,
+			delay: 0.5,
+			type: 'spring',
+		},
+	},
+};
+
+const opacityVariants = {
+	hidden: {
+		opacity: 0,
+	},
+	visible: {
+		opacity: 1,
+		transition: {
+			duration: 1,
+			delay: 2,
+			type: 'spring',
+		},
+	},
+};
+
 const Hero = () => {
 	return (
 		<Container maxWidth="xl">
@@ -32,7 +62,7 @@ const Hero = () => {
 						fontWeight: '600',
 						textAlign: 'center',
 						width: { xs: 'unset', lg: '32%' },
-						lineHeight: { xs: '60px', lg: '80px' },
+						lineHeight: { xs: '45px', lg: '55px' },
 					}}>
 					Grow your health, Grow a garden
 				</Typography>
@@ -50,10 +80,9 @@ const Hero = () => {
 							<Stack sx={{ gap: '1rem', width: '227px', alignItems: 'center' }}>
 								<Box
 									component={motion.div}
-									initial={{ y: 100, opacity: 0 }}
-									whileInView={{ y: 0, opacity: 1 }}
-									transition={{ duration: 2, delay: 0.5, type: 'spring' }}
-									viewport={{ once: true }}>
+									variants={imagesVariants}
+									initial="hidden"
+									animate="visible">
 									<ImageFrame
 										imgheight="248px"
 										radius="0 70px 0 0 "
@@ -65,6 +94,10 @@ const Hero = () => {
 								</Box>
 
 								<Typography
+									component={motion.p}
+									variants={opacityVariants}
+									initial="hidden"
+									animate="visible"
 									variant="body1"
 									sx={{ width: '80%', textAlign: 'center' }}>
 									<Link to="/">
@@ -94,7 +127,16 @@ const Hero = () => {
 								marginTop: '2rem',
 							}}>
 							<Box
-								component="span"
+								component={motion.span}
+								variants={{
+									...opacityVariants,
+									visible: {
+										...opacityVariants.visible,
+										transition: { duration: 0.5, delay: 1.5, type: 'spring' },
+									},
+								}}
+								initial="hidden"
+								animate="visible"
 								sx={{
 									position: 'absolute',
 									top: { xs: '-4rem', lg: '30px' },
@@ -103,16 +145,30 @@ const Hero = () => {
 								{icons.stars}
 							</Box>
 							<Box
-								component="span"
+								component={motion.span}
+								variants={{
+									...opacityVariants,
+									visible: {
+										...opacityVariants.visible,
+										transition: { duration: 0.5, delay: 1.8, type: 'spring' },
+									},
+								}}
+								initial="hidden"
+								animate="visible"
 								sx={{ position: 'absolute', bottom: '180px', left: '-110px' }}>
 								{icons.stars}
 							</Box>
 							<Box
 								component={motion.div}
-								initial={{ y: 100, opacity: 0 }}
-								whileInView={{ y: 0, opacity: 1 }}
-								transition={{ duration: 2, delay: 0.7, type: 'spring' }}
-								viewport={{ once: true }}>
+								variants={{
+									...imagesVariants,
+									visible: {
+										...imagesVariants.visible,
+										transition: { duration: 2, delay: 0.7, type: 'spring' },
+									},
+								}}
+								initial="hidden"
+								animate="visible">
 								<ImageFrame
 									imgheight={{ xs: '320px', md: '350px', lg: '474px' }}
 									imgwidth={{ xs: '320px', md: '350px', lg: '454px' }}
@@ -125,6 +181,10 @@ const Hero = () => {
 								/>
 							</Box>
 							<Box
+								component={motion.div}
+								variants={opacityVariants}
+								initial="hidden"
+								animate="visible"
 								fontWeight="bold"
 								fontSize={'1.25rem'}>
 								<Link to="/">
@@ -159,10 +219,15 @@ const Hero = () => {
 							<Stack sx={{ gap: '1.25rem', width: '227px' }}>
 								<Box
 									component={motion.div}
-									initial={{ y: 100, opacity: 0 }}
-									whileInView={{ y: 0, opacity: 1 }}
-									transition={{ duration: 3, delay: 1, type: 'spring' }}
-									viewport={{ once: true }}>
+									variants={{
+										...imagesVariants,
+										visible: {
+											...imagesVariants.visible,
+											transition: { duration: 2, delay: 1, type: 'spring' },
+										},
+									}}
+									initial="hidden"
+									animate="visible">
 									<ImageFrame
 										imgheight="281px"
 										radius="113.5px 113.5px 0 0 "
@@ -172,7 +237,11 @@ const Hero = () => {
 										image="brina-blum-wATDAuB4Gto-unsplash.jpg"
 									/>
 								</Box>
-								<Stack>
+								<Stack
+									component={motion.div}
+									variants={opacityVariants}
+									initial="hidden"
+									animate="visible">
 									<Typography
 										variant="body1"
 										sx={{ width: '80%' }}>

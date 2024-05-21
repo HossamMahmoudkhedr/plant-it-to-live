@@ -9,6 +9,7 @@ const StyledLink = styled.a`
 	}
 `;
 const Footer = () => {
+	let year = new Date().getFullYear();
 	return (
 		<Container
 			maxWidth="xl"
@@ -141,12 +142,11 @@ const Footer = () => {
 					<Typography
 						variant="caption"
 						sx={{ color: 'white', fontSize: '0.8rem' }}>
-						© 2024 Plant it to live. All rights reserved.
+						© {year} Plant it to live. All rights reserved.
 					</Typography>
 					<Typography
 						variant="body1"
 						sx={{ color: 'white', fontSize: '1rem' }}>
-						Email:{' '}
 						<StyledLink href="mailto:plantitolive@gmail.com">
 							plantitolive@gmail.com
 						</StyledLink>

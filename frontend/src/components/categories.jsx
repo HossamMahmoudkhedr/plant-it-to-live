@@ -2,6 +2,20 @@ import { Box, Container, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { categories } from '../data/categoriesData';
 import RoseCircle from '../utils/roseCircle';
+import { motion } from 'framer-motion';
+
+const opacityVariants = {
+	hidden: {
+		opacity: 0,
+	},
+	visible: {
+		opacity: 1,
+		transition: {
+			duration: 2,
+			type: 'spring',
+		},
+	},
+};
 
 const Categories = () => {
 	return (
@@ -63,6 +77,11 @@ const Categories = () => {
 								},
 							}}>
 							<Box
+								component={motion.div}
+								variants={opacityVariants}
+								initial="hidden"
+								whileInView="visible"
+								viewport={{ once: true }}
 								sx={{
 									border: {
 										xs: '15px solid var(--light-green)',
@@ -78,6 +97,17 @@ const Categories = () => {
 								/>
 							</Box>
 							<Stack
+								component={motion.div}
+								variants={{
+									...opacityVariants,
+									visible: {
+										...opacityVariants.visible,
+										transition: { duration: 2, delay: 0.5, type: 'spring' },
+									},
+								}}
+								initial="hidden"
+								whileInView="visible"
+								viewport={{ once: true }}
 								sx={{
 									color: 'var(--white)',
 									gap: '1rem',

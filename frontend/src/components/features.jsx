@@ -4,6 +4,30 @@ import Heading from '../utils/heading';
 import CustomButton from '../utils/customButton';
 import { motion } from 'framer-motion';
 
+const opacityVariants = {
+	hidden: {
+		opacity: 0,
+	},
+	visible: {
+		opacity: 1,
+		transition: {
+			duration: 1,
+			delay: 1,
+		},
+	},
+};
+const scaleVariants = {
+	hidden: {
+		transform: 'scaleX(0)',
+	},
+	visible: {
+		transform: 'scaleX(1)',
+		transition: {
+			duration: 1,
+		},
+	},
+};
+
 const Features = () => {
 	return (
 		<Container
@@ -25,9 +49,10 @@ const Features = () => {
 						xs={12}>
 						<Stack
 							component={motion.div}
-							initial={{ transform: 'scaleX(0)' }}
-							whileInView={{ transform: 'scaleX(1)' }}
-							transition={{ duration: 1 }}
+							variants={scaleVariants}
+							initial="hidden"
+							whileInView="visible"
+							viewport={{ once: true }}
 							direction={{ xs: 'column-reverse', md: 'row' }}
 							sx={{
 								justifyContent: 'space-between',
@@ -40,9 +65,10 @@ const Features = () => {
 							}}>
 							<Stack
 								component={motion.div}
-								initial={{ opacity: 0 }}
-								whileInView={{ opacity: 1 }}
-								transition={{ duration: 1, delay: 1 }}
+								variants={opacityVariants}
+								initial="hidden"
+								whileInView="visible"
+								viewport={{ once: true }}
 								sx={{ gap: '1rem', width: { xs: '100%', md: '50%' } }}>
 								<Typography
 									variant="h5"
@@ -60,9 +86,10 @@ const Features = () => {
 							</Stack>
 							<Box
 								component={motion.div}
-								initial={{ opacity: 0 }}
-								whileInView={{ opacity: 1 }}
-								transition={{ duration: 1, delay: 1 }}
+								variants={opacityVariants}
+								initial="hidden"
+								whileInView="visible"
+								viewport={{ once: true }}
 								width={{ xs: '100%', md: '40%' }}>
 								<img
 									src={require('../assets/images/shovel.png')}
@@ -84,9 +111,10 @@ const Features = () => {
 						md={7.2}>
 						<Stack
 							component={motion.div}
-							initial={{ transform: 'scaleX(0)' }}
-							whileInView={{ transform: 'scaleX(1)' }}
-							transition={{ duration: 1 }}
+							variants={scaleVariants}
+							initial="hidden"
+							whileInView="visible"
+							viewport={{ once: true }}
 							sx={{
 								gap: '1rem',
 								borderRadius: '1.5rem',
@@ -96,9 +124,10 @@ const Features = () => {
 							}}>
 							<Typography
 								component={motion.h4}
-								initial={{ opacity: 0 }}
-								whileInView={{ opacity: 1 }}
-								transition={{ duration: 1, delay: 1 }}
+								variants={opacityVariants}
+								initial="hidden"
+								whileInView="visible"
+								viewport={{ once: true }}
 								variant="h4"
 								sx={{
 									fontSize: '2rem',
@@ -110,9 +139,10 @@ const Features = () => {
 							</Typography>
 							<Typography
 								component={motion.p}
-								initial={{ opacity: 0 }}
-								whileInView={{ opacity: 1 }}
-								transition={{ duration: 1, delay: 1 }}
+								variants={opacityVariants}
+								initial="hidden"
+								whileInView="visible"
+								viewport={{ once: true }}
 								variant="body1"
 								sx={{ color: 'var(--dark-gray)' }}>
 								{' '}
@@ -130,9 +160,10 @@ const Features = () => {
 						md={4.8}>
 						<Stack
 							component={motion.div}
-							initial={{ transform: 'scaleY(0)' }}
-							whileInView={{ transform: 'scaleY(1)' }}
-							transition={{ duration: 1 }}
+							variants={scaleVariants}
+							initial="hidden"
+							whileInView="visible"
+							viewport={{ once: true }}
 							sx={{
 								gap: '1rem',
 								borderRadius: '1.5rem',
@@ -143,9 +174,10 @@ const Features = () => {
 							}}>
 							<Box
 								component={motion.div}
-								initial={{ opacity: 0 }}
-								whileInView={{ opacity: 1 }}
-								transition={{ duration: 1, delay: 1 }}
+								variants={opacityVariants}
+								initial="hidden"
+								whileInView="visible"
+								viewport={{ once: true }}
 								sx={{ alignSelf: 'flex-end', width: '60%' }}>
 								<CustomButton
 									text="Plant"
@@ -158,9 +190,16 @@ const Features = () => {
 							</Box>
 							<Box
 								component={motion.div}
-								initial={{ opacity: 0 }}
-								whileInView={{ opacity: 1 }}
-								transition={{ duration: 1, delay: 1.5 }}
+								variants={{
+									...opacityVariants,
+									visible: {
+										...opacityVariants.visible,
+										transition: { duration: 1, delay: 1.2 },
+									},
+								}}
+								initial="hidden"
+								whileInView="visible"
+								viewport={{ once: true }}
 								sx={{ alignSelf: 'flex-start', width: '60%' }}>
 								<CustomButton
 									text="Follow"
@@ -173,9 +212,16 @@ const Features = () => {
 							</Box>
 							<Box
 								component={motion.div}
-								initial={{ opacity: 0 }}
-								whileInView={{ opacity: 1 }}
-								transition={{ duration: 1, delay: 2 }}
+								variants={{
+									...opacityVariants,
+									visible: {
+										...opacityVariants.visible,
+										transition: { duration: 1, delay: 1.5 },
+									},
+								}}
+								initial="hidden"
+								whileInView="visible"
+								viewport={{ once: true }}
 								sx={{ alignSelf: 'flex-end', width: '60%' }}>
 								<CustomButton
 									text="Reap"
@@ -188,9 +234,16 @@ const Features = () => {
 							</Box>
 							<Box
 								component={motion.div}
-								initial={{ opacity: 0 }}
-								whileInView={{ opacity: 1 }}
-								transition={{ duration: 1, delay: 2.5 }}
+								variants={{
+									...opacityVariants,
+									visible: {
+										...opacityVariants.visible,
+										transition: { duration: 1, delay: 1.8 },
+									},
+								}}
+								initial="hidden"
+								whileInView="visible"
+								viewport={{ once: true }}
 								sx={{ alignSelf: 'flex-start', width: '60%' }}>
 								<CustomButton
 									text="Treat"
@@ -207,9 +260,10 @@ const Features = () => {
 
 				<Stack
 					component={motion.div}
-					initial={{ transform: 'scaleY(0)' }}
-					whileInView={{ transform: 'scaleY(1)' }}
-					transition={{ duration: 1 }}
+					variants={scaleVariants}
+					initial="hidden"
+					whileInView="visible"
+					viewport={{ once: true }}
 					sx={{
 						width: { xs: '100%', lg: '50%' },
 						padding: '1.5rem 0',
@@ -222,9 +276,10 @@ const Features = () => {
 					}}>
 					<Stack
 						component={motion.div}
-						initial={{ opacity: 0 }}
-						whileInView={{ opacity: 1 }}
-						transition={{ duration: 1, delay: 1 }}
+						variants={opacityVariants}
+						initial="hidden"
+						whileInView="visible"
+						viewport={{ once: true }}
 						sx={{
 							gap: { xs: '0.5rem', lg: '2rem' },
 							alignItems: 'center',
@@ -249,9 +304,10 @@ const Features = () => {
 					</Stack>
 					<Box
 						component={motion.div}
-						initial={{ opacity: 0 }}
-						whileInView={{ opacity: 1 }}
-						transition={{ duration: 1, delay: 1 }}>
+						variants={opacityVariants}
+						initial="hidden"
+						whileInView="visible"
+						viewport={{ once: true }}>
 						<img
 							src={require('../assets/images/plant-in-white-pot.jpg')}
 							alt=""

@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
-import { Button } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import React from 'react';
 
 const StyledButton = styled(Button)`
+	display: felx;
+	align-items: center;
 	text-transform: none;
 
 	&&:hover {
@@ -19,6 +21,8 @@ const CustomButton = ({
 	width,
 	border,
 	boxshadow,
+	icon,
+	icHeight,
 	restprops,
 }) => {
 	return (
@@ -31,14 +35,25 @@ const CustomButton = ({
 				background: background || 'transparent',
 				borderRadius: borderradius || '0',
 				border: border || 'none',
-				color: color,
 				padding: padding,
 				width: width,
 				fontWeight: 'inherit',
 				fontSize: 'inherit',
 				boxShadow: boxshadow,
+				gap: icon ? '1rem' : 'unset',
 			}}>
-			{text}
+			{icon && (
+				<Box
+					component="span"
+					height={icHeight}>
+					{icon}
+				</Box>
+			)}
+			<Typography
+				variant="body1"
+				sx={{ color: color, fontSize: 'inherit', fontWeight: 'inherit' }}>
+				{text}
+			</Typography>
 		</StyledButton>
 	);
 };

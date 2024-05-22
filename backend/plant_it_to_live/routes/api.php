@@ -34,6 +34,12 @@ Route::group(['prefix'=>'admin'],function()
     Route::get('users',[AdminController::class,'users']);//get all users
     Route::post('edit',[AdminController::class,'edit']);//edit admin name and email
     Route::post('addplant',[AdminController::class,'addplant']);//add new plant to the user
+    Route::get('plants',[AdminController::class,'plants']);
+    Route::get('plant',[AdminController::class,'plant']);
+    Route::post('editplant',[AdminController::class,'editplant']);
+    Route::get('deleteplant',[AdminController::class,'deleteplant']);
+    Route::get('export', [AdminController::class, 'export']);
+    Route::get('/download/{fileName}', [AdminController::class,'download']);
     Route::post('changepassword',[AdminController::class,'changepassword']);//change admin password using old password
     Route::get('forgetpassword', [AdminController::class, 'forgetpassword']);//send email to admin with url for reset password form
     Route::post('resetpassword', [AdminController::class, 'resetpassword'])->name('adminresetpassword');//reset password form
@@ -53,7 +59,6 @@ Route::group(['prefix'=>'/'],function()
     Route::get('activate', [UserController::class, 'activate'])->name('activate');//active user account
     Route::post('forgetpassword', [UserController::class, 'forgetpassword']);//send email to user with url for reset password form
     Route::post('resetpassword', [UserController::class, 'resetpassword'])->name('resetpassword');//reset password form
-    //Route::get('googlelog',[UserController::class, 'googlelog'])->name('googlelog');
     Route::get('auth/google', [UserController::class, 'redirectToGoogle'])->middleware('web');//redir to google
     Route::get('/auth/google/callback', [UserController::class, 'handleGoogleCallback'])->middleware('web');
 });

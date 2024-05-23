@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    model1 = pickle.load(open(r"C:\xampp\htdocs\plant-it-to-live\backend\machine\LogisticRegression.pkl", 'rb'))
+    model1 = pickle.load(open(r"C:\xampp\htdocs\plant-it-to-live\machine\LogisticRegression.pkl", 'rb'))
     # Get input data from JSON request
     data = request.json
     
@@ -40,7 +40,7 @@ def predict():
 @app.route('/detect', methods=['POST'])
 def detect():
     # Load the model
-    model2 = torch.load(r"C:\xampp\htdocs\plant-it-to-live\backend\machine\plant-disease-model-complete (1).pth", map_location=torch.device('cpu'))
+    model2 = torch.load(r"C:\xampp\htdocs\plant-it-to-live\machine\plant-disease-model-complete (1).pth", map_location=torch.device('cpu'))
     model2.eval()
 
     # Define preprocessing transform

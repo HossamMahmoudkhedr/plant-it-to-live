@@ -43,6 +43,10 @@ class User  extends Authenticatable implements JWTSubject , MustVerifyEmail
         'password',
 
     ];
+    public function plants()
+    {
+        return $this ->belongsToMany('App\Models\Plant','plant_user');
+    }
 
     /**
      * The attributes that should be cast.

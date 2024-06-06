@@ -308,7 +308,7 @@ class AdminController extends Controller
 
         return $this->SuccessResponse([  'download_link' => url('/api/admin/download/' . $fileName)]);
     }
-    public function download($fileName)
+    public function download($fileName):string
     {
         $filePath = storage_path('app/' . $fileName);
 
@@ -316,6 +316,20 @@ class AdminController extends Controller
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
         ]);
+    }
+    public function delete_user(Request $request)
+    {
+        $validator= Validator::make($request->all(),[
+            'id'=>'required|exists:users,id'
+        ]);
+        if($validator->fails())
+        {
+            return $this->validationerrors($validator->errors());
+        }
+        $user= User::find($request->id);
+       if( $user->delete())
+            return $this->SuccessResponse();
+       return $this->failed();
     }
 
 }

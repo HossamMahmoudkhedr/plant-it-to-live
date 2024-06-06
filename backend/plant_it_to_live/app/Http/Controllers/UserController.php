@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Plant;
 use App\Models\User;
 //use App\Models\Admin;
 use App\Mail\ResetPassword;
@@ -25,7 +26,7 @@ class UserController extends Controller
     use ApiResponse;
     public function __construct()
     {
-        $this->middleware('auth:user', ['except' => ['login','signup','activate','forgetpassword','redirectToGoogle','resetpassword','handleGoogleCallback']]);
+        $this->middleware('auth:user', ['except' => ['login','signup','activate','forgetpassword','redirectToGoogle','resetpassword','handleGoogleCallback','allplants']]);
 
     }
     public function login(Request $request)
@@ -305,6 +306,11 @@ class UserController extends Controller
             }
             Auth::guard('user')->login($visitor);
             $token = JWTAuth::fromUser($visitor);
-            return $this->SuccessResponse(['token' => $token]);// here we will re
+            return $this->SuccessResponse(['token' => $token]);// here we will r
+    }
+    public function allplants()
+    {
+        $plants=Plant::all();
+        return $this->SuccessResponse($plants);
     }
 }

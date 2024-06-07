@@ -45,7 +45,7 @@ class User  extends Authenticatable implements JWTSubject , MustVerifyEmail
     ];
     public function plants()
     {
-        return $this ->belongsToMany('App\Models\Plant','plant_user');
+        return $this ->belongsToMany('App\Models\Plant','user_plant');
     }
 
     /**

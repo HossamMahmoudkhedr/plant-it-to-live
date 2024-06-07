@@ -26,7 +26,7 @@ class UserController extends Controller
     use ApiResponse;
     public function __construct()
     {
-        $this->middleware('auth:user', ['except' => ['login','signup','activate','forgetpassword','redirectToGoogle','resetpassword','handleGoogleCallback','allplants']]);
+        $this->middleware('auth:user', ['except' => ['login','signup','activate','forgetpassword','redirectToGoogle','resetpassword','handleGoogleCallback','allplants','getplant']]);
 
     }
     public function login(Request $request)
@@ -310,7 +310,79 @@ class UserController extends Controller
     }
     public function allplants()
     {
-        $plants=Plant::all();
+        $plants=Plant::paginate(50);
+        $plants->getCollection()->makeHidden(['admin_id','created_at','updated_at']);
         return $this->SuccessResponse($plants);
+    }
+
+    //single plant
+    public function getplant(Request $request)
+    {
+        $validator = Validator::make($request->all(),[
+            'id'=>'required|exists:plants,id'
+        ]);
+        if($validator->fails())
+        {
+            return $this->validationerrors($validator->errors());
+        }
+        $plant=Plant::find($request->id);
+        if(!$plant)
+        {
+            return $this->failed('Plant not found');
+        }
+        $plant->makeHidden(['admin_id','created_at','updated_at']);
+        return $this->SuccessResponse($plant);
+    }
+    //select plant
+
+    public function selectplant(Request $request)
+    {
+        $validator = Validator::make($request->all(),[
+            'id'=>'required|exists:plants,id'
+        ]);
+        if($validator->fails())
+        {
+            return $this->validationerrors($validator->errors());
+        }
+        $user=Auth()->user();
+        if($user)
+        {
+            $plant=$user->plants()->where('plant_id',$request->id)->exists();
+            if(!$plant)
+            {
+                $user->plants()->attach($request->id);
+            }
+            return $this->SuccessResponse("Done");
+        }
+        else
+        {
+            return $this->failed("Please login first");
+        }
+    }
+    //view all user plants
+    public function userplants()
+    {
+        $user=Auth()->user();
+        $plants=$user->plants()->paginate(50);
+        $plants->getcollection()->makeHidden(['admin_id','created_at','updated_at','pivot']);
+        return $this->SuccessResponse($plants);
+    }
+    //remove plant from user plants
+    public function removeplant(Request $request)
+    {
+        $validator = Validator::make($request->all(),[
+            'id'=>'required|exists:plants,id'
+        ]);
+        if($validator->fails())
+        {
+            return $this->validationerrors($validator->errors());
+        }
+        $user=Auth()->user();
+        if($user)
+        {
+            $user->plants()->detach($request->id);
+            return $this->SuccessResponse("Done");
+        }
+        return $this->failed("Please login first");
     }
 }

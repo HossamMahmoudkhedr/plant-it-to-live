@@ -30,7 +30,6 @@ Route::group(['prefix'=>'admin'],function()
 {
     //***********************normal admin actions ********************************************
     Route::post('login',[AdminController::class,'login']);//log admin
-    Route::get('logout',[AdminController::class,'logout']);//logout admin
     Route::get('home',[AdminController::class,'home']);//return admin data
     Route::get('users',[AdminController::class,'users']);//get all users
     Route::post('edit',[AdminController::class,'edit']);//edit admin name and email
@@ -38,6 +37,9 @@ Route::group(['prefix'=>'admin'],function()
     Route::post('changepassword',[AdminController::class,'changepassword']);//change admin password using old password
     Route::get('forgetpassword', [AdminController::class, 'forgetpassword']);//send email to admin with url for reset password form
     Route::post('resetpassword', [AdminController::class, 'resetpassword'])->name('adminresetpassword');//reset password form
+    Route::get('logout',[AdminController::class,'logout']);//logout admin
+    Route::get('delete_user',[AdminController::class,'delete_user']);//logout admin
+
     /***************************************************************************************************/
     /*************************************Admin  actions on the plant ************************************************************/
     Route::post('addplant',[AdminController::class,'addplant']);//add new plant to the user
@@ -70,11 +72,16 @@ Route::group(['prefix'=>'/'],function()
     Route::Post('sendRequestToCropRecommendation',[CroprecommendationController::class,'sendRequestToCropRecommendation']);
     Route::Post('sendRequestToDiseasesDetection',[DiseasesDetectionController::class,'sendRequestToDiseasesDetection']);
     /***************************************************************************************************************************/
+    //all plants
     Route::get('allplants',[Usercontroller::class,'allplants']);
-
-
-
-
+    //singel plant
+    Route::get('plant',[Usercontroller::class,'getplant']);
+    //select plant
+    Route::post('selectplant',[Usercontroller::class,'selectplant']);
+    //view all user plants
+    Route::get('userplants',[Usercontroller::class,'userplants']);
+    //remove plant from user plants
+    Route::post('removeplant',[Usercontroller::class,'removeplant']);
 
 });
 

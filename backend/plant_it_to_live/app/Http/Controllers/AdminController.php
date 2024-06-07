@@ -224,6 +224,7 @@ class AdminController extends Controller
         {
             return $this->failed("Plant not found");
         }
+        $plant->makeHidden(['admin_id','updated_at','created_at']);
         return $this->SuccessResponse($plant);
     }
     //edit plant
@@ -251,7 +252,8 @@ class AdminController extends Controller
         }
         $plant=Plant::find($request->id);
         $filePath = $plant->img; // Assuming $plant->img contains the relative path
-        unlink($filePath);
+        if($filePath!=null)
+            unlink($filePath);
         $plant->common_name=$request->common_name;
         $plant->scientific_name=$request->scientific_name;
         $plant->watering=$request->watering;
@@ -285,7 +287,8 @@ class AdminController extends Controller
         }
         $plant=Plant::find($request->id);
         $filePath = $plant->img; // Assuming $plant->img contains the relative path
-        unlink($filePath);
+        if($filePath!=null)
+            unlink($filePath);
        if(!$plant->delete())
            return $this->failed("try again");
         return $this->SuccessResponse();
@@ -293,28 +296,28 @@ class AdminController extends Controller
     public function logout()
     {
         auth()->logout();
-
         return response()->json(['message' => 'Successfully loged out']);
     }
     public function export(Request $request)
     {
         $fileName = 'plants.xlsx'; // You can generate a dynamic file name if needed
         $filePath = storage_path('app/' . $fileName);
-
         // Delete the old file if it exists
-
-
         Excel::store(new PlantsExport, $fileName);
-
         return $this->SuccessResponse([  'download_link' => url('/api/admin/download/' . $fileName)]);
     }
-    public function download($fileName):string
+    public function download($fileName)
     {
         $filePath = storage_path('app/' . $fileName);
 
-        return new BinaryFileResponse($filePath, 200, [
+        // Check if file exists
+        if (!file_exists($filePath)) {
+            abort(404);
+        }
+
+        // Return the file as a response
+        return response()->download($filePath, $fileName, [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
         ]);
     }
     public function delete_user(Request $request)
@@ -327,6 +330,7 @@ class AdminController extends Controller
             return $this->validationerrors($validator->errors());
         }
         $user= User::find($request->id);
+        $user->plants()->detach();
        if( $user->delete())
             return $this->SuccessResponse();
        return $this->failed();

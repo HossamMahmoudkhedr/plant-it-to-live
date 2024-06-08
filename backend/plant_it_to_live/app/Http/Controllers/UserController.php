@@ -87,15 +87,12 @@ class UserController extends Controller
             else  $user->gender= 0;
          }
          if(isset($request->picture)) {
+
             $picture = $request->file('picture');
-            $fileName = time() . '_' .Str::random(10). rand(1,1000) . '.' . $picture->extension();
-            $filePath = 'pictures/' . $fileName; // Relative path from the public directory
+            $fileName = time() . '_' .Str::random(10). rand(1,1000) . '.' . $picture->getClientOriginalExtension();
             $picture->move(public_path('pictures'), $fileName);
-            // Get the base URL of your application
-            $baseUrl = url('/');
-            // Concatenate the base URL with the path to the uploaded image
-            $fullPath = $baseUrl . '/' . $filePath;
-            $user->picture = $fullPath;
+             $filepath = 'C:\\xampp\\htdocs\\plant-it-to-live\\backend\\plant_it_to_live\\public\\pictures\\' . $fileName;
+             $user->picture = $filepath;
         }
 
         if($user->save())
@@ -135,15 +132,15 @@ class UserController extends Controller
             else  $user->gender= 0;
          }
          if(isset($request->picture)) {
-            $picture = $request->file('picture');
-            $fileName = time() . '_' .Str::random(10). rand(1,1000) . '.' . $picture->extension();
-            $filePath = 'pictures/' . $fileName; // Relative path from the public directory
-            $picture->move(public_path('pictures'), $fileName);
-            // Get the base URL of your application
-            $baseUrl = url('/');
-            // Concatenate the base URL with the path to the uploaded image
-            $fullPath = $baseUrl . '/' . $filePath;
-            $user->picture = $fullPath;
+             if($user->picture!=null&&$user->google_id==null)
+             {
+                 unlink($user->picture);
+             }
+             $picture = $request->file('picture');
+             $fileName = time() . '_' .Str::random(10). rand(1,1000) . '.' . $picture->getClientOriginalExtension();
+             $picture->move(public_path('pictures'), $fileName);
+             $filepath = 'C:\\xampp\\htdocs\\plant-it-to-live\\backend\\plant_it_to_live\\public\\pictures\\' . $fileName;
+             $user->picture = $filepath;
         }
         if($user->save())
         {
@@ -171,7 +168,12 @@ class UserController extends Controller
         if (!$user) {
             return $this->failed('User not found');
         }
-        if( $user->delete())
+        if($user->picture!=null&&$user->google_id==null)
+        {
+            unlink($user->picture);
+        }
+         $user->plants()->detach();
+         if($user->delete())
         {
             return $this->SuccessResponse('','User Sucessfuly Deleted');
         }
@@ -381,7 +383,7 @@ class UserController extends Controller
         if($user)
         {
             $user->plants()->detach($request->id);
-            return $this->SuccessResponse("Done");
+            return $this->SuccessResponse();
         }
         return $this->failed("Please login first");
     }

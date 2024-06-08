@@ -330,6 +330,10 @@ class AdminController extends Controller
             return $this->validationerrors($validator->errors());
         }
         $user= User::find($request->id);
+        if($user->picture!=null&&$user->google_id==null)
+        {
+            unlink($user->picture);
+        }
         $user->plants()->detach();
        if( $user->delete())
             return $this->SuccessResponse();

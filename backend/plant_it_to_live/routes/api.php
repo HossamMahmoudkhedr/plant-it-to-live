@@ -50,6 +50,18 @@ Route::group(['prefix'=>'admin'],function()
     /***********************************print method **************************************************/
     Route::get('export', [AdminController::class, 'export']);
     Route::get('/download/{fileName}', [AdminController::class,'download']);
+    /****************************************************************************************************/
+    /******************************************Suggestion************************************************/
+    // view all Suggestions
+    Route::get('allsuggestions',[AdminController::class,'allsuggestions']);
+    // view the Suggestion
+    Route::get('suggestion',[AdminController::class,'suggestion']);
+    //add to plants table
+    Route::get('acceptsuggestion',[AdminController::class,'acceptsuggestion']);
+    //edit the Suggestion
+    //delete the Suggestion
+    //print the Suggestions
+    /***************************************************************************************************/
 
 });
 Route::group(['prefix'=>'/'],function()
@@ -82,6 +94,12 @@ Route::group(['prefix'=>'/'],function()
     Route::get('userplants',[Usercontroller::class,'userplants']);
     //remove plant from user plants
     Route::post('removeplant',[Usercontroller::class,'removeplant']);
+    /*************************************************Suggestion*******************************************************************/
+    //Add new Suggestion
+    Route::post('addsuggestion',[Usercontroller::class,'addsuggestion']);
+    //Get All user Suggestion
+    Route::get('usersuggestions',[Usercontroller::class,'usersuggestions']);
+    /******************************************************************************************************************************/
 
 });
 

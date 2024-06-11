@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Plant;
+use App\Models\Suggested_plant;
 use App\Models\User;
 use App\Models\Admin;
 use Firebase\JWT\JWK;
 use App\Traits\ApiResponse;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\Console\Completion\Suggestion;
 use Tymon\JWTAuth\JWTGuard;
 use Illuminate\Http\Request;
 use App\Mail\AdminChangePassword;
@@ -335,9 +337,60 @@ class AdminController extends Controller
             unlink($user->picture);
         }
         $user->plants()->detach();
-       if( $user->delete())
+        $user->suggestions()->delete();
+        if( $user->delete())
             return $this->SuccessResponse();
        return $this->failed();
     }
-
+    public function allsuggestions()
+    {
+        $suggestions=Suggested_plant::paginate(50);
+        if($suggestions)
+        {
+            $suggestions->makeHidden(['admin_id','user_id']);
+            return $this->SuccessResponse($suggestions);
+        }
+        return $this->failed();
+    }
+    public function suggestion(Request $request)
+    {
+        $validator= Validator::make($request->all(),[
+            'id'=>'required|exists:Suggested_plants,id'
+        ]);
+        if($validator->fails())
+        {
+            return $this->validationerrors($validator->errors());
+        }
+        $plant=Suggested_plant::with(['user'=>function($q)
+        {
+            $q->select('id', 'name', 'email');
+        }])->find($request->id);
+        if($plant)
+        {
+            return $this->SuccessResponse($plant);
+        }
+        return $this->failed();
+    }
+    public function acceptsuggestion(Request $request)
+    {
+        $validator= Validator::make($request->all(),[
+            'id'=>'required|exists:Suggested_plants,id'
+        ]);
+        if($validator->fails())
+        {
+            return $this->validationerrors($validator->errors());
+        }
+        $suggestedplant=Suggested_plant::find($request->id);
+        if($suggestedplant)
+        {
+            $suggestedplant->admin_id=Auth()->user()->id;
+            $suggestedplant->approved=1;
+            $suggestedplant->save();
+            $plant=new Plant();
+            $plant->fill($suggestedplant->only(['common_name','scientific_name','watering','fertilizer','sunlight','pruning','img','water_amount','fertilizer_amount','sun_per_day','soil_salinty','appropriate_season','admin_id']));
+            $plant->save();
+            return $this->SuccessResponse();
+        }
+        return $this->failed();
+    }
 }

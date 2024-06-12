@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\PlantsSuggesionExport;
 use App\Models\Plant;
 use App\Models\Suggested_plant;
 use App\Models\User;
@@ -291,7 +292,11 @@ class AdminController extends Controller
         $filePath = $plant->img; // Assuming $plant->img contains the relative path
         if($filePath!=null)
             unlink($filePath);
-       if(!$plant->delete())
+        $suggested=Suggested_plant::where('plant_id',$plant->id)->first();
+        $suggested->approved=0;
+        $suggested->plant_id=null;
+        $suggested->save();
+        if(!$plant->delete())
            return $this->failed("try again");
         return $this->SuccessResponse();
     }
@@ -381,16 +386,123 @@ class AdminController extends Controller
             return $this->validationerrors($validator->errors());
         }
         $suggestedplant=Suggested_plant::find($request->id);
+        if($suggestedplant->plant_id!=null)
+        {
+            return $this->validationerrors("this plant is already accepted");
+        }
         if($suggestedplant)
         {
+            $plant=new Plant();
+            $imgoldpath=$suggestedplant->img;
+            $filename=time().'.'.pathinfo($imgoldpath, PATHINFO_EXTENSION);
+            $filepath = 'C:\\xampp\\htdocs\\plant-it-to-live\\backend\\plant_it_to_live\\public\\plantImges\\' . $filename;
+            if (file_exists($imgoldpath)) {
+                copy($imgoldpath, $filepath);
+            }
             $suggestedplant->admin_id=Auth()->user()->id;
             $suggestedplant->approved=1;
+            $suggestedplant->plant_id=$plant->id;
             $suggestedplant->save();
-            $plant=new Plant();
-            $plant->fill($suggestedplant->only(['common_name','scientific_name','watering','fertilizer','sunlight','pruning','img','water_amount','fertilizer_amount','sun_per_day','soil_salinty','appropriate_season','admin_id']));
+            $plant->fill($suggestedplant->only(['common_name','scientific_name','watering','fertilizer','sunlight','pruning','water_amount','fertilizer_amount','sun_per_day','soil_salinty','appropriate_season','admin_id']));
+            $plant->img=$filepath;
             $plant->save();
+            $suggestedplant->admin_id=Auth()->user()->id;
+            $suggestedplant->approved=1;
+            $suggestedplant->plant_id=$plant->id;
+            $suggestedplant->save();
+
             return $this->SuccessResponse();
         }
         return $this->failed();
     }
+    public function editsuggestion(Request $request)
+    {
+        //validation
+        $validator=Validator::make($request->all(),[
+            'id'=>'required|exists:Suggested_plants,id',
+            'common_name'=>'required|string',
+            'scientific_name'=>'required|string',
+            'watering'=>'required|string',
+            'fertilizer'=>'required|string',
+            'sunlight'=>'required|string',
+            'pruning'=>'required|string',
+            'img'=>'required|image|mimes:jpeg,png,jpg,gif,svg',
+            'water_amount'=>'required|string',
+            'fertilizer_amount'=>'required|string',
+            'sun_per_day'=>'required|string',
+            'soil_salinty'=>'required|string',
+            'appropriate_season'=>'required|string',
+        ]);
+        if($validator->fails())
+        {
+            return $this->validationerrors($validator->errors());
+        }
+        $plant=Suggested_plant::find($request->id);
+        $filePath = $plant->img; // Assuming $plant->img contains the relative path
+        if($filePath!=null)
+            unlink($filePath);
+        $plant->common_name=$request->common_name;
+        $plant->scientific_name=$request->scientific_name;
+        $plant->watering=$request->watering;
+        $plant->fertilizer=$request->fertilizer;
+        $plant->sunlight=$request->sunlight;
+        $plant->pruning=$request->pruning;
+        $plant->water_amount=$request->water_amount;
+        $plant->fertilizer_amount=$request->fertilizer_amount;
+        $plant->sun_per_day=$request->sun_per_day;
+        $plant->soil_salinty=$request->soil_salinty;
+        $plant->appropriate_season=$request->appropriate_season;
+        $img=$request->file('img');
+        $filename=time().'.'.$img->getClientOriginalExtension();
+        $filepath='plantImges/'.$filename;
+        $img->move(public_path('plantImges'),$filename);
+        // Concatenate the base URL with the path to the uploaded image
+        $filepath = 'C:\\xampp\\htdocs\\plant-it-to-live\\backend\\plant_it_to_live\\public\\plantImges\\' . $filename;
+        $plant->img = $filepath;
+        $plant->admin_id=Auth()->user()->id;
+        $plant->save();
+        return $this->SuccessResponse();
+    }
+    public function deletesuggestion(Request $request)
+    {
+        $validator= Validator::make($request->all(),[
+            'id'=>'required|exists:Suggested_plants,id'
+        ]);
+        if($validator->fails())
+        {
+            return $this->validationerrors($validator->errors());
+        }
+        $plant=Suggested_plant::find($request->id);
+        unlink($plant->img);
+        if($plant)
+        {
+            $plant->delete();
+            return $this->SuccessResponse();
+        }
+        return $this->failed();
+    }
+    public function exportsuggest(Request $request)
+    {
+        $fileName = 'suggestions.xlsx'; // You can generate a dynamic file name if needed
+        $filePath = storage_path('app/' . $fileName);
+
+        // Delete the old file if it exists
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
+
+        // Export the file
+        Excel::store(new PlantsSuggesionExport(), $fileName);
+
+        // Check if file exists
+        if (!file_exists($filePath)) {
+            abort(404);
+        }
+
+        // Return the file as a response
+        return response()->download($filePath, $fileName, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
+    }
+
 }

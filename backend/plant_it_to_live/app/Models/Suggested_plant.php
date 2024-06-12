@@ -14,7 +14,7 @@ class Suggested_plant extends Authenticatable implements JWTSubject
 {
     use HasFactory;
     public $table='Suggested_plants';
-    protected $fillable=['common_name','scientific_name','watering','fertilizer','sunlight','pruning','img','water_amount','fertilizer_amount','sun_per_day','soil_salinty','appropriate_season','approved','user_id','admin_id'];
+    protected $fillable=['common_name','scientific_name','watering','fertilizer','sunlight','pruning','img','water_amount','fertilizer_amount','sun_per_day','soil_salinty','appropriate_season','approved','user_id','admin_id','plant_id'];
     public $timestamps = false;
 
     public function getJWTIdentifier()
@@ -24,6 +24,10 @@ class Suggested_plant extends Authenticatable implements JWTSubject
     public function user()
     {
         return $this->belongsTo('App\Models\User','user_id');
+    }
+    public function plant()
+    {
+        return $this->belongsTo('App\Models\Plant','plant_id');
     }
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.

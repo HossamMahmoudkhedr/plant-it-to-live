@@ -41,7 +41,7 @@ Route::group(['prefix'=>'admin'],function()
     Route::get('delete_user',[AdminController::class,'delete_user']);//logout admin
 
     /***************************************************************************************************/
-    /*************************************Admin  actions on the plant ************************************************************/
+    /*************************************Admin actions on the plant ************************************************************/
     Route::post('addplant',[AdminController::class,'addplant']);//add new plant to the user
     Route::get('plants',[AdminController::class,'plants']);//get all the plants
     Route::get('plant',[AdminController::class,'plant']);//get one plant
@@ -59,8 +59,12 @@ Route::group(['prefix'=>'admin'],function()
     //add to plants table
     Route::get('acceptsuggestion',[AdminController::class,'acceptsuggestion']);
     //edit the Suggestion
+    Route::post('editsuggestion',[AdminController::class,'editsuggestion']);
     //delete the Suggestion
+    Route::get('deletesuggestion',[AdminController::class,'deletesuggestion']);
     //print the Suggestions
+    Route::get('exportsuggest', [AdminController::class, 'exportsuggest']);
+    Route::get('/downloadsuggest/{fileName}', [AdminController::class,'downloadsuggest']);
     /***************************************************************************************************/
 
 });

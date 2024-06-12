@@ -309,9 +309,24 @@ class AdminController extends Controller
     {
         $fileName = 'plants.xlsx'; // You can generate a dynamic file name if needed
         $filePath = storage_path('app/' . $fileName);
+
         // Delete the old file if it exists
-        Excel::store(new PlantsExport, $fileName);
-        return $this->SuccessResponse([  'download_link' => url('/api/admin/download/' . $fileName)]);
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
+
+        // Export the file
+        Excel::store(new PlantsExport(), $fileName);
+
+        // Check if file exists
+        if (!file_exists($filePath)) {
+            abort(404);
+        }
+
+        // Return the file as a response
+        return response()->download($filePath, $fileName, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
     }
     public function download($fileName)
     {

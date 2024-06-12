@@ -68,7 +68,7 @@ fertilizer_amount varchar(500),
 sun_per_day varchar(500),
 soil_salinty varchar(500),
 appropriate_season varchar(150),
-admin_id int ,
+admin_id int,
 user_id int not null,
 foreign key (admin_id)
 references admins(id),
@@ -157,7 +157,17 @@ null,
 1);
 ALTER TABLE user_plant DROP PRIMARY KEY;
 ALTER TABLE user_plant MODIFY COLUMN id INT AUTO_INCREMENT PRIMARY KEY;
-
-
 select * from user_plant;
+alter table Suggested_plants 
+add column  approved bit default 0; 
+select * from Suggested_plants;
+select * from plants;
 
+
+ALTER TABLE Suggested_plants
+ADD COLUMN plant_id INT NULL;
+ALTER TABLE Suggested_plants
+ADD CONSTRAINT unique_plant_id UNIQUE (plant_id);
+ALTER TABLE Suggested_plants
+ADD CONSTRAINT fk_plant
+FOREIGN KEY (plant_id) REFERENCES plants(id)

@@ -38,7 +38,7 @@ Route::group(['prefix'=>'admin'],function()
     Route::get('forgetpassword', [AdminController::class, 'forgetpassword']);//send email to admin with url for reset password form
     Route::post('resetpassword', [AdminController::class, 'resetpassword'])->name('adminresetpassword');//reset password form
     Route::get('logout',[AdminController::class,'logout']);//logout admin
-    Route::get('delete_user',[AdminController::class,'delete_user']);//logout admin
+    //Route::get('delete_user',[AdminController::class,'delete_user']);//logout admin
 
     /***************************************************************************************************/
     /*************************************Admin actions on the plant ************************************************************/
@@ -49,7 +49,7 @@ Route::group(['prefix'=>'admin'],function()
     Route::get('deleteplant',[AdminController::class,'deleteplant']);//delete plant
     /***********************************print method **************************************************/
     Route::get('export', [AdminController::class, 'export']);
-    Route::get('/download/{fileName}', [AdminController::class,'download']);
+   // Route::get('/download/{fileName}', [AdminController::class,'download']);
     /****************************************************************************************************/
     /******************************************Suggestion************************************************/
     // view all Suggestions
@@ -64,7 +64,7 @@ Route::group(['prefix'=>'admin'],function()
     Route::get('deletesuggestion',[AdminController::class,'deletesuggestion']);
     //print the Suggestions
     Route::get('exportsuggest', [AdminController::class, 'exportsuggest']);
-    Route::get('/downloadsuggest/{fileName}', [AdminController::class,'downloadsuggest']);
+   // Route::get('/downloadsuggest/{fileName}', [AdminController::class,'downloadsuggest']);
     /***************************************************************************************************/
 
 });
@@ -104,6 +104,5 @@ Route::group(['prefix'=>'/'],function()
     //Get All user Suggestion
     Route::get('usersuggestions',[Usercontroller::class,'usersuggestions']);
     /******************************************************************************************************************************/
-
 });
 

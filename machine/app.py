@@ -2,18 +2,16 @@ from flask import Flask, request, jsonify
 import torch
 from torchvision import transforms
 from PIL import Image
-
+import joblib
 from io import BytesIO
 import torch.nn as nn  # Add this line
 import pickle
 from resnet9_model import ResNet9 
 app = Flask(__name__)
 # for calculating the accuracy
-
-
 @app.route('/predict', methods=['POST'])
 def predict():
-    model1 = pickle.load(open(r"C:\xampp\htdocs\plant-it-to-live\machine\LogisticRegression.pkl", 'rb'))
+    model1 = joblib.load(open(r"C:\xampp\htdocs\plant-it-to-live\machine\RandomForest.pkl", 'rb'))
     # Get input data from JSON request
     data = request.json
     
@@ -25,17 +23,11 @@ def predict():
     PH = float(data['PH'])
     H = float(data['H'])
     R = float(data['R'])
-    
     prediction = model1.predict([[n, pho, po, T, PH, H, R]])
-    
-    # Convert prediction to a human-readable format (if needed)
-    # For example, if your model outputs numeric labels, you might need to map them to class names
-    
     # Prepare response data
     response_data = {
         'prediction': prediction[0]  # Assuming the model returns a single prediction
     }
-
     return jsonify(response_data)
 @app.route('/detect', methods=['POST'])
 def detect():
@@ -51,8 +43,7 @@ def detect():
     transforms.ToTensor(),
     
 ])
-    # Function to predict image
-   # Function to predict image from file path
+
     classes=[
         'Apple___Apple_scab',
         'Apple___Black_rot',

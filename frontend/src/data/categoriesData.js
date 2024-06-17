@@ -1,23 +1,23 @@
 export const categories = [
 	{
 		id: 1,
-		title: 'title',
+		title: 'Home Gardens',
 		description:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.',
+			'Ideal for individuals looking to start or enhance their home gardening experience.',
 		image: 'plants.jpg',
 	},
 	{
 		id: 2,
-		title: 'title',
+		title: 'Greenhouses',
 		description:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.',
+			'Designed for users who want to create optimal growing conditions for their plants regardless of external weather conditions.',
 		image: 'green-house.jpg',
 	},
 	{
 		id: 3,
-		title: 'title',
+		title: ' Green Lands',
 		description:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.',
+			'Perfect for those with larger outdoor spaces who wish to cultivate a variety of crops.  ',
 		image: 'green-land.jpg',
 	},
 ];

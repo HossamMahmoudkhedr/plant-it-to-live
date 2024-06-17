@@ -100,7 +100,7 @@ const Hero = () => {
 									animate="visible"
 									variant="body1"
 									sx={{ width: '80%', textAlign: 'center' }}>
-									<Link to="/">
+									{/* <Link to="/">
 										<Box
 											component="span"
 											sx={{
@@ -109,7 +109,7 @@ const Hero = () => {
 											}}>
 											Click here!
 										</Box>
-									</Link>{' '}
+									</Link>{' '} */}
 									to check your plants’ health by uploading photos.
 								</Typography>
 							</Stack>
@@ -248,7 +248,7 @@ const Hero = () => {
 										Want to check if the plant can be planted in your
 										environment?
 									</Typography>
-									<Link to="/">
+									{/* <Link to="/">
 										<Box
 											component="span"
 											sx={{
@@ -257,7 +257,7 @@ const Hero = () => {
 											}}>
 											Click here!
 										</Box>
-									</Link>
+									</Link> */}
 								</Stack>
 							</Stack>
 						</Stack>

@@ -73,12 +73,11 @@ const Aboutus = () => {
 							width: { xs: '100%', md: '60%', lg: '33.5%' },
 							lineHeight: '1.8',
 						}}>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-						eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-						ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-						aliquip ex ea commodo consequat. Duis aute irure dolor in
-						reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-						pariatur. Excepteur sint.
+						our innovative platform dedicated to helping people cultivate plants
+						successfully, whether at home, in green lands, or greenhouses. Our
+						mission is to empower individuals with the knowledge and tools
+						necessary to grow healthy and thriving plants using cutting-edge
+						artificial intelligence technology.
 					</Typography>
 				</Stack>
 			</Stack>

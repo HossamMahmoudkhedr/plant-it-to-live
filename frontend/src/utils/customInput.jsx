@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 const StyledInput = styled.input`
 	background-color: ${(props) => props.background};
 	border-radius: 1.25rem;
-	padding: 20px;
+	padding: ${(props) => props.padding || '20px'};
 	box-shadow: 0 0 8px 1px rgba(0, 0, 0, 0.25);
 	outline: none;
 	border: none;
@@ -22,11 +22,13 @@ const CustomInput = ({
 	type,
 	placeholder,
 	background,
-	restprops,
 	labelcolor,
+	padding,
+	restprops,
+	width,
 }) => {
 	return (
-		<Stack sx={{ gap: '0.7rem' }}>
+		<Stack sx={{ gap: '0.7rem', width: width || 'auto' }}>
 			<Typography
 				variant="body1"
 				component="label"
@@ -42,6 +44,7 @@ const CustomInput = ({
 				name={name}
 				type={type}
 				placeholder={placeholder}
+				padding={padding}
 				background={background || 'transparent'}
 				{...restprops}
 			/>

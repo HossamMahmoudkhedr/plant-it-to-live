@@ -14,6 +14,10 @@ import Chat from './components/chat';
 import CropRecommendation from './components/cropRecommendation';
 import DetectDiseases from './components/detectDiseases';
 import Notfound from './pages/notfound';
+import UserProfile from './components/userProfile';
+import AdminLogin from './components/adminLogin';
+import PlantsDetails from './components/plantsDetails';
+import AdminDashboard from './components/adminDashboard';
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -47,6 +51,22 @@ const router = createBrowserRouter(
 			<Route
 				path="/detectDiseases"
 				element={<DetectDiseases />}
+			/>
+			<Route
+				path="/userProfile"
+				element={<UserProfile />}
+			/>
+			<Route
+				path="/adminLogin"
+				element={<AdminLogin />}
+			/>
+			<Route
+				path="/plantsDetails"
+				element={<PlantsDetails />}
+			/>
+			<Route
+				path="/adminDashboard"
+				element={<AdminDashboard />}
 			/>
 			<Route
 				path="*"

@@ -506,20 +506,16 @@ class AdminController extends Controller
     {
         $fileName = 'suggestions.xlsx'; // You can generate a dynamic file name if needed
         $filePath = storage_path('app/' . $fileName);
-
         // Delete the old file if it exists
         if (file_exists($filePath)) {
             unlink($filePath);
         }
-
         // Export the file
         Excel::store(new PlantsSuggesionExport(), $fileName);
-
         // Check if file exists
         if (!file_exists($filePath)) {
             abort(404);
         }
-
         // Return the file as a response
         return response()->download($filePath, $fileName, [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

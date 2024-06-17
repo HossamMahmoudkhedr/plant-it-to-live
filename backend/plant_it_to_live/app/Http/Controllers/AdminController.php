@@ -290,14 +290,20 @@ class AdminController extends Controller
         }
         $plant=Plant::find($request->id);
         $filePath = $plant->img; // Assuming $plant->img contains the relative path
-        if($filePath!=null)
-            unlink($filePath);
         $suggested=Suggested_plant::where('plant_id',$plant->id)->first();
-        $suggested->approved=0;
-        $suggested->plant_id=null;
-        $suggested->save();
+        if ($suggested)
+        {
+            $suggested->approved=0;
+            $suggested->plant_id=null;
+            $suggested->save();
+        }
         if(!$plant->delete())
-           return $this->failed("try again");
+        {
+            if($filePath!=null)
+                unlink($filePath);
+            return $this->failed("try again");
+        }
+
         return $this->SuccessResponse();
     }
     public function logout()

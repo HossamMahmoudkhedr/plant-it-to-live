@@ -8,10 +8,10 @@ import Result from '../utils/result';
 const DetectDiseases = () => {
 	return (
 		<>
-			<Result
+			{/* <Result
 				title="Disease name"
 				desc="test"
-			/>
+			/> */}
 			<Container maxWidth="lg">
 				<Stack
 					sx={{ alignItems: 'flex-start', marginTop: '2rem', gap: '1.5rem' }}>

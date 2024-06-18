@@ -1,36 +1,29 @@
 import { Box, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { icons } from './icons';
+import Dark from './dark';
 
 const Result = ({ title, desc }) => {
 	return (
 		<>
-			<Box
-				sx={{
-					backgroundColor: 'black',
-					opacity: '0.4',
-					width: '100%',
-					height: '100%',
-					position: 'absolute',
-					left: 0,
-					top: 0,
-				}}></Box>
+			<Dark />
 			<Stack
 				sx={{
 					padding: '1rem 4rem 1rem 2rem',
 					borderRadius: '1.5rem',
 					backgroundColor: 'var(--body)',
-					position: 'absolute',
+					position: 'fixed',
 					left: '50%',
 					top: '50%',
 					transform: 'translate(-50%,-50%)',
 					gap: '1rem',
+					zIndex: '9',
 				}}>
 				<Stack
 					sx={{
 						position: 'absolute',
-						right: '-10px',
-						top: '-10px',
+						right: '-15px',
+						top: '-15px',
 						width: '40px',
 						height: '40px',
 						borderRadius: '50%',

@@ -3,7 +3,7 @@ import React from 'react';
 import { icons } from '../utils/icons';
 import CustomInput from '../utils/customInput';
 import PlantCard from '../utils/plantCard';
-import PlantDetails from './plantDetails';
+import PlantDetails from '../utils/plantDetails';
 
 const PlantsDetails = () => {
 	return (

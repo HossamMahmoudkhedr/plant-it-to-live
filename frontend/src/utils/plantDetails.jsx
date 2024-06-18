@@ -1,10 +1,10 @@
 import { Box, Grid, Stack, Typography } from '@mui/material';
 import React from 'react';
-import Dark from '../utils/dark';
-import CustomButton from '../utils/customButton';
-import { icons } from '../utils/icons';
+import Dark from './dark';
+import CustomButton from './customButton';
+import { icons } from './icons';
 
-const PlantDetails = ({ isUser, text }) => {
+const PlantDetails = ({ isUser, text, suggestion }) => {
 	return (
 		<>
 			<Dark />
@@ -223,7 +223,7 @@ const PlantDetails = ({ isUser, text }) => {
 						</Stack>
 					</Grid>
 				</Grid>
-				{isUser && (
+				{isUser && !suggestion && (
 					<Stack
 						direction="row"
 						justifyContent="center"
@@ -238,7 +238,7 @@ const PlantDetails = ({ isUser, text }) => {
 						/>
 					</Stack>
 				)}
-				{!isUser && (
+				{!isUser && !suggestion && (
 					<Stack
 						direction="row"
 						justifyContent="space-between"
@@ -265,6 +265,41 @@ const PlantDetails = ({ isUser, text }) => {
 								icHeight={'22px'}
 							/>
 						</Box>
+					</Stack>
+				)}
+				{!isUser && suggestion && (
+					<Stack
+						direction="row"
+						justifyContent="space-between"
+						alignItems="center"
+						sx={{ fontSize: 'bold' }}>
+						<CustomButton
+							text={'Approve'}
+							background="var(--very-dark-green)"
+							borderradius={'1.25rem'}
+							color="white"
+							icon={icons.check}
+							icHeight={'22px'}
+							padding={'1.25rem'}
+						/>
+						<CustomButton
+							text={'Deny'}
+							background="#BA1327"
+							borderradius={'0.8rem'}
+							color="white"
+							padding={'1rem 1.5rem'}
+							icon={icons.circleX}
+							icHeight="22px"
+						/>
+						<CustomButton
+							text={'Edit'}
+							background="black"
+							borderradius={'0.8rem'}
+							color="white"
+							padding={'1rem 1.5rem'}
+							icon={icons.linedEdit}
+							icHeight={'22px'}
+						/>
 					</Stack>
 				)}
 			</Stack>

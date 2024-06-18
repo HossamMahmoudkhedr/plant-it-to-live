@@ -18,6 +18,8 @@ import Heading from '../utils/heading';
 import Users from './users';
 import PlantsDashboard from './plantsDashboard';
 import Suggestions from './suggestions';
+import PlantDetails from '../utils/plantDetails';
+import UserDetails from '../utils/userDetails';
 
 const StyledBox = styled(Box)`
 	display: flex;
@@ -34,6 +36,8 @@ const StyledBox = styled(Box)`
 const AdminDashboard = () => {
 	return (
 		<Box>
+			{/* <PlantDetails suggestion={true} /> */}
+			<UserDetails />
 			<Box
 				sx={{
 					width: '20%',
@@ -149,9 +153,9 @@ const AdminDashboard = () => {
 					</Stack>
 				</Stack>
 				<Stack sx={{ padding: '2rem 3rem 1rem 3rem' }}>
-					{/* <Users /> */}
+					<Users />
 					{/* <PlantsDashboard /> */}
-					<Suggestions />
+					{/* <Suggestions /> */}
 				</Stack>
 			</Box>
 		</Box>

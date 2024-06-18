@@ -17,6 +17,8 @@ import { ReactComponent as CircleX } from '../assets/icons/circle-x.svg';
 import { ReactComponent as LinedEdit } from '../assets/icons/lined-edit.svg';
 import { ReactComponent as Suggestion } from '../assets/icons/suggestion.svg';
 import { ReactComponent as Plus } from '../assets/icons/add-square.svg';
+import { ReactComponent as Check } from '../assets/icons/check.svg';
+import { ReactComponent as BiggerUser } from '../assets/icons/user-bigger.svg';
 
 export const icons = {
 	leafs: <Leafs />,
@@ -38,4 +40,6 @@ export const icons = {
 	linedEdit: <LinedEdit />,
 	suggestion: <Suggestion />,
 	plus: <Plus />,
+	check: <Check />,
+	biggerUser: <BiggerUser />,
 };

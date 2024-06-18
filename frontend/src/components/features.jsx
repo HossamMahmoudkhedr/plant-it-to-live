@@ -73,15 +73,14 @@ const Features = () => {
 								<Typography
 									variant="h5"
 									sx={{ fontWeight: 'bold' }}>
-									Title
+									Crop Recommendation
 								</Typography>
 								<Typography
 									variant="body1"
 									sx={{ color: 'var(--dark-gray)' }}>
-									Lorem ipsum dolor sit amet consectetur adipisicing elit.
-									Quisquam nemo tempore quo dolores. Similique corporis
-									repudiandae aspernatur aut aperiam eligendi doloremque,
-									ratione eaque delectus ad maxime qui esse repellendus nulla.
+									This feature suggests the most suitable crops for users based
+									on their environmental conditions, ensuring the best possible
+									growth outcomes.
 								</Typography>
 							</Stack>
 							<Box
@@ -134,8 +133,7 @@ const Features = () => {
 									fontWeight: 'bold',
 									width: { xs: '100%', lg: '80%' },
 								}}>
-								Some more title with a short description at least from three
-								lines
+								Plant disease detection to help your plant grow healthy
 							</Typography>
 							<Typography
 								component={motion.p}
@@ -146,10 +144,9 @@ const Features = () => {
 								variant="body1"
 								sx={{ color: 'var(--dark-gray)' }}>
 								{' '}
-								Lorem ipsum dolor sit amet consectetur adipisicing elit.
-								Doloribus soluta, vitae necessitatibus cum minima ab alias sit.
-								Alias, nam tempore, ipsum eaque minima saepe dicta deserunt
-								porro accusantium, quam dolorem?{' '}
+								Users can upload images of their plants, and our AI model will
+								diagnose any diseases, providing detailed instructions on how to
+								treat and care for the affected plants.{' '}
 							</Typography>
 						</Stack>
 					</Grid>
@@ -288,7 +285,7 @@ const Features = () => {
 						<Typography
 							variant="h5"
 							sx={{ fontWeight: 'bold' }}>
-							Titleeeee
+							Plant Information Database
 						</Typography>
 						<Typography
 							variant="body1"
@@ -296,10 +293,10 @@ const Features = () => {
 								color: 'var(--dark-gray)',
 								width: { xs: '85%', lg: '80%' },
 							}}>
-							Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-							nemo tempore quo dolores. Similique corporis repudiandae
-							aspernatur aut aperiam eligendi doloremque, ratione eaque delectus
-							ad maxime qui esse repellendus nulla.
+							Users can select from a comprehensive list of plants stored in our
+							database. For each plant, the platform offers detailed information
+							on water requirements, sun exposure, and other critical care tips
+							to ensure healthy growth.
 						</Typography>
 					</Stack>
 					<Box

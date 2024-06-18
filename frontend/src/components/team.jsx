@@ -20,10 +20,11 @@ const Team = () => {
 						width: { xs: '100%', md: '70%', lg: '50%' },
 					}}>
 					{' '}
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda
-					modi praesentium deleniti, quo ea cum fugiat! Libero nesciunt dolore,
-					aut pariatur doloribus debitis sint illo impedit, ducimus dolorem,
-					maxime vel!{' '}
+					Our dedicated team, consisting of frontend developers, designers,
+					backend developers, and a machine learning developer, collaborates to
+					create a seamless, visually appealing, and highly functional platform.
+					Together, we are committed to providing comprehensive and
+					user-friendly solutions for all your planting needs.{' '}
 				</Typography>
 			</Stack>
 		</Container>

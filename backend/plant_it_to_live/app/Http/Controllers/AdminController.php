@@ -290,14 +290,20 @@ class AdminController extends Controller
         }
         $plant=Plant::find($request->id);
         $filePath = $plant->img; // Assuming $plant->img contains the relative path
-        if($filePath!=null)
-            unlink($filePath);
         $suggested=Suggested_plant::where('plant_id',$plant->id)->first();
-        $suggested->approved=0;
-        $suggested->plant_id=null;
-        $suggested->save();
+        if ($suggested)
+        {
+            $suggested->approved=0;
+            $suggested->plant_id=null;
+            $suggested->save();
+        }
         if(!$plant->delete())
-           return $this->failed("try again");
+        {
+            if($filePath!=null)
+                unlink($filePath);
+            return $this->failed("try again");
+        }
+
         return $this->SuccessResponse();
     }
     public function logout()
@@ -500,20 +506,16 @@ class AdminController extends Controller
     {
         $fileName = 'suggestions.xlsx'; // You can generate a dynamic file name if needed
         $filePath = storage_path('app/' . $fileName);
-
         // Delete the old file if it exists
         if (file_exists($filePath)) {
             unlink($filePath);
         }
-
         // Export the file
         Excel::store(new PlantsSuggesionExport(), $fileName);
-
         // Check if file exists
         if (!file_exists($filePath)) {
             abort(404);
         }
-
         // Return the file as a response
         return response()->download($filePath, $fileName, [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

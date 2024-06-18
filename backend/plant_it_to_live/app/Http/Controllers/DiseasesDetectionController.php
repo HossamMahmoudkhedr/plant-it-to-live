@@ -45,7 +45,7 @@ class DiseasesDetectionController extends Controller
             $responseData = $response->json(); // Get response data
         // Access data from the response
 
-            return $this->SuccessResponse(["response"=>$responseData], "Prediction received");
+            return $this->SuccessResponse($responseData, "Prediction received");
         } else {
             // Handle error
             return $this->failed("Model Not working");//response()->json(['error' => 'Failed to communicate with Flask server'], $response->status());

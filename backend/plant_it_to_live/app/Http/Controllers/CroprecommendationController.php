@@ -18,13 +18,13 @@ class CroprecommendationController extends Controller
     {
         //validation
         $validator = Validator::make($request->all(), [
-            'n' => 'required',
-            'pho' => 'required',
-            'po' => 'required',
-            'T' => 'required',
-            'PH' => 'required',
-            'H' => 'required',
-            'R' => 'required',
+            'n' => 'required|numeric',
+            'pho' => 'required|numeric',
+            'po' => 'required|numeric',
+            'T' => 'required|numeric',
+            'PH' => 'required|numeric',
+            'H' => 'required|numeric',
+            'R' => 'required|numeric',
         ]);
         if ($validator->fails()) {
            // return $this->response($validator->errors(), 'Validation errors', 406);

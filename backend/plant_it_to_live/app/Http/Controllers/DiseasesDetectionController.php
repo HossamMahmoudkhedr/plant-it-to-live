@@ -40,14 +40,12 @@ class DiseasesDetectionController extends Controller
         // Send POST request to Flask endpoint
         $response = Http::timeout(60)->post('http://localhost:5000/detect', $data);
         // Check if request was successful
+        unlink($path);
         if ($response->successful()) {
-            unlink(public_path("palntsDieseases") . "/" . $file);
             $responseData = $response->json(); // Get response data
         // Access data from the response
-            //$prediction = $responseData['prediction']; // Assuming 'prediction' is returned from Flask
-            // Do something with the prediction
-            // For example, return it as part of your response
-            return $this->SuccessResponse(['path'=>$path,"response"=>$responseData], "Prediction received");
+
+            return $this->SuccessResponse($responseData, "Prediction received");
         } else {
             // Handle error
             return $this->failed("Model Not working");//response()->json(['error' => 'Failed to communicate with Flask server'], $response->status());

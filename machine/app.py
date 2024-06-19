@@ -2,22 +2,15 @@ from flask import Flask, request, jsonify
 import torch
 from torchvision import transforms
 from PIL import Image
-
+import joblib
 from io import BytesIO
-import torch.nn as nn  # Add this line
-import pickle
+import torch.nn as nn  
 from resnet9_model import ResNet9 
 app = Flask(__name__)
-# for calculating the accuracy
-
-
 @app.route('/predict', methods=['POST'])
 def predict():
-    model1 = pickle.load(open(r"C:\xampp\htdocs\plant-it-to-live\machine\LogisticRegression.pkl", 'rb'))
-    # Get input data from JSON request
+    model1 = joblib.load(open(r"C:\xampp\htdocs\plant-it-to-live\machine\RandomForest.pkl", 'rb'))
     data = request.json
-    
-    # Extract features from the input data
     n = int(data['n'])
     pho = int(data['pho'])
     po = int(data['po'])
@@ -25,34 +18,19 @@ def predict():
     PH = float(data['PH'])
     H = float(data['H'])
     R = float(data['R'])
-    
     prediction = model1.predict([[n, pho, po, T, PH, H, R]])
-    
-    # Convert prediction to a human-readable format (if needed)
-    # For example, if your model outputs numeric labels, you might need to map them to class names
-    
-    # Prepare response data
     response_data = {
-        'prediction': prediction[0]  # Assuming the model returns a single prediction
+        'prediction': prediction[0]  
     }
-
     return jsonify(response_data)
 @app.route('/detect', methods=['POST'])
 def detect():
-    # Load the model
     model2 = torch.load(r"C:\xampp\htdocs\plant-it-to-live\machine\plant-disease-model-complete (1).pth", map_location=torch.device('cpu'))
     model2.eval()
-
-    # Define preprocessing transform
-   # Define preprocessing transform
     preprocess = transforms.Compose([
-    transforms.Resize((256, 256)),  # Resize to 256x256
-    #transforms.CenterCrop(224),      # Center crop to 224x224
-    transforms.ToTensor(),
-    
+    transforms.Resize((256, 256)),  
+    transforms.ToTensor(),  
 ])
-    # Function to predict image
-   # Function to predict image from file path
     classes=[
         'Apple___Apple_scab',
         'Apple___Black_rot',
@@ -95,36 +73,29 @@ def detect():
     ]
     def predict_image_from_path(image_path, model):
         try:
-            # Open and preprocess the image
             image = Image.open(image_path).convert('RGB')
             image = preprocess(image).unsqueeze(0)
-            # Make prediction
             with torch.no_grad():
                 outputs = model(image)
                 _, predicted = torch.max(outputs, 1)
                 predicted_class = predicted.item()
-            
             return predicted_class, None
         except Exception as e:
             return None, str(e)
-
     data = request.get_json()
     if data is None or 'image_path' not in data:
         return jsonify({'error': 'Image path not provided'})
-    
     image_path = data['image_path']
     if not image_path:
         return jsonify({'error': 'Invalid image path'})
-
     try:
         print(len(classes))
         class_idx, error = predict_image_from_path(image_path, model2)
         if error is not None:
             return jsonify({'error': error})
         else:
-            return jsonify({'prediction':classes[class_idx],'id':class_idx })
+            return jsonify({'prediction':classes[class_idx]})
     except Exception as e:
         return jsonify({'error': str(e)})
-
 if __name__ == '__main__':
     app.run(debug=True)

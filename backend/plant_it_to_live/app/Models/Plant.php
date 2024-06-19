@@ -18,6 +18,10 @@ class Plant extends Authenticatable implements JWTSubject
     {
         return $this->belongsTo('App\Models\Admin','admin_id');
     }
+    public function suggestedplant()
+    {
+        return $this->hasOne('App\Models\Suggested_plant','plant_id');
+    }
     public function getJWTIdentifier()
     {
         return $this->getKey();

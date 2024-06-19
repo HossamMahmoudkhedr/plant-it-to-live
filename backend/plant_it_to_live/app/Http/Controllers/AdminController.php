@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\PlantsSuggesionExport;
 use App\Models\Plant;
+use App\Models\Suggested_plant;
 use App\Models\User;
 use App\Models\Admin;
 use Firebase\JWT\JWK;
 use App\Traits\ApiResponse;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\Console\Completion\Suggestion;
 use Tymon\JWTAuth\JWTGuard;
 use Illuminate\Http\Request;
 use App\Mail\AdminChangePassword;
@@ -224,6 +227,7 @@ class AdminController extends Controller
         {
             return $this->failed("Plant not found");
         }
+        $plant->makeHidden(['admin_id','updated_at','created_at']);
         return $this->SuccessResponse($plant);
     }
     //edit plant
@@ -251,7 +255,8 @@ class AdminController extends Controller
         }
         $plant=Plant::find($request->id);
         $filePath = $plant->img; // Assuming $plant->img contains the relative path
-        unlink($filePath);
+        if($filePath!=null)
+            unlink($filePath);
         $plant->common_name=$request->common_name;
         $plant->scientific_name=$request->scientific_name;
         $plant->watering=$request->watering;
@@ -285,15 +290,25 @@ class AdminController extends Controller
         }
         $plant=Plant::find($request->id);
         $filePath = $plant->img; // Assuming $plant->img contains the relative path
-        unlink($filePath);
-       if(!$plant->delete())
-           return $this->failed("try again");
+        $suggested=Suggested_plant::where('plant_id',$plant->id)->first();
+        if ($suggested)
+        {
+            $suggested->approved=0;
+            $suggested->plant_id=null;
+            $suggested->save();
+        }
+        if(!$plant->delete())
+        {
+            if($filePath!=null)
+                unlink($filePath);
+            return $this->failed("try again");
+        }
+
         return $this->SuccessResponse();
     }
     public function logout()
     {
         auth()->logout();
-
         return response()->json(['message' => 'Successfully loged out']);
     }
     public function export(Request $request)
@@ -302,19 +317,208 @@ class AdminController extends Controller
         $filePath = storage_path('app/' . $fileName);
 
         // Delete the old file if it exists
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
 
+        // Export the file
+        Excel::store(new PlantsExport(), $fileName);
 
-        Excel::store(new PlantsExport, $fileName);
+        // Check if file exists
+        if (!file_exists($filePath)) {
+            abort(404);
+        }
 
-        return $this->SuccessResponse([  'download_link' => url('/api/admin/download/' . $fileName)]);
+        // Return the file as a response
+        return response()->download($filePath, $fileName, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
     }
     public function download($fileName)
     {
         $filePath = storage_path('app/' . $fileName);
 
-        return new BinaryFileResponse($filePath, 200, [
+        // Check if file exists
+        if (!file_exists($filePath)) {
+            abort(404);
+        }
+
+        // Return the file as a response
+        return response()->download($filePath, $fileName, [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+        ]);
+    }
+    public function delete_user(Request $request)
+    {
+        $validator= Validator::make($request->all(),[
+            'id'=>'required|exists:users,id'
+        ]);
+        if($validator->fails())
+        {
+            return $this->validationerrors($validator->errors());
+        }
+        $user= User::find($request->id);
+        if($user->picture!=null&&$user->google_id==null)
+        {
+            unlink($user->picture);
+        }
+        $user->plants()->detach();
+        $user->suggestions()->delete();
+        if( $user->delete())
+            return $this->SuccessResponse();
+       return $this->failed();
+    }
+    public function allsuggestions()
+    {
+        $suggestions=Suggested_plant::paginate(50);
+        if($suggestions)
+        {
+            $suggestions->makeHidden(['admin_id','user_id']);
+            return $this->SuccessResponse($suggestions);
+        }
+        return $this->failed();
+    }
+    public function suggestion(Request $request)
+    {
+        $validator= Validator::make($request->all(),[
+            'id'=>'required|exists:Suggested_plants,id'
+        ]);
+        if($validator->fails())
+        {
+            return $this->validationerrors($validator->errors());
+        }
+        $plant=Suggested_plant::with(['user'=>function($q)
+        {
+            $q->select('id', 'name', 'email');
+        }])->find($request->id);
+        if($plant)
+        {
+            return $this->SuccessResponse($plant);
+        }
+        return $this->failed();
+    }
+    public function acceptsuggestion(Request $request)
+    {
+        $validator= Validator::make($request->all(),[
+            'id'=>'required|exists:Suggested_plants,id'
+        ]);
+        if($validator->fails())
+        {
+            return $this->validationerrors($validator->errors());
+        }
+        $suggestedplant=Suggested_plant::find($request->id);
+        if($suggestedplant->plant_id!=null)
+        {
+            return $this->validationerrors("this plant is already accepted");
+        }
+        if($suggestedplant)
+        {
+            $plant=new Plant();
+            $imgoldpath=$suggestedplant->img;
+            $filename=time().'.'.pathinfo($imgoldpath, PATHINFO_EXTENSION);
+            $filepath = 'C:\\xampp\\htdocs\\plant-it-to-live\\backend\\plant_it_to_live\\public\\plantImges\\' . $filename;
+            if (file_exists($imgoldpath)) {
+                copy($imgoldpath, $filepath);
+            }
+            $suggestedplant->admin_id=Auth()->user()->id;
+            $suggestedplant->approved=1;
+            $suggestedplant->plant_id=$plant->id;
+            $suggestedplant->save();
+            $plant->fill($suggestedplant->only(['common_name','scientific_name','watering','fertilizer','sunlight','pruning','water_amount','fertilizer_amount','sun_per_day','soil_salinty','appropriate_season','admin_id']));
+            $plant->img=$filepath;
+            $plant->save();
+            $suggestedplant->admin_id=Auth()->user()->id;
+            $suggestedplant->approved=1;
+            $suggestedplant->plant_id=$plant->id;
+            $suggestedplant->save();
+
+            return $this->SuccessResponse();
+        }
+        return $this->failed();
+    }
+    public function editsuggestion(Request $request)
+    {
+        //validation
+        $validator=Validator::make($request->all(),[
+            'id'=>'required|exists:Suggested_plants,id',
+            'common_name'=>'required|string',
+            'scientific_name'=>'required|string',
+            'watering'=>'required|string',
+            'fertilizer'=>'required|string',
+            'sunlight'=>'required|string',
+            'pruning'=>'required|string',
+            'img'=>'required|image|mimes:jpeg,png,jpg,gif,svg',
+            'water_amount'=>'required|string',
+            'fertilizer_amount'=>'required|string',
+            'sun_per_day'=>'required|string',
+            'soil_salinty'=>'required|string',
+            'appropriate_season'=>'required|string',
+        ]);
+        if($validator->fails())
+        {
+            return $this->validationerrors($validator->errors());
+        }
+        $plant=Suggested_plant::find($request->id);
+        $filePath = $plant->img; // Assuming $plant->img contains the relative path
+        if($filePath!=null)
+            unlink($filePath);
+        $plant->common_name=$request->common_name;
+        $plant->scientific_name=$request->scientific_name;
+        $plant->watering=$request->watering;
+        $plant->fertilizer=$request->fertilizer;
+        $plant->sunlight=$request->sunlight;
+        $plant->pruning=$request->pruning;
+        $plant->water_amount=$request->water_amount;
+        $plant->fertilizer_amount=$request->fertilizer_amount;
+        $plant->sun_per_day=$request->sun_per_day;
+        $plant->soil_salinty=$request->soil_salinty;
+        $plant->appropriate_season=$request->appropriate_season;
+        $img=$request->file('img');
+        $filename=time().'.'.$img->getClientOriginalExtension();
+        $filepath='plantImges/'.$filename;
+        $img->move(public_path('plantImges'),$filename);
+        // Concatenate the base URL with the path to the uploaded image
+        $filepath = 'C:\\xampp\\htdocs\\plant-it-to-live\\backend\\plant_it_to_live\\public\\plantImges\\' . $filename;
+        $plant->img = $filepath;
+        $plant->admin_id=Auth()->user()->id;
+        $plant->save();
+        return $this->SuccessResponse();
+    }
+    public function deletesuggestion(Request $request)
+    {
+        $validator= Validator::make($request->all(),[
+            'id'=>'required|exists:Suggested_plants,id'
+        ]);
+        if($validator->fails())
+        {
+            return $this->validationerrors($validator->errors());
+        }
+        $plant=Suggested_plant::find($request->id);
+        unlink($plant->img);
+        if($plant)
+        {
+            $plant->delete();
+            return $this->SuccessResponse();
+        }
+        return $this->failed();
+    }
+    public function exportsuggest(Request $request)
+    {
+        $fileName = 'suggestions.xlsx'; // You can generate a dynamic file name if needed
+        $filePath = storage_path('app/' . $fileName);
+        // Delete the old file if it exists
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
+        // Export the file
+        Excel::store(new PlantsSuggesionExport(), $fileName);
+        // Check if file exists
+        if (!file_exists($filePath)) {
+            abort(404);
+        }
+        // Return the file as a response
+        return response()->download($filePath, $fileName, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ]);
     }
 

@@ -22,7 +22,7 @@ Route::get('unauthenticated',function()
     return response()->json(
         [
             'sucess'=>false,
-            'massage'=>'Unauthenticated',
+            'message'=>'Unauthenticated',
         ],401);
 })->name('unauthenticated');
 

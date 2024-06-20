@@ -12,7 +12,7 @@ trait ApiResponse
         return response()->json(
             [
                 'sucess'=>true,
-                'massage'=>$msg,
+                'message'=>$msg,
                 'data'=>$data,
             ],200);
     }
@@ -24,7 +24,7 @@ trait ApiResponse
         return response()->json(
             [
                 'sucess'=>false,
-                'massage'=>$msg,
+                'message'=>$msg,
                 'data'=>$data,
             ],422);
     }
@@ -38,7 +38,7 @@ trait ApiResponse
         return response()->json(
             [
                 'sucess'=>false,
-                'massage'=>$msg,
+                'message'=>$msg,
             ],404);
     }
 }

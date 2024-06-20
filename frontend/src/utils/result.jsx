@@ -3,10 +3,13 @@ import React from 'react';
 import { icons } from './icons';
 import Dark from './dark';
 
-const Result = ({ title, desc }) => {
+const Result = ({ title, desc, setShowResult }) => {
+	const handleCloseResult = () => {
+		setShowResult(false);
+	};
 	return (
 		<>
-			<Dark />
+			<Dark setShow={setShowResult} />
 			<Stack
 				sx={{
 					padding: '1rem 4rem 1rem 2rem',
@@ -20,6 +23,7 @@ const Result = ({ title, desc }) => {
 					zIndex: '9',
 				}}>
 				<Stack
+					onClick={handleCloseResult}
 					sx={{
 						position: 'absolute',
 						right: '-15px',
@@ -42,7 +46,7 @@ const Result = ({ title, desc }) => {
 				</Typography>
 				<Typography
 					variant="body1"
-					sx={{ fontSize: '1rem' }}>
+					sx={{ fontSize: '1rem', textTransform: 'capitalize' }}>
 					{desc}
 				</Typography>
 			</Stack>

@@ -315,7 +315,7 @@ class UserController extends Controller
     public function allplants()
     {
         $plants=Plant::paginate(50);
-        $plants->getCollection()->makeHidden(['admin_id','created_at','updated_at']);
+        $plants->getCollection()->makeHidden(['admin_id']);
         return $this->SuccessResponse($plants);
     }
 

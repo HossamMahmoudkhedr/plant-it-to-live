@@ -140,7 +140,6 @@ class AdminController extends Controller
        DB::table('password_reset_tokens')->where('email',$user->email)->delete();
        $token= JWTAuth::fromUser($user);
        return $this->SuccessResponse(['token'=>$token],"Password Saved successfully.");
-
     }
     public function changepassword(Request $request)
     {
@@ -201,9 +200,11 @@ class AdminController extends Controller
         $plant->appropriate_season=$request->appropriate_season;
         $img=$request->file('img');
         $filename=time().'.'.$img->getClientOriginalExtension();
-        $img->move(public_path('plantImges'),$filename);
-        $filepath = 'C:\\xampp\\htdocs\\plant-it-to-live\\backend\\plant_it_to_live\\public\\plantImges\\' . $filename;
-        $plant->img = $filepath;
+        //$img->move(public_path('plantImges'),$filename);
+        //$filepath = 'C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images/' . $filename;
+        $finalPath = 'C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images';
+        $img->move($finalPath, $filename);
+        $plant->img = $filename;
         $plant->admin_id=Auth()->user()->id;
         $plant->save();
         return $this->SuccessResponse();
@@ -250,9 +251,10 @@ class AdminController extends Controller
             return $this->validationerrors($validator->errors());
         }
         $plant=Plant::find($request->id);
+
         $filePath = $plant->img; // Assuming $plant->img contains the relative path
         if($filePath!=null)
-            unlink($filePath);
+            unlink('C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images/'.$plant->img);
         $plant->common_name=$request->common_name;
         $plant->scientific_name=$request->scientific_name;
         $plant->watering=$request->watering;
@@ -266,11 +268,9 @@ class AdminController extends Controller
         $plant->appropriate_season=$request->appropriate_season;
         $img=$request->file('img');
         $filename=time().'.'.$img->getClientOriginalExtension();
-        $filepath='plantImges/'.$filename;
-        $img->move(public_path('plantImges'),$filename);
-        // Concatenate the base URL with the path to the uploaded image
-        $filepath = 'C:\\xampp\\htdocs\\plant-it-to-live\\backend\\plant_it_to_live\\public\\plantImges\\' . $filename;
-        $plant->img = $filepath;
+        $finalPath = 'C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images';
+        $img->move($finalPath, $filename);
+        $plant->img = $filename;
         $plant->save();
         return $this->SuccessResponse();
     }

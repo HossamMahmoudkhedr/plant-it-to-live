@@ -1,17 +1,64 @@
 import { Box, Container, Grid, Stack, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { icons } from '../utils/icons';
 import CustomInput from '../utils/customInput';
 import PlantCard from '../utils/plantCard';
 import PlantDetails from '../utils/plantDetails';
+import { useScroll } from 'framer-motion';
+import { fetchApi } from '../utils/fetchFromAPI';
+import Cookies from 'js-cookie';
+import { Link } from 'react-router-dom';
 
 const PlantsDetails = () => {
+	const [plants, setPlants] = useState([]);
+	const [userData, setUserData] = useState({});
+	const [selectedPlant, setSelectedPlant] = useState({});
+	const [show, setShow] = useState(false);
+	useEffect(() => {
+		if (Cookies.get('user')) {
+			fetchApi(`user?token=${Cookies.get('user')}`)
+				.then((data) => {
+					console.log(data);
+					setUserData(data.data);
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		}
+		fetchApi('allplants').then((data) => {
+			setPlants(data.data.data);
+		});
+	}, []);
+
+	const handleClick = (id) => {
+		console.log('A777777777777aaaaaaaaaaaaaa');
+		setSelectedPlant({});
+		setShow(true);
+		fetchApi(`plant?id=${id}`).then((data) => {
+			setSelectedPlant(data.data);
+		});
+	};
 	return (
 		<Container maxWidth="xl">
-			{/* <PlantDetails
-				isUser={true}
-				text={'Save to my profile'}
-			/> */}
+			{show && (
+				<PlantDetails
+					setShow={setShow}
+					appropriateSeason={selectedPlant['appropriate_season']}
+					fertilizer={selectedPlant['fertilizer']}
+					fertilizerAmount={selectedPlant['fertilizer_amount']}
+					name={selectedPlant['common_name']}
+					pruning={selectedPlant['pruning']}
+					scientificName={selectedPlant['scientific_name']}
+					soilSalinty={selectedPlant['soil_salinty']}
+					sunPerDay={selectedPlant['sun_per_day']}
+					sunlight={selectedPlant['sunlight']}
+					waterAmount={selectedPlant['water_amount']}
+					watering={selectedPlant['watering']}
+					id={selectedPlant['id']}
+					isUser={true}
+					text={'Save to my profile'}
+				/>
+			)}
 			<Stack
 				direction="row"
 				sx={{
@@ -26,17 +73,21 @@ const PlantsDetails = () => {
 						alt=""
 					/>
 				</Box>
-				<Stack
-					direction={{ xs: 'column-reverse', md: 'row' }}
-					alignItems="center"
-					gap={{ xs: '0.5rem', md: '1rem' }}>
+				<Link
+					to={'/userProfile'}
+					style={{
+						display: 'flex',
+						flexDirection: 'row',
+						gap: '1rem',
+						alignItems: 'center',
+					}}>
 					<Typography
 						variant="body1"
 						sx={{ fontWeight: 'bold', color: 'var(--very-dark-green)' }}>
-						Ahmed Saeed
+						{userData.name}
 					</Typography>
-					<Box>{icons.user}</Box>
-				</Stack>
+					<Box>{icons.avatar}</Box>
+				</Link>
 			</Stack>
 			<Stack
 				alignItems="center"
@@ -58,17 +109,24 @@ const PlantsDetails = () => {
 					container
 					spacing={3}
 					padding="0 2rem">
-					<Grid
-						item
-						xs={12}
-						md={4}
-						lg={3}>
-						<PlantCard
-							img="green-leaf-texture-leaf-texture-background.jpg"
-							name="Plant"
-						/>
-					</Grid>
-					<Grid
+					{plants.map((plant) => (
+						<Grid
+							item
+							xs={12}
+							md={4}
+							lg={3}>
+							<PlantCard
+								img="green-leaf-texture-leaf-texture-background.jpg"
+								name={plant['common_name']}
+								restprops={{
+									onClick: () => {
+										handleClick(plant.id);
+									},
+								}}
+							/>
+						</Grid>
+					))}
+					{/* <Grid
 						item
 						xs={12}
 						md={4}
@@ -107,7 +165,7 @@ const PlantsDetails = () => {
 							img="green-house.jpg"
 							name="Plant"
 						/>
-					</Grid>
+					</Grid> */}
 				</Grid>
 			</Stack>
 		</Container>

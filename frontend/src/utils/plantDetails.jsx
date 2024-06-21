@@ -5,6 +5,8 @@ import CustomButton from './customButton';
 import { icons } from './icons';
 import { fetchApi } from './fetchFromAPI';
 import Cookies from 'js-cookie';
+import NoStyleInput from './noStyleInput';
+import NoStyleTextarea from './noStyleTextarea';
 
 const PlantDetails = ({
 	id,
@@ -26,27 +28,55 @@ const PlantDetails = ({
 	setShow,
 	setAllPlants,
 }) => {
-	const formData = new FormData();
 	const [edit, setEdit] = useState(false);
-	const [plant, setPlant] = useState({});
+	const [textToUser, setTextToUser] = useState('');
+	const [plant, setPlant] = useState({
+		name,
+		appropriateSeason,
+		fertilizer,
+		fertilizerAmount,
+		pruning,
+		scientificName,
+		soilSalinty,
+		sunPerDay,
+		sunlight,
+		waterAmount,
+		watering,
+		img,
+	});
 	const [image, setImage] = useState('');
 	const fileUploadRef = useRef(null);
 
 	useEffect(() => {
-		console.log('added');
-		formData.append('common_name', name);
-		formData.append('scientific_name', scientificName);
-		formData.append('watering', watering);
-		formData.append('fertilizer', fertilizer);
-		formData.append('sunlight', sunlight);
-		formData.append('pruning', pruning);
-		formData.append('img', img);
-		formData.append('water_amount', waterAmount);
-		formData.append('fertilizer_amount', fertilizerAmount);
-		formData.append('sun_per_day', sunPerDay);
-		formData.append('soil_salinty', soilSalinty);
-		formData.append('appropriate_season', appropriateSeason);
-	}, [formData]);
+		setPlant({
+			name,
+			appropriateSeason,
+			fertilizer,
+			fertilizerAmount,
+			pruning,
+			scientificName,
+			soilSalinty,
+			sunPerDay,
+			sunlight,
+			waterAmount,
+			watering,
+			img,
+		});
+	}, [
+		name,
+		appropriateSeason,
+		fertilizer,
+		fertilizerAmount,
+		pruning,
+		scientificName,
+		soilSalinty,
+		sunPerDay,
+		sunlight,
+		waterAmount,
+		watering,
+		img,
+	]);
+
 	const handleRemove = (id) => {
 		fetchApi(`admin/deleteplant?token=${Cookies.get('admin')}&id=${id}`).then(
 			(data) => {
@@ -63,25 +93,53 @@ const PlantDetails = ({
 	};
 
 	const handleUploadChange = (e) => {
-		const file = e.target.files[0];
-		console.log(file);
-		if (file) {
-			formData.append('img', file);
-			const reader = new FileReader();
-			reader.onload = (e) => {
-				setImage(e.target.result);
-			};
-			reader.readAsDataURL(file);
+		if (edit) {
+			const file = e.target.files[0];
+			console.log(file);
+			if (file) {
+				const reader = new FileReader();
+				reader.onload = (e) => {
+					setImage(e.target.result);
+					setPlant((prevPlant) => ({
+						...prevPlant,
+						img: file,
+					}));
+				};
+				reader.readAsDataURL(file);
+			}
 		}
 	};
 
 	const handleData = (e) => {
-		if (formData.has(e.target.getAttribute('data-id'))) {
-			formData.delete(e.target.getAttribute('data-id'));
-		}
-		formData.append(e.target.getAttribute('data-id'), e.target.textContent);
+		const { name, value } = e.target;
+		console.log(value);
+
+		setPlant({ [e.target.name]: e.target.value });
+		console.log(name);
 	};
+
 	const handleSubmit = (id) => {
+		const formData = new FormData();
+		formData.append('common_name', name);
+		formData.append('scientific_name', plant.scientificName);
+		formData.append('watering', watering);
+		formData.append('fertilizer', fertilizer);
+		formData.append('sunlight', sunlight);
+		formData.append('pruning', pruning);
+		formData.append('img', img);
+		formData.append('water_amount', waterAmount);
+		formData.append('fertilizer_amount', fertilizerAmount);
+		formData.append('sun_per_day', sunPerDay);
+		formData.append('soil_salinty', soilSalinty);
+		formData.append('appropriate_season', appropriateSeason);
+		for (const key in plant) {
+			if (plant.hasOwnProperty(key)) {
+				formData.set(key, plant[key]);
+			}
+		}
+		if (plant.img) {
+			formData.set('img', plant.img);
+		}
 		fetchApi(
 			`admin/editplant?token=${Cookies.get('admin')}&id=${id}`,
 			'POST',
@@ -89,6 +147,28 @@ const PlantDetails = ({
 		).then((data) => {
 			console.log(data);
 		});
+	};
+
+	const handleSaveToProfile = () => {
+		if (!textToUser) {
+			fetchApi(`selectplant?token=${Cookies.get('user')}&id=${id}`, 'POST')
+				.then((data) => {
+					console.log(data);
+					setTextToUser('Unsave from my profile');
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		} else {
+			fetchApi(`removeplant?token=${Cookies.get('user')}&id=${id}`, 'POST')
+				.then((data) => {
+					console.log(data);
+					setTextToUser('');
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		}
 	};
 
 	return (
@@ -161,9 +241,11 @@ const PlantDetails = ({
 								transition: 'all 0.3s linear',
 							}}
 							onClick={() => {
-								fileUploadRef.current.click();
-								setEdit(false);
-								handleSubmit(id);
+								if (edit) {
+									fileUploadRef.current.click();
+								}
+								// setEdit(false);
+								// handleSubmit(id);
 							}}
 							src={img || image}
 							alt=""
@@ -179,25 +261,25 @@ const PlantDetails = ({
 						item
 						xs={12}
 						md={6}>
-						<Stack direction="row">
+						<Stack
+							direction="row"
+							alignItems="center"
+							gap="1rem">
 							<Typography
 								variant="body1"
-								sx={{ fontWeight: 'bold', width: '35%' }}>
+								sx={{ fontWeight: 'bold', marginBottom: '5px' }}>
 								Scientific name:
 							</Typography>
-							<Typography
-								component="p"
-								variant="body1"
-								sx={{
-									border: edit ? '2px solid black' : '',
-									borderRadius: '5px',
-									padding: edit ? '0 0.3rem' : '',
-								}}
-								data-id={'scientific_name'}
-								onKeyDown={handleData}
-								contenteditable={`${edit}`}>
-								{scientificName}
-							</Typography>
+
+							<NoStyleInput
+								type="text"
+								value={plant.scientificName}
+								name={'scientific_name'}
+								padding={edit ? '10px' : ''}
+								border={edit ? '1px solid black' : ''}
+								contenteditable={!edit}
+								restprops={{ onInput: handleData }}
+							/>
 						</Stack>
 					</Grid>
 					<Grid
@@ -213,43 +295,40 @@ const PlantDetails = ({
 								sx={{ fontWeight: 'bold', width: '60%' }}>
 								Appropriate season:
 							</Typography>
-							<Typography
-								variant="body1"
-								sx={{
-									border: edit ? '2px solid black' : '',
-									borderRadius: '5px',
-									padding: edit ? '0 0.3rem' : '',
-								}}
-								data-id={'appropriate_season'}
-								onKeyDown={handleData}
-								contenteditable={`${edit}`}>
-								{appropriateSeason}
-							</Typography>
+
+							<NoStyleInput
+								type="text"
+								value={plant.appropriateSeason}
+								name={'appropriate_season'}
+								padding={edit ? '10px' : ''}
+								border={edit ? '1px solid black' : ''}
+								contenteditable={!edit}
+								restprops={{ onChange: handleData }}
+							/>
 						</Stack>
 					</Grid>
 					<Grid
 						item
 						xs={12}
 						md={6}>
-						<Stack direction="row">
+						<Stack
+							direction="row"
+							gap="1rem">
 							<Typography
 								variant="body1"
-								sx={{ fontWeight: 'bold', width: '60%' }}>
+								sx={{ fontWeight: 'bold' }}>
 								Fertilizer:
 							</Typography>
-							<Typography
-								component="p"
-								variant="body1"
-								sx={{
-									border: edit ? '2px solid black' : '',
-									borderRadius: '5px',
-									padding: edit ? '0 0.3rem' : '',
-								}}
-								data-id={'fertilizer'}
-								onKeyDown={handleData}
-								contenteditable={`${edit}`}>
-								{fertilizer}
-							</Typography>
+
+							<NoStyleInput
+								type="text"
+								value={plant.fertilizer}
+								name={'fertilizer'}
+								padding={edit ? '10px' : ''}
+								border={edit ? '1px solid black' : ''}
+								contenteditable={!edit}
+								restprops={{ onChange: handleData, rows: '1' }}
+							/>
 						</Stack>
 					</Grid>
 					<Grid
@@ -262,44 +341,40 @@ const PlantDetails = ({
 								sx={{ fontWeight: 'bold', width: '60%' }}>
 								Fertilizer Amount:
 							</Typography>
-							<Typography
-								component="p"
-								variant="body1"
-								sx={{
-									border: edit ? '2px solid black' : '',
-									borderRadius: '5px',
-									padding: edit ? '0 0.3rem' : '',
-								}}
-								data-id={'fertilizer_amount'}
-								onKeyDown={handleData}
-								contenteditable={`${edit}`}>
-								{fertilizerAmount}
-							</Typography>
+
+							<NoStyleTextarea
+								type="text"
+								value={plant.fertilizerAmount}
+								name={'fertilizer_amount'}
+								padding={edit ? '10px' : ''}
+								border={edit ? '1px solid black' : ''}
+								contenteditable={!edit}
+								restprops={{ onChange: handleData, rows: '5', cols: '30' }}
+							/>
 						</Stack>
 					</Grid>
 					<Grid
 						item
 						xs={12}
 						md={6}>
-						<Stack direction="row">
+						<Stack
+							direction="row"
+							gap="1rem">
 							<Typography
 								variant="body1"
-								sx={{ fontWeight: 'bold', width: '40%' }}>
+								sx={{ fontWeight: 'bold' }}>
 								Pruning:
 							</Typography>
-							<Typography
-								component="p"
-								variant="body1"
-								sx={{
-									border: edit ? '2px solid black' : '',
-									borderRadius: '5px',
-									padding: edit ? '0 0.3rem' : '',
-								}}
-								data-id={'pruning'}
-								onKeyDown={handleData}
-								contenteditable={`${edit}`}>
-								{pruning}
-							</Typography>
+
+							<NoStyleTextarea
+								type="text"
+								value={plant.pruning}
+								name={'pruning'}
+								padding={edit ? '10px' : ''}
+								border={edit ? '1px solid black' : ''}
+								contenteditable={!edit}
+								restprops={{ onChange: handleData, rows: '5', cols: '30' }}
+							/>
 						</Stack>
 					</Grid>
 					<Grid
@@ -309,97 +384,91 @@ const PlantDetails = ({
 						<Stack direction="row">
 							<Typography
 								variant="body1"
-								sx={{ fontWeight: 'bold', width: '40%' }}>
+								sx={{ fontWeight: 'bold' }}>
 								Soil Salinty:
 							</Typography>
-							<Typography
-								component="p"
-								variant="body1"
-								sx={{
-									border: edit ? '2px solid black' : '',
-									borderRadius: '5px',
-									padding: edit ? '0 0.3rem' : '',
-								}}
-								data-id={'soil_salinty'}
-								onKeyDown={handleData}
-								contenteditable={`${edit}`}>
-								{soilSalinty}
-							</Typography>
+
+							<NoStyleTextarea
+								type="text"
+								value={plant.soilSalinty}
+								name={'soil_salinty'}
+								padding={edit ? '10px' : ''}
+								border={edit ? '1px solid black' : ''}
+								contenteditable={!edit}
+								restprops={{ onChange: handleData, rows: '5', cols: '30' }}
+							/>
 						</Stack>
 					</Grid>
 					<Grid
 						item
 						xs={12}
 						md={6}>
-						<Stack direction="row">
+						<Stack
+							direction="row"
+							gap="1rem">
 							<Typography
 								variant="body1"
-								sx={{ fontWeight: 'bold', width: '30%' }}>
+								sx={{ fontWeight: 'bold' }}>
 								Sun Per Day:
 							</Typography>
-							<Typography
-								component="p"
-								variant="body1"
-								sx={{
-									border: edit ? '2px solid black' : '',
-									borderRadius: '5px',
-									padding: edit ? '0 0.3rem' : '',
-								}}
-								data-id={'sun_per_day'}
-								onKeyDown={handleData}
-								contenteditable={`${edit}`}>
-								{sunPerDay}
-							</Typography>
+
+							<NoStyleTextarea
+								type="text"
+								value={plant.sunPerDay}
+								name={'sun_per_day'}
+								padding={edit ? '10px' : ''}
+								border={edit ? '1px solid black' : ''}
+								contenteditable={!edit}
+								restprops={{ onChange: handleData, rows: '5', cols: '30' }}
+							/>
 						</Stack>
 					</Grid>
 					<Grid
 						item
 						xs={12}
 						md={6}>
-						<Stack direction="row">
+						<Stack
+							direction="row"
+							gap="1rem">
 							<Typography
 								variant="body1"
-								sx={{ fontWeight: 'bold', width: '30%' }}>
+								sx={{ fontWeight: 'bold' }}>
 								Sunlight:
 							</Typography>
-							<Typography
-								component="p"
-								variant="body1"
-								sx={{
-									border: edit ? '2px solid black' : '',
-									borderRadius: '5px',
-									padding: edit ? '0 0.3rem' : '',
-								}}
-								data-id={'sunlight'}
-								onKeyDown={handleData}
-								contenteditable={`${edit}`}>
-								{sunlight}
-							</Typography>
+
+							<NoStyleTextarea
+								type="text"
+								value={plant.sunlight}
+								name={'sunlight'}
+								padding={edit ? '10px' : ''}
+								border={edit ? '1px solid black' : ''}
+								contenteditable={!edit}
+								restprops={{ onChange: handleData, rows: '5', cols: '30' }}
+							/>
 						</Stack>
 					</Grid>
 					<Grid
 						item
 						xs={12}
 						md={6}>
-						<Stack direction="row">
+						<Stack
+							direction="row"
+							gap="1rem">
 							<Typography
 								variant="body1"
-								sx={{ fontWeight: 'bold', width: '60%' }}>
+								sx={{ fontWeight: 'bold' }}>
 								Water Amount:
 							</Typography>
-							<Typography
-								component="p"
-								variant="body1"
-								sx={{
-									border: edit ? '2px solid black' : '',
-									borderRadius: '5px',
-									padding: edit ? '0 0.3rem' : '',
-								}}
-								data-id={'water_amount'}
-								onKeyDown={handleData}
-								contenteditable={`${edit}`}>
-								{waterAmount}
-							</Typography>
+
+							<NoStyleTextarea
+								type="text"
+								value={plant.waterAmount}
+								name={'water_amount'}
+								padding={edit ? '10px' : ''}
+								border={edit ? '1px solid black' : ''}
+								contenteditable={!edit}
+								restprops={{ onChange: handleData, rows: '5', cols: '30' }}
+							/>
 						</Stack>
 					</Grid>
 					<Grid
@@ -412,19 +481,16 @@ const PlantDetails = ({
 								sx={{ fontWeight: 'bold', width: '60%' }}>
 								Watering:
 							</Typography>
-							<Typography
-								component="p"
-								variant="body1"
-								sx={{
-									border: edit ? '2px solid black' : '',
-									borderRadius: '5px',
-									padding: edit ? '0 0.3rem' : '',
-								}}
-								data-id={'watering'}
-								contenteditable={`${edit}`}
-								onKeyDown={handleData}>
-								{watering}
-							</Typography>
+
+							<NoStyleTextarea
+								type="text"
+								value={plant.watering}
+								name={'watering'}
+								padding={edit ? '10px' : ''}
+								border={edit ? '1px solid black' : ''}
+								contenteditable={!edit}
+								restprops={{ onChange: handleData, rows: '5', cols: '30' }}
+							/>
 						</Stack>
 					</Grid>
 					{/* <Grid
@@ -460,12 +526,13 @@ const PlantDetails = ({
 						justifyContent="center"
 						sx={{ fontWeight: 'bold', fontSize: '1.25rem' }}>
 						<CustomButton
-							text={text}
+							text={textToUser ? textToUser : text}
 							background="var(--very-dark-green)"
 							borderradius={'1.25rem'}
 							color="white"
 							padding={'1.25rem'}
 							width={'50%'}
+							restprops={{ onClick: handleSaveToProfile }}
 						/>
 					</Stack>
 				)}

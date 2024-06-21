@@ -187,7 +187,7 @@ const Hero = () => {
 								animate="visible"
 								fontWeight="bold"
 								fontSize={'1.25rem'}>
-								<Link to="/">
+								<Link to="/plantsDetails">
 									<CustomButton
 										background="var(--linear-background)"
 										color="white"

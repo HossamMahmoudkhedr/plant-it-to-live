@@ -18,6 +18,7 @@ import UserProfile from './components/userProfile';
 import AdminLogin from './components/adminLogin';
 import PlantsDetails from './components/plantsDetails';
 import AdminDashboard from './components/adminDashboard';
+import Activate from './components/activate';
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -67,6 +68,10 @@ const router = createBrowserRouter(
 			<Route
 				path="/adminDashboard"
 				element={<AdminDashboard />}
+			/>
+			<Route
+				path="/activate"
+				element={<Activate />}
 			/>
 			<Route
 				path="*"

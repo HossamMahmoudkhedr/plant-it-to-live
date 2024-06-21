@@ -3,11 +3,30 @@ import React from 'react';
 import { icons } from './icons';
 import Dark from './dark';
 import CustomButton from './customButton';
+import { fetchApi } from './fetchFromAPI';
+import Cookies from 'js-cookie';
 
-const UserDetails = () => {
+const UserDetails = ({ name, email, setShow, id, setRows }) => {
+	const handleDeleteUser = () => {
+		fetchApi(
+			`admin/delete_user?token=${Cookies.get('admin')}&id=${id}`,
+			'POST'
+		).then((data) => {
+			console.log(data);
+			fetchApi(`admin/users?token=${Cookies.get('admin')}`)
+				.then((data) => {
+					console.log(data);
+					setRows(data.data.users.data);
+					setShow(false);
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		});
+	};
 	return (
 		<>
-			<Dark />
+			<Dark setShow={setShow} />
 			<Stack
 				gap={'1rem'}
 				alignItems={'center'}
@@ -29,6 +48,9 @@ const UserDetails = () => {
 						gap: '4rem',
 					}}>
 					<Stack
+						onClick={() => {
+							setShow(false);
+						}}
 						sx={{
 							position: 'absolute',
 							right: '-15px',
@@ -61,7 +83,7 @@ const UserDetails = () => {
 							<Typography
 								variant="body1"
 								sx={{ fontSize: '1rem', fontWeight: '700' }}>
-								Ahmed Salman
+								{name}
 							</Typography>
 						</Stack>
 						<Stack
@@ -80,7 +102,7 @@ const UserDetails = () => {
 							<Typography
 								variant="body1"
 								sx={{ fontSize: '1rem', fontWeight: '700' }}>
-								Ahmed@gmail.com
+								{email}
 							</Typography>
 						</Stack>
 					</Stack>
@@ -91,6 +113,7 @@ const UserDetails = () => {
 					background="#BA1327"
 					color="white"
 					padding={'1rem 1.5rem'}
+					restprops={{ onClick: handleDeleteUser }}
 				/>
 			</Stack>
 		</>

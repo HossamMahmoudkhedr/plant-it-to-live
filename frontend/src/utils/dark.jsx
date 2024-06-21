@@ -3,7 +3,9 @@ import React from 'react';
 
 const Dark = ({ setShow }) => {
 	const handleMenu = () => {
-		setShow(false);
+		if (setShow) {
+			setShow(false);
+		}
 	};
 	return (
 		<Box

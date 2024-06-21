@@ -295,11 +295,10 @@ class AdminController extends Controller
         }
         if(!$plant->delete())
         {
-            if($filePath!=null)
-                unlink($filePath);
             return $this->failed("try again");
         }
-
+        if($filePath!=null)
+            unlink('C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images/'.$plant->img);
         return $this->SuccessResponse();
     }
     public function logout()
@@ -407,9 +406,9 @@ class AdminController extends Controller
         if($suggestedplant)
         {
             $plant=new Plant();
-            $imgoldpath=$suggestedplant->img;
+            $imgoldpath="C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images/".$suggestedplant->img;
             $filename=time().'.'.pathinfo($imgoldpath, PATHINFO_EXTENSION);
-            $filepath = 'C:\\xampp\\htdocs\\plant-it-to-live\\backend\\plant_it_to_live\\public\\plantImges\\' . $filename;
+            $filepath = "C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images/".$filename;
             if (file_exists($imgoldpath)) {
                 copy($imgoldpath, $filepath);
             }
@@ -418,7 +417,7 @@ class AdminController extends Controller
             $suggestedplant->plant_id=$plant->id;
             $suggestedplant->save();
             $plant->fill($suggestedplant->only(['common_name','scientific_name','watering','fertilizer','sunlight','pruning','water_amount','fertilizer_amount','sun_per_day','soil_salinty','appropriate_season','admin_id']));
-            $plant->img=$filepath;
+            $plant->img=$filename;
             $plant->save();
             $suggestedplant->admin_id=Auth()->user()->id;
             $suggestedplant->approved=1;
@@ -452,9 +451,9 @@ class AdminController extends Controller
             return $this->validationerrors($validator->errors());
         }
         $plant=Suggested_plant::find($request->id);
-        $filePath = $plant->img; // Assuming $plant->img contains the relative path
+        $filePath = $plant->img;
         if($filePath!=null)
-            unlink($filePath);
+            unlink('C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images/'.$plant->img);
         $plant->common_name=$request->common_name;
         $plant->scientific_name=$request->scientific_name;
         $plant->watering=$request->watering;
@@ -468,11 +467,13 @@ class AdminController extends Controller
         $plant->appropriate_season=$request->appropriate_season;
         $img=$request->file('img');
         $filename=time().'.'.$img->getClientOriginalExtension();
-        $filepath='plantImges/'.$filename;
-        $img->move(public_path('plantImges'),$filename);
+        //$filepath='plantImges/'.$filename;
+        //$img->move(public_path('plantImges'),$filename);
         // Concatenate the base URL with the path to the uploaded image
-        $filepath = 'C:\\xampp\\htdocs\\plant-it-to-live\\backend\\plant_it_to_live\\public\\plantImges\\' . $filename;
-        $plant->img = $filepath;
+        //$filepath = 'C:\\xampp\\htdocs\\plant-it-to-live\\backend\\plant_it_to_live\\public\\plantImges\\' . $filename;
+        $finalPath = 'C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images';
+        $img->move($finalPath, $filename);
+        $plant->img = $filename;
         $plant->admin_id=Auth()->user()->id;
         $plant->save();
         return $this->SuccessResponse();
@@ -487,7 +488,9 @@ class AdminController extends Controller
             return $this->validationerrors($validator->errors());
         }
         $plant=Suggested_plant::find($request->id);
-        unlink($plant->img);
+        $filePath = $plant->img;
+        if($filePath!=null)
+            unlink('C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images/'.$plant->img);
         if($plant)
         {
             $plant->delete();

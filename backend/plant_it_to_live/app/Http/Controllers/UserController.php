@@ -424,9 +424,11 @@ class UserController extends Controller
         $plant->appropriate_season=$request->appropriate_season;
         $img=$request->file('img');
         $filename=time().'.'.$img->getClientOriginalExtension();
-        $img->move(public_path('plantImges'),$filename);
-        $filepath = 'C:\\xampp\\htdocs\\plant-it-to-live\\backend\\plant_it_to_live\\public\\plantImges\\' . $filename;
-        $plant->img = $filepath;
+       // $img->move(public_path('plantImges'),$filename);
+        //$filepath = 'C:\\xampp\\htdocs\\plant-it-to-live\\backend\\plant_it_to_live\\public\\plantImges\\' . $filename;
+        $finalPath = 'C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images';
+        $img->move($finalPath, $filename);
+        $plant->img = $filename;
         $plant->user_id=Auth()->user()->id;
         $plant->save();
         return $this->SuccessResponse();

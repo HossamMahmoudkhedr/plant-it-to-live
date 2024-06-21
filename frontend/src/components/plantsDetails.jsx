@@ -31,7 +31,6 @@ const PlantsDetails = () => {
 	}, []);
 
 	const handleClick = (id) => {
-		console.log('A777777777777aaaaaaaaaaaaaa');
 		setSelectedPlant({});
 		setShow(true);
 		fetchApi(`plant?id=${id}`).then((data) => {

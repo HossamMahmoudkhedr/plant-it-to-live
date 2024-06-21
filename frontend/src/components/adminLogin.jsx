@@ -1,7 +1,10 @@
-import { Box, Container, Stack, Typography } from '@mui/material';
-import React from 'react';
+import { Alert, Box, Container, Stack, Typography } from '@mui/material';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import CustomButton from '../utils/customButton';
+import { fetchApi } from '../utils/fetchFromAPI';
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 
 const StyledInput = styled.input`
 	padding: 1rem 0.3rem;
@@ -18,6 +21,45 @@ const StyledInput = styled.input`
 `;
 
 const AdminLogin = () => {
+	const [errorMessage, setErrorMessage] = useState('');
+	const [formValues, setFormValues] = useState({});
+	const navigate = useNavigate();
+	const handleInput = (e) => {
+		const { name, value } = e.target;
+		setFormValues((prevValues) => ({
+			...prevValues,
+			[name]: value,
+		}));
+	};
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+
+		const formData = new FormData();
+		if (formValues.email && formValues.password) {
+			formData.append('email', formValues.email);
+			formData.append('password', formValues.password);
+		}
+
+		console.log(formData.has('email'), formData.has('password'));
+
+		if (formData.has('email') && formData.has('password')) {
+			fetchApi('admin/login', 'POST', formData)
+				.then((data) => {
+					console.log(data);
+
+					Cookies.set('admin', data.data.token);
+					setErrorMessage('');
+					navigate('/adminDashboard');
+				})
+				.catch((error) => {
+					console.log(error.response.data?.massage);
+					setErrorMessage(error.response.data?.massage);
+				});
+		} else {
+			setErrorMessage('Please enter both email and password.');
+		}
+	};
 	return (
 		<Box
 			sx={{
@@ -60,7 +102,11 @@ const AdminLogin = () => {
 							gap: '1rem',
 							width: { xs: '95%', md: '50%', lg: '40%' },
 						}}>
-						<Stack gap="2rem">
+						{errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+						<Stack
+							component="form"
+							onSubmit={handleSubmit}
+							gap="2rem">
 							<Stack gap="0.5rem">
 								<Typography
 									variant="h4"
@@ -78,29 +124,22 @@ const AdminLogin = () => {
 									type="email"
 									name="email"
 									placeholder="Email"
+									onChange={handleInput}
 								/>
 								<StyledInput
 									type="password"
 									name="password"
 									placeholder="Password"
+									onChange={handleInput}
 								/>
 							</Stack>
 							<Stack
 								direction={{ xs: 'column', lg: 'row' }}
 								sx={{
 									alignItems: 'center',
-									justifyContent: 'space-between',
+									justifyContent: 'center',
 									gap: { xs: '1rem', lg: 'unset' },
 								}}>
-								<Stack
-									direction="row"
-									gap="0.3rem"
-									alignItems="center">
-									<input type="checkbox" />
-									<Box sx={{ fontWeight: 'bold', fontSize: '1.25rem' }}>
-										Remember me
-									</Box>
-								</Stack>
 								<a
 									style={{
 										textDecoration: 'underline',
@@ -123,6 +162,7 @@ const AdminLogin = () => {
 									text="Login"
 									width="100%"
 									borderradius="0.8rem"
+									restprops={{ type: 'submit' }}
 								/>
 							</Box>
 						</Stack>

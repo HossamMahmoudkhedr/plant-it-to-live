@@ -1,15 +1,31 @@
-import { Box, Container, Stack } from '@mui/material';
-import React, { useState } from 'react';
+import { Box, Container, Stack, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import CustomButton from '../utils/customButton';
 import { Link } from 'react-router-dom';
 import { icons } from '../utils/icons';
 import Dark from '../utils/dark';
+import Cookies from 'js-cookie';
+import { fetchApi } from '../utils/fetchFromAPI';
 
 const Navbar = () => {
 	const [show, setShow] = useState(false);
+	const [userData, setUserData] = useState({});
 	const handleMenu = () => {
 		setShow((prev) => !prev);
 	};
+
+	useEffect(() => {
+		if (Cookies.get('user')) {
+			fetchApi(`user?token=${Cookies.get('user')}`)
+				.then((data) => {
+					console.log(data);
+					setUserData(data.data);
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		}
+	}, []);
 	return (
 		<Container maxWidth="xl">
 			{show && <Dark setShow={setShow} />}
@@ -71,37 +87,79 @@ const Navbar = () => {
 							justifyContent: 'center',
 						}}>
 						<li>
-							<a href="#">About us</a>
+							<a
+								style={{ color: 'black' }}
+								href="#">
+								About us
+							</a>
 						</li>
 						<li>
-							<a href="#">Categories</a>
+							<a
+								style={{ color: 'black' }}
+								href="#">
+								Categories
+							</a>
 						</li>
 						<li>
-							<a href="#">Features</a>
+							<a
+								style={{ color: 'black' }}
+								href="#">
+								Features
+							</a>
 						</li>
 						<li>
-							<a href="#">Contact</a>
+							<a
+								style={{ color: 'black' }}
+								href="#">
+								Contact
+							</a>
 						</li>
 					</Stack>
-					<Stack
-						direction="row"
-						sx={{ alignItems: 'center', gap: '1rem' }}>
-						<Link to={'/signup'}>
-							<CustomButton
-								text="Sign up"
-								border="2px solid var(--black)"
-								color="var(--black)"
-							/>
+					{userData.name ? (
+						<Link
+							to={'/userProfile'}
+							style={{
+								display: 'flex',
+								flexDirection: 'row-reverse',
+								gap: '1rem',
+								alignItems: 'center',
+							}}>
+							<Box
+								component="span"
+								height="55px">
+								{icons.avatar}
+							</Box>
+							<Typography
+								variant="body1"
+								sx={{
+									fontWeight: 'bold',
+									fontSize: '1rem',
+									color: 'var(--very-dark-green)',
+								}}>
+								{userData.name}
+							</Typography>
 						</Link>
-						<Link to={'/login'}>
-							<CustomButton
-								text="Login"
-								color="var(--white)"
-								border="2px solid var(--black)"
-								background="var(--black)"
-							/>
-						</Link>
-					</Stack>
+					) : (
+						<Stack
+							direction="row"
+							sx={{ alignItems: 'center', gap: '1rem' }}>
+							<Link to={'/signup'}>
+								<CustomButton
+									text="Sign up"
+									border="2px solid var(--black)"
+									color="var(--black)"
+								/>
+							</Link>
+							<Link to={'/login'}>
+								<CustomButton
+									text="Login"
+									color="var(--white)"
+									border="2px solid var(--black)"
+									background="var(--black)"
+								/>
+							</Link>
+						</Stack>
+					)}
 				</Stack>
 			</Stack>
 		</Container>

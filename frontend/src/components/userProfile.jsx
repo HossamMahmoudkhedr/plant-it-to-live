@@ -1,13 +1,22 @@
-import { Box, Stack, Typography } from '@mui/material';
-import React from 'react';
+import { Box, Button, Stack, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import { icons } from '../utils/icons';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Heading from '../utils/heading';
 import MyProfile from './myProfile';
 import Security from './security';
 import SuggestPlant from './suggestPlant';
 import MyCrops from './myCrops';
+import Cookies from 'js-cookie';
+import { fetchApi } from '../utils/fetchFromAPI';
+
+const pages = [
+	{ name: 'My profile', component: <MyProfile /> },
+	{ name: 'Security', component: <Security /> },
+	{ name: 'My crops', component: <MyCrops /> },
+	{ name: 'Help us', component: <SuggestPlant /> },
+];
 
 const StyledBox = styled(Box)`
 	display: flex;
@@ -22,6 +31,29 @@ const StyledBox = styled(Box)`
 `;
 
 const UserProfile = () => {
+	const [currPage, setCurrPage] = useState(0);
+	const [userData, setUserData] = useState({});
+	const navigate = useNavigate();
+	useEffect(() => {
+		if (Cookies.get('user')) {
+			fetchApi(`user?token=${Cookies.get('user')}`)
+				.then((data) => {
+					console.log(data);
+					setUserData(data.data);
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		}
+	}, []);
+
+	const handleLogout = () => {
+		fetchApi(`logout?token=${Cookies.get('user')}`, 'GET').then((data) => {
+			console.log(data);
+			Cookies.remove('user');
+			navigate('/');
+		});
+	};
 	return (
 		<Box>
 			<Box
@@ -55,60 +87,109 @@ const UserProfile = () => {
 							<Stack
 								component="ul"
 								gap="1.5rem">
-								<StyledBox component="li">
+								<StyledBox
+									component="li"
+									onClick={() => {
+										setCurrPage(0);
+									}}>
 									<Box
 										component="span"
-										height="30px">
-										{icons.avatar}
+										height="30px"
+										sx={{
+											fill: currPage === 0 ? 'var(--dark-green)' : '#CFCAB6',
+										}}>
+										{icons.user}
 									</Box>{' '}
 									<Typography
 										variant="body1"
-										sx={{ color: 'var(--dark-green)' }}>
+										sx={{
+											color: 'var(--dark-green)',
+											color: currPage === 0 ? 'var(--dark-green)' : '#CFCAB6',
+										}}>
 										My profile
 									</Typography>
 								</StyledBox>
-								<StyledBox component="li">
+								<StyledBox
+									component="li"
+									onClick={() => {
+										setCurrPage(1);
+									}}>
 									<Box
 										component="span"
-										height="30px">
+										height="30px"
+										sx={{
+											stroke: currPage === 1 ? 'var(--dark-green)' : '#CFCAB6',
+										}}>
 										{icons.security}
 									</Box>{' '}
 									<Typography
 										variant="body1"
-										sx={{ color: '#CFCAB6' }}>
+										sx={{
+											color: '#CFCAB6',
+											color: currPage === 1 ? 'var(--dark-green)' : '#CFCAB6',
+										}}>
 										Security
 									</Typography>
 								</StyledBox>
-								<StyledBox component="li">
+								<StyledBox
+									component="li"
+									onClick={() => {
+										setCurrPage(2);
+									}}>
 									<Box
 										component="span"
-										height="30px">
+										height="30px"
+										sx={{
+											fill: currPage === 2 ? 'var(--dark-green)' : '#CFCAB6',
+										}}>
 										{icons.crop}
 									</Box>{' '}
 									<Typography
 										variant="body1"
-										sx={{ color: '#CFCAB6' }}>
+										sx={{
+											color: '#CFCAB6',
+											color: currPage === 2 ? 'var(--dark-green)' : '#CFCAB6',
+										}}>
 										My crops
 									</Typography>
 								</StyledBox>
-								<StyledBox component="li">
+								<StyledBox
+									component="li"
+									onClick={() => {
+										setCurrPage(3);
+									}}>
 									<Box
 										component="span"
-										height="30px">
+										height="30px"
+										sx={{
+											stroke: currPage === 3 ? 'var(--dark-green)' : '#CFCAB6',
+										}}>
 										{icons.help}
 									</Box>{' '}
 									<Typography
 										variant="body1"
-										sx={{ color: '#CFCAB6' }}>
+										sx={{
+											color: '#CFCAB6',
+											color: currPage === 3 ? 'var(--dark-green)' : '#CFCAB6',
+										}}>
 										Help Us
 									</Typography>
 								</StyledBox>
 							</Stack>
 						</Stack>
 					</Stack>
-					<Link
-						to="/"
-						style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+					<Button
+						variant="contained"
+						onClick={handleLogout}
+						disableElevation
+						sx={{
+							display: 'flex',
+							alignItems: 'center',
+							gap: '0.5rem',
+							width: 'fit-content',
+							backgroundColor: 'transparent',
+							'&:hover': { backgroundColor: 'transparent' },
+						}}>
 						<Box
 							component="span"
 							height="30px">
@@ -116,10 +197,15 @@ const UserProfile = () => {
 						</Box>{' '}
 						<Typography
 							variant="body1"
-							sx={{ color: '#CFCAB6', fontWeight: 'bold', fontSize: '1.5rem' }}>
+							sx={{
+								color: '#CFCAB6',
+								fontWeight: 'bold',
+								fontSize: '1.5rem',
+								textTransform: 'capitalize',
+							}}>
 							Log out
 						</Typography>
-					</Link>
+					</Button>
 				</Stack>
 			</Box>
 			<Box sx={{ width: '80%', float: 'right' }}>
@@ -134,11 +220,12 @@ const UserProfile = () => {
 					<Stack
 						direction="row"
 						sx={{ alignItems: 'center' }}>
-						<Box
+						<Link
+							to="/"
 							component="span"
-							sx={{ padding: '0rem 1rem 0rem 0rem', height: '35px' }}>
+							style={{ padding: '0rem 1rem 0rem 0rem', height: '35px' }}>
 							{icons.home}
-						</Box>
+						</Link>
 						<Typography
 							variant="body1"
 							sx={{
@@ -147,19 +234,20 @@ const UserProfile = () => {
 								padding: '0rem 0rem 0rem 1rem',
 								borderLeft: '1px dotted black',
 							}}>
-							Ahmed Saeed
+							{userData ? userData.name : 'User'}
 						</Typography>
 					</Stack>
 				</Stack>
 				<Stack sx={{ padding: '2rem 3rem 1rem 3rem' }}>
 					<Stack gap="1.5rem">
 						<Stack sx={{ alignItems: 'flex-start' }}>
-							<Heading text={'My profile'} />
+							<Heading text={pages[currPage].name} />
 						</Stack>
 						{/* <MyProfile /> */}
 						{/* <Security /> */}
 						{/* <SuggestPlant /> */}
-						<MyCrops />
+						{/* <MyCrops /> */}
+						{pages[currPage].component}
 					</Stack>
 				</Stack>
 			</Box>

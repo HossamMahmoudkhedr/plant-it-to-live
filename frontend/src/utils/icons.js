@@ -19,6 +19,7 @@ import { ReactComponent as Suggestion } from '../assets/icons/suggestion.svg';
 import { ReactComponent as Plus } from '../assets/icons/add-square.svg';
 import { ReactComponent as Check } from '../assets/icons/check.svg';
 import { ReactComponent as BiggerUser } from '../assets/icons/user-bigger.svg';
+import { ReactComponent as CircleCheck } from '../assets/icons/circle-check-regular.svg';
 
 export const icons = {
 	leafs: <Leafs />,
@@ -42,4 +43,5 @@ export const icons = {
 	plus: <Plus />,
 	check: <Check />,
 	biggerUser: <BiggerUser />,
+	circleCheck: <CircleCheck />,
 };

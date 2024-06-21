@@ -8,11 +8,12 @@ const StyledStack = styled(Stack)`
 	}
 `;
 
-const PlantCard = ({ img, name }) => {
+const PlantCard = ({ img, name, restprops }) => {
 	return (
 		<StyledStack
 			gap="1rem"
 			alignItems="center"
+			{...restprops}
 			sx={{ cursor: 'pointer' }}>
 			<Box
 				sx={{ overflow: 'hidden', borderRadius: '1.25rem', height: '222px' }}>

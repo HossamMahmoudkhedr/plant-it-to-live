@@ -28,7 +28,7 @@ def detect():
     model2 = torch.load(r"C:\xampp\htdocs\plant-it-to-live\machine\plant-disease-model-complete (1).pth", map_location=torch.device('cpu'))
     model2.eval()
     preprocess = transforms.Compose([
-    transforms.Resize((256, 256)),  
+    transforms.Resize((256, 256)), 
     transforms.ToTensor(),  
 ])
     classes=[

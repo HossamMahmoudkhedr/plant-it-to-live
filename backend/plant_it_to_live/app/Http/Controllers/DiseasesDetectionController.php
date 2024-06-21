@@ -35,8 +35,6 @@ class DiseasesDetectionController extends Controller
         $data = [
            'image_path'=>$path
         ];
-
-
         // Send POST request to Flask endpoint
         $response = Http::timeout(60)->post('http://localhost:5000/detect', $data);
         // Check if request was successful

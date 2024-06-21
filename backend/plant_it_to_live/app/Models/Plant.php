@@ -13,6 +13,7 @@ class Plant extends Authenticatable implements JWTSubject
 {
     public  $table="plants";
     protected $fillable=['common_name','scientific_name','watering','fertilizer','sunlight','pruning','img','water_amount','fertilizer_amount','sun_per_day','soil_salinty','appropriate_season','admin_id'];
+    public $timestamps = false;
     use  HasFactory, Notifiable  ;
     public function admin ():BelongsTo
     {

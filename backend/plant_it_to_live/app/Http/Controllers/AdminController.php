@@ -239,7 +239,7 @@ class AdminController extends Controller
             'fertilizer'=>'required|string',
             'sunlight'=>'required|string',
             'pruning'=>'required|string',
-            'img'=>'required|image|mimes:jpeg,png,jpg,gif,svg',
+            'img'=>'image|mimes:jpeg,png,jpg,gif,svg',
             'water_amount'=>'required|string',
             'fertilizer_amount'=>'required|string',
             'sun_per_day'=>'required|string',
@@ -252,9 +252,17 @@ class AdminController extends Controller
         }
         $plant=Plant::find($request->id);
 
-        $filePath = $plant->img; // Assuming $plant->img contains the relative path
-        if($filePath!=null)
-            unlink('C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images/'.$plant->img);
+        if(isset($request->img))
+        {
+            $filePath = $plant->img; // Assuming $plant->img contains the relative path
+            if($filePath!=null)
+                unlink('C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images/'.$plant->img);
+            $img=$request->file('img');
+            $filename=time().'.'.$img->getClientOriginalExtension();
+            $finalPath = 'C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images';
+            $img->move($finalPath, $filename);
+            $plant->img = $filename;
+        }
         $plant->common_name=$request->common_name;
         $plant->scientific_name=$request->scientific_name;
         $plant->watering=$request->watering;
@@ -266,11 +274,6 @@ class AdminController extends Controller
         $plant->sun_per_day=$request->sun_per_day;
         $plant->soil_salinty=$request->soil_salinty;
         $plant->appropriate_season=$request->appropriate_season;
-        $img=$request->file('img');
-        $filename=time().'.'.$img->getClientOriginalExtension();
-        $finalPath = 'C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images';
-        $img->move($finalPath, $filename);
-        $plant->img = $filename;
         $plant->save();
         return $this->SuccessResponse();
     }
@@ -463,9 +466,17 @@ class AdminController extends Controller
             return $this->validationerrors($validator->errors());
         }
         $plant=Suggested_plant::find($request->id);
-        $filePath = $plant->img;
-        if($filePath!=null)
-            unlink('C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images/'.$plant->img);
+        if(isset($request->img))
+        {
+            $filePath = $plant->img; // Assuming $plant->img contains the relative path
+            if($filePath!=null)
+                unlink('C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images/'.$plant->img);
+            $img=$request->file('img');
+            $filename=time().'.'.$img->getClientOriginalExtension();
+            $finalPath = 'C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images';
+            $img->move($finalPath, $filename);
+            $plant->img = $filename;
+        }
         $plant->common_name=$request->common_name;
         $plant->scientific_name=$request->scientific_name;
         $plant->watering=$request->watering;
@@ -477,15 +488,6 @@ class AdminController extends Controller
         $plant->sun_per_day=$request->sun_per_day;
         $plant->soil_salinty=$request->soil_salinty;
         $plant->appropriate_season=$request->appropriate_season;
-        $img=$request->file('img');
-        $filename=time().'.'.$img->getClientOriginalExtension();
-        //$filepath='plantImges/'.$filename;
-        //$img->move(public_path('plantImges'),$filename);
-        // Concatenate the base URL with the path to the uploaded image
-        //$filepath = 'C:\\xampp\\htdocs\\plant-it-to-live\\backend\\plant_it_to_live\\public\\plantImges\\' . $filename;
-        $finalPath = 'C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images';
-        $img->move($finalPath, $filename);
-        $plant->img = $filename;
         $plant->admin_id=Auth()->user()->id;
         $plant->save();
         return $this->SuccessResponse();
@@ -529,5 +531,4 @@ class AdminController extends Controller
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ]);
     }
-
 }

@@ -1,5 +1,5 @@
 import { Box, Stack, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 const StyledStack = styled(Stack)`
@@ -9,6 +9,18 @@ const StyledStack = styled(Stack)`
 `;
 
 const PlantCard = ({ img, name, restprops }) => {
+	const [imageURL, setImageURL] = useState(
+		'../../../backend/plant_it_to_live/public/plantImges/1718951011.png'
+	);
+	// console.log(img);
+	// const reader = new FileReader();
+	// if (img) {
+	// 	reader.onload = (e) => {
+	// 		setImageURL(e.target.result);
+	// 	};
+	// }
+	// reader.readAsDataURL(img);
+
 	return (
 		<StyledStack
 			gap="1rem"
@@ -23,7 +35,11 @@ const PlantCard = ({ img, name, restprops }) => {
 						objectFit: 'cover !important',
 						transition: 'all 0.3s linear',
 					}}
-					src={require(`../assets/images/${img}`)}
+					src={
+						// require('../../../backend/plant_it_to_live/public/plantImges/1718951011.png') ||
+						// require('C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images/') ||
+						require('../assets/images/apple.png')
+					}
 					alt={name}
 					loading="lazy"
 				/>

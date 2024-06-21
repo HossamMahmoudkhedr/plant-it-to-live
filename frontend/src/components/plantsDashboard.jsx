@@ -129,7 +129,7 @@ const PlantsDashboard = () => {
 							md={4}
 							lg={3}>
 							<PlantCard
-								img="apple.png"
+								img={plant.img || 'apple.png'}
 								name={plant.common_name}
 								restprops={{
 									onClick: () => {

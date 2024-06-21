@@ -1,25 +1,36 @@
 import { Box, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-
 const StyledStack = styled(Stack)`
 	&&:hover div img {
 		transform: rotate(5deg) scale(1.25);
 	}
 `;
 
-const PlantCard = ({ img, name, restprops }) => {
-	const [imageURL, setImageURL] = useState(
-		'../../../backend/plant_it_to_live/public/plantImges/1718951011.png'
-	);
-	// console.log(img);
-	// const reader = new FileReader();
+const PlantCard = ({ img, name, setAllPlants, restprops }) => {
+	const [imageURL, setImageURL] = useState('grape.png');
+	// console.log(images);
+	useEffect(() => {
+		setImageURL('grape.png');
+		setTimeout(() => {
+			if (require(`../assets/images/${img}`)) {
+				setImageURL(img);
+			} else {
+				setImageURL('grape.png');
+			}
+		}, 2000);
+	}, [setAllPlants, img]);
 	// if (img) {
+	// 	const reader = new FileReader();
 	// 	reader.onload = (e) => {
 	// 		setImageURL(e.target.result);
+	// 		// setImageURL(img);
 	// 	};
+	// 	reader.readAsDataURL(img);
 	// }
-	// reader.readAsDataURL(img);
+	// useEffect(() => {
+	// 	setImageURL(img);
+	// }, []);
 
 	return (
 		<StyledStack
@@ -29,20 +40,25 @@ const PlantCard = ({ img, name, restprops }) => {
 			sx={{ cursor: 'pointer' }}>
 			<Box
 				sx={{ overflow: 'hidden', borderRadius: '1.25rem', height: '222px' }}>
-				<img
-					width="100%"
-					style={{
-						objectFit: 'cover !important',
-						transition: 'all 0.3s linear',
-					}}
-					src={
-						// require('../../../backend/plant_it_to_live/public/plantImges/1718951011.png') ||
-						// require('C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images/') ||
-						require('../assets/images/apple.png')
-					}
-					alt={name}
-					loading="lazy"
-				/>
+				{imageURL !== 'grape.png' && (
+					<img
+						width="100%"
+						style={{
+							objectFit: 'cover !important',
+							transition: 'all 0.3s linear',
+						}}
+						src={
+							// require('../../../backend/plant_it_to_live/public/plantImges/1718951011.png') ||
+							// require('C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images/') ||
+
+							// require(`../assets/images/${imageURL}`)
+							// ? require(`../assets/images/${imageURL}`)
+							require(`../assets/images/${imageURL}`)
+						}
+						alt={name}
+						loading="lazy"
+					/>
+				)}
 			</Box>
 			<Box>
 				<Typography

@@ -235,7 +235,7 @@ const Signup = () => {
 									<CustomInput
 										label="Birthdate"
 										labelcolor="white"
-										name="birthdate"
+										name="b_date"
 										placeholder="DD/MM/YY"
 										type="date"
 										background="#fff9e374"

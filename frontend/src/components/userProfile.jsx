@@ -15,7 +15,7 @@ const pages = [
 	{ name: 'My profile', component: <MyProfile /> },
 	{ name: 'Security', component: <Security /> },
 	{ name: 'My crops', component: <MyCrops /> },
-	{ name: 'Help us', component: <SuggestPlant /> },
+	{ name: 'Help us', component: <SuggestPlant admin={false} /> },
 ];
 
 const StyledBox = styled(Box)`

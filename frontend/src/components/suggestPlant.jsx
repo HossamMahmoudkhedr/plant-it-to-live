@@ -35,13 +35,27 @@ const SuggestPlant = ({ admin }) => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		console.log('submitted');
-		fetchApi(`admin/addplant?token=${Cookies.get('admin')}`, 'POST', formData)
-			.then((data) => {
-				console.log(data);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
+		if (admin) {
+			fetchApi(`admin/addplant?token=${Cookies.get('admin')}`, 'POST', formData)
+				.then((data) => {
+					console.log(data);
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		} else {
+			fetchApi(
+				`admin/addsuggestion?token=${Cookies.get('user')}`,
+				'POST',
+				formData
+			)
+				.then((data) => {
+					console.log(data);
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		}
 	};
 	return (
 		<Stack

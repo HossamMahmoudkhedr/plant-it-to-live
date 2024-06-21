@@ -352,10 +352,22 @@ class AdminController extends Controller
         $user= User::find($request->id);
         if($user->picture!=null&&$user->google_id==null)
         {
-            unlink($user->picture);
+            unlink('C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images/'.$user->picture);
         }
         $user->plants()->detach();
-        $user->suggestions()->delete();
+        //$user->suggestions()->delete();
+        $plants=$user->suggestions;
+       if($plants)
+       {
+           foreach($plants as $plant)
+           {
+               if($plant->img!=null)
+               {
+                   unlink('C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images/'.$plant->img);
+                   $plant->delete();
+               }
+           }
+       }
         if( $user->delete())
             return $this->SuccessResponse();
        return $this->failed();

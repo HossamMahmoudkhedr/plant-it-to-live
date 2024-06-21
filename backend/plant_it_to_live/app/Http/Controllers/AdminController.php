@@ -46,12 +46,10 @@ class AdminController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-
         if ($validator->fails()) {
            // return $this->response($validator->errors(), 'Validation errors', 406);
            return $this->validationerrors($validator->errors());
         }
-
         // Attempt authentication
         if (! $token = auth('admin')->attempt($validator->validated())) {
            // return response('',404);
@@ -81,7 +79,6 @@ class AdminController extends Controller
             'email' => 'required|email',
         ]);
         if ($validator->fails()) {
-            // return $this->response($validator->errors(), 'Validation errors', 406);
             return $this->validationerrors($validator->errors());
          }
         $admin=Admin::find(auth()->user()->id);
@@ -114,7 +111,6 @@ class AdminController extends Controller
         );
         Mail::to($user->email)->send(new AdminChangePassword($name=$user->name,$token));
         return $this->SuccessResponse("Password reset email sent successfully.");
-
     }
     public function resetpassword(Request $request)
     {
@@ -320,15 +316,12 @@ class AdminController extends Controller
         if (file_exists($filePath)) {
             unlink($filePath);
         }
-
         // Export the file
         Excel::store(new PlantsExport(), $fileName);
-
         // Check if file exists
         if (!file_exists($filePath)) {
             abort(404);
         }
-
         // Return the file as a response
         return response()->download($filePath, $fileName, [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

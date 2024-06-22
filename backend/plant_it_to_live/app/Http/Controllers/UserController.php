@@ -456,4 +456,6 @@ class UserController extends Controller
         $plants=$user->suggestions()->paginate(50);
         return $this->SuccessResponse($plants);
     }
+
+
 }

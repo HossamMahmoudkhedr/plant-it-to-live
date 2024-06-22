@@ -10,7 +10,7 @@
     <p>Dear {{ $name }},</p>
     <p>We received a request to reset your password for your account.</p>
     <p>Please click the following link to reset your password:</p>
-    <a href="{{route('resetpassword',['token' => $token])}}">Reset Password (valid for one hour)</a>
+    <a href="http://localhost:3000/forgotPasswordSecond?token={{$token}}&user=true">Reset Password (valid for one hour)</a>
     <p>If you did not request this password reset, please ignore this email.</p>
     <p>Thank you.</p>
 </body>

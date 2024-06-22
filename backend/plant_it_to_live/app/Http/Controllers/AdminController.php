@@ -456,7 +456,7 @@ class AdminController extends Controller
             'fertilizer'=>'required|string',
             'sunlight'=>'required|string',
             'pruning'=>'required|string',
-            'img'=>'required|image|mimes:jpeg,png,jpg,gif,svg',
+            'img'=>'image|mimes:jpeg,png,jpg,gif,svg',
             'water_amount'=>'required|string',
             'fertilizer_amount'=>'required|string',
             'sun_per_day'=>'required|string',

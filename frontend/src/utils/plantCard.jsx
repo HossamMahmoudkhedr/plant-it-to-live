@@ -18,7 +18,7 @@ const PlantCard = ({ img, name, setAllPlants, restprops }) => {
 			} else {
 				setImageURL('grape.png');
 			}
-		}, 2000);
+		}, 1000);
 	}, [setAllPlants, img]);
 	// if (img) {
 	// 	const reader = new FileReader();

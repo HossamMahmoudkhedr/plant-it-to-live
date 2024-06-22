@@ -10,6 +10,7 @@ import Cookies from 'js-cookie';
 import { Link } from 'react-router-dom';
 
 const PlantsDetails = () => {
+	const [allPlants, setAllPlants] = useState([]);
 	const [plants, setPlants] = useState([]);
 	const [userData, setUserData] = useState({});
 	const [selectedPlant, setSelectedPlant] = useState({});
@@ -27,6 +28,7 @@ const PlantsDetails = () => {
 		}
 		fetchApi('allplants').then((data) => {
 			setPlants(data.data.data);
+			setAllPlants(data.data.data);
 		});
 	}, []);
 
@@ -36,6 +38,19 @@ const PlantsDetails = () => {
 		fetchApi(`plant?id=${id}`).then((data) => {
 			setSelectedPlant(data.data);
 		});
+	};
+
+	const handleSearch = (e) => {
+		let value = e.target.value;
+		if (value === '') {
+			setPlants(allPlants);
+		} else {
+			setPlants(
+				plants.filter((plant) =>
+					plant['common_name'].toLowerCase().includes(value.toLowerCase())
+				)
+			);
+		}
 	};
 	return (
 		<Container maxWidth="xl">
@@ -102,12 +117,22 @@ const PlantsDetails = () => {
 					<CustomInput
 						placeholder={'Search for a plant'}
 						width="100%"
+						restprops={{ onChange: handleSearch }}
 					/>
 				</Stack>
 				<Grid
 					container
 					spacing={3}
 					padding="0 2rem">
+					{plants.length === 0 && (
+						<Stack
+							marginTop="2rem"
+							width="100%"
+							direction="row"
+							justifyContent="center">
+							<Typography variant="body1">There are no plants</Typography>
+						</Stack>
+					)}
 					{plants.map((plant) => (
 						<Grid
 							item

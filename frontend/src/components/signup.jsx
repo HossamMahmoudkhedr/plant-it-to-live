@@ -42,7 +42,7 @@ const Signup = () => {
 			.then((data) => {
 				console.log(data);
 				setLoading(false);
-				setSuccesMessage(data.massage);
+				setSuccesMessage(data.message);
 			})
 			.catch((error) => {
 				console.log(error);

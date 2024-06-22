@@ -342,7 +342,7 @@ const PlantDetails = ({
 							width: '100%',
 							position: 'relative',
 						}}>
-						{!editImg && (
+						{!editImg && !edit && (
 							<Button
 								variant="contained"
 								sx={{
@@ -441,6 +441,31 @@ const PlantDetails = ({
 					container
 					spacing={3}
 					padding="0 2rem">
+					<Grid
+						item
+						xs={12}
+						md={6}>
+						<Stack
+							direction="row"
+							alignItems="center"
+							gap="1rem">
+							<Typography
+								variant="body1"
+								sx={{ fontWeight: 'bold', marginBottom: '5px' }}>
+								Common name:
+							</Typography>
+
+							<NoStyleInput
+								type="text"
+								value={plant.name}
+								name={'common_name'}
+								padding={edit ? '10px' : ''}
+								border={edit ? '1px solid black' : ''}
+								contenteditable={!edit}
+								restprops={{ onInput: handleData }}
+							/>
+						</Stack>
+					</Grid>
 					<Grid
 						item
 						xs={12}

@@ -23,6 +23,7 @@ import PlantDetails from '../utils/plantDetails';
 import UserDetails from '../utils/userDetails';
 import { fetchApi } from '../utils/fetchFromAPI';
 import Cookies from 'js-cookie';
+import Security from './security';
 
 const StyledBox = styled(Box)`
 	display: flex;
@@ -50,6 +51,7 @@ const pages = [
 	{ name: 'Users', component: <Users /> },
 	{ name: 'Plants', component: <PlantsDashboard /> },
 	{ name: 'Suggestions', component: <Suggestions /> },
+	{ name: 'Security', component: <Security isUser={false} /> },
 ];
 
 const AdminDashboard = () => {
@@ -170,6 +172,28 @@ const AdminDashboard = () => {
 											color: currPage === 2 ? 'var(--dark-green)' : '#CFCAB6',
 										}}>
 										Suggestions
+									</Typography>
+								</StyledBox>
+								<StyledBox
+									component="li"
+									onClick={() => {
+										setCurrPage(3);
+									}}>
+									<Box
+										component="span"
+										sx={{
+											// fill: currPage === 2 ? 'var(--dark-green)' : '#CFCAB6',
+											stroke: currPage === 3 ? 'var(--dark-green)' : '#CFCAB6',
+										}}
+										height="30px">
+										{icons.security}
+									</Box>
+									<Typography
+										variant="body1"
+										sx={{
+											color: currPage === 3 ? 'var(--dark-green)' : '#CFCAB6',
+										}}>
+										Security
 									</Typography>
 								</StyledBox>
 							</Stack>

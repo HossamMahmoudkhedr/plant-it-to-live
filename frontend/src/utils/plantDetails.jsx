@@ -342,7 +342,7 @@ const PlantDetails = ({
 							width: '100%',
 							position: 'relative',
 						}}>
-						{!editImg && !edit && (
+						{!editImg && !edit && !isUser && (
 							<Button
 								variant="contained"
 								sx={{

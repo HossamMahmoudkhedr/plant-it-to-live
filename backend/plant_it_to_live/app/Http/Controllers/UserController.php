@@ -303,32 +303,6 @@ class UserController extends Controller
 
         return response()->json(['message' => 'Successfully loged out']);
     }
-    /************************************************************************************* */
-    public function redirectToGoogle()
-    {
-        return Socialite::driver('google')->redirect();
-    }
-
-    public function handleGoogleCallback()
-    {
-            // Retrieve user details from Google
-            $user = Socialite::driver('google')->user();
-            // Check if the user exists in your database or create a new user
-            $visitor = User::where('email', $user->getEmail())->first();
-            if (!$visitor) {
-                // If the user doesn't exist, create a new user
-                $visitor = new User();
-                $visitor->google_id=$user->getId();
-                $visitor->name = $user->getName();
-                $visitor->email = $user->getEmail();
-                $visitor->picture=$user->getAvatar();
-                $visitor->activated = true;
-                $visitor->save();
-            }
-            Auth::guard('user')->login($visitor);
-            $token = JWTAuth::fromUser($visitor);
-            return $this->SuccessResponse(['token' => $token]);// here we will r
-    }
     public function allplants()
     {
         $plants=Plant::paginate(50);
@@ -456,6 +430,4 @@ class UserController extends Controller
         $plants=$user->suggestions()->paginate(50);
         return $this->SuccessResponse($plants);
     }
-
-
 }

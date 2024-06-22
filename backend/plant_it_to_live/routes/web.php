@@ -14,6 +14,5 @@ use Illuminate\Support\Facades\Route;
 */
 use App\Http\Controllers\SocialiteController;
 Route::group(['middleware' => ['web']], function () {
-    Route::get('/auth/google/redirect', [SocialiteController::class, 'redirectToGoogle']);
-    Route::get('/auth/google/callback', [SocialiteController::class, 'handleGoogleCallback']);
+
 });

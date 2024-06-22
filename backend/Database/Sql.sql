@@ -80,7 +80,7 @@ alter table Suggested_plants
 add column  approved bit default 0; 
 ALTER TABLE Suggested_plants
 ADD COLUMN plant_id INT NULL;
-ALTER TABLE Suggested_plantss
+ALTER TABLE Suggested_plants
 ADD CONSTRAINT unique_plant_id UNIQUE (plant_id);
 ALTER TABLE Suggested_plants
 ADD CONSTRAINT fk_plant

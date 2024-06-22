@@ -20,7 +20,6 @@ create table users
     b_date timestamp ,
     gender  BIT,
     picture varchar(300),
-    google_id varchar(150),
     activated bool default false,
 	created_at timestamp,
     updated_at timestamp

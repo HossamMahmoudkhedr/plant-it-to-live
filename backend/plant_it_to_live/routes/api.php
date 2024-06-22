@@ -82,8 +82,6 @@ Route::group(['prefix'=>'/'],function()
     Route::post('forgetpassword', [UserController::class, 'forgetpassword']);//send email to user with url for reset password form
     Route::post('resetpassword', [UserController::class, 'resetpassword'])->name('resetpassword');//reset password form
     Route::post('changepassword',[UserController::class,'changepassword']);//change admin password using old password
-    Route::get('auth/google', [UserController::class, 'redirectToGoogle'])->middleware('web');//redir to google
-    Route::get('/auth/google/callback', [UserController::class, 'handleGoogleCallback'])->middleware('web');
     /*******************************************************************************************************************************/
 //--------------------------------------------AI Integration-----------------------------------------------------------//
     Route::Post('sendRequestToCropRecommendation',[CroprecommendationController::class,'sendRequestToCropRecommendation']);

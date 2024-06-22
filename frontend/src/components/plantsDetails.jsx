@@ -42,6 +42,7 @@ const PlantsDetails = () => {
 			{show && (
 				<PlantDetails
 					setShow={setShow}
+					img={selectedPlant.img}
 					appropriateSeason={selectedPlant['appropriate_season']}
 					fertilizer={selectedPlant['fertilizer']}
 					fertilizerAmount={selectedPlant['fertilizer_amount']}
@@ -55,7 +56,6 @@ const PlantsDetails = () => {
 					watering={selectedPlant['watering']}
 					id={selectedPlant['id']}
 					isUser={true}
-					text={'Save to my profile'}
 				/>
 			)}
 			<Stack
@@ -115,7 +115,7 @@ const PlantsDetails = () => {
 							md={4}
 							lg={3}>
 							<PlantCard
-								img="green-leaf-texture-leaf-texture-background.jpg"
+								img={plant.img}
 								name={plant['common_name']}
 								restprops={{
 									onClick: () => {

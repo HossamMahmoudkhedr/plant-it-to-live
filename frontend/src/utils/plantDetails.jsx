@@ -1,4 +1,4 @@
-import { Box, Grid, Stack, Typography } from '@mui/material';
+import { Box, Button, Grid, Stack, Typography } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import Dark from './dark';
 import CustomButton from './customButton';
@@ -7,6 +7,7 @@ import { fetchApi } from './fetchFromAPI';
 import Cookies from 'js-cookie';
 import NoStyleInput from './noStyleInput';
 import NoStyleTextarea from './noStyleTextarea';
+import { filterProps } from 'framer-motion';
 
 const PlantDetails = ({
 	id,
@@ -97,6 +98,8 @@ const PlantDetails = ({
 			const file = e.target.files[0];
 			console.log(file);
 			if (file) {
+				// setImage(file.name);
+
 				const reader = new FileReader();
 				reader.onload = (e) => {
 					setImage(e.target.result);
@@ -146,28 +149,49 @@ const PlantDetails = ({
 			formData
 		).then((data) => {
 			console.log(data);
+			fetchApi(`admin/plants?token=${Cookies.get('admin')}&page=1`).then(
+				(data) => {
+					console.log(data.data.data);
+					setAllPlants(data.data.data);
+				}
+			);
 		});
 	};
 
+	useEffect(() => {
+		if (id) {
+			fetchApi(`userplants?token=${Cookies.get('user')}`)
+				.then((data) => {
+					let plants = data.data.data;
+					let selectedPlant = plants.filter((el) => el.id === id);
+					console.log(selectedPlant.length);
+					if (selectedPlant.length !== 0) {
+						setTextToUser('Unsave from my profile');
+					} else {
+						setTextToUser('Save to my profile');
+					}
+				})
+				.catch((error) => {
+					setTextToUser('Save to my profile');
+				});
+		}
+	}, [id]);
+
 	const handleSaveToProfile = () => {
-		if (!textToUser) {
-			fetchApi(`selectplant?token=${Cookies.get('user')}&id=${id}`, 'POST')
-				.then((data) => {
-					console.log(data);
-					setTextToUser('Unsave from my profile');
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+		if (textToUser === 'Save to my profile') {
+			fetchApi(
+				`selectplant?token=${Cookies.get('user')}&id=${id}`,
+				'POST'
+			).then((data) => {
+				setTextToUser('Unsave from my profile');
+			});
 		} else {
-			fetchApi(`removeplant?token=${Cookies.get('user')}&id=${id}`, 'POST')
-				.then((data) => {
-					console.log(data);
-					setTextToUser('');
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+			fetchApi(
+				`removeplant?token=${Cookies.get('user')}&id=${id}`,
+				'POST'
+			).then((data) => {
+				setTextToUser('Save to my profile');
+			});
 		}
 	};
 
@@ -224,6 +248,8 @@ const PlantDetails = ({
 							overflow: 'hidden',
 							borderRadius: '1.25rem',
 							height: '222px',
+							position: 'relative',
+							width: '100%',
 						}}>
 						<input
 							ref={fileUploadRef}
@@ -233,24 +259,72 @@ const PlantDetails = ({
 							accept="image/*"
 							style={{ display: 'none' }}
 						/>
-						<img
-							height="200px"
-							width="100%"
-							style={{
-								objectFit: 'cover !important',
-								transition: 'all 0.3s linear',
-							}}
-							onClick={() => {
-								if (edit) {
-									fileUploadRef.current.click();
+						{edit && (
+							<Button
+								variant="contained"
+								sx={{
+									position: 'absolute',
+									left: '50%',
+									transform: 'translateX(-50%)',
+									top: '20px',
+									zIndex: '2',
+									color: 'white',
+									backgroundColor: 'var(--very-dark-green)',
+									'&:hover': { backgroundColor: 'var(--very-dark-green)' },
+								}}
+								onClick={() => {
+									if (edit) {
+										fileUploadRef.current.click();
+									}
+									// setEdit(false);
+									// handleSubmit(id);
+								}}>
+								Click To Upload The Photot
+							</Button>
+						)}
+						{!edit && (
+							<img
+								width="100%"
+								style={{
+									objectFit: 'cover !important',
+									transition: 'all 0.3s linear',
+								}}
+								src={
+									image
+										? image
+										: require(`../assets/images/${img ? img : 'grape.png'}`)
 								}
-								// setEdit(false);
-								// handleSubmit(id);
-							}}
-							src={img || image}
-							alt=""
-							loading="lazy"
-						/>
+								alt=""
+								loading="lazy"
+							/>
+						)}
+
+						{/* {!edit && lastImage && (
+							<img
+								width="100%"
+								style={{
+									objectFit: 'cover !important',
+									transition: 'all 0.3s linear',
+								}}
+								src={require(`../assets/images/${
+									lastImage ? lastImage : 'grape.png'
+								}`)}
+								alt=""
+								loading="lazy"
+							/>
+						)} */}
+						{edit && (
+							<img
+								width="100%"
+								style={{
+									objectFit: 'cover !important',
+									transition: 'all 0.3s linear',
+								}}
+								src={image ? image : require(`../assets/images/${img}`)}
+								alt=""
+								loading="lazy"
+							/>
+						)}
 					</Box>
 				</Stack>
 				<Grid

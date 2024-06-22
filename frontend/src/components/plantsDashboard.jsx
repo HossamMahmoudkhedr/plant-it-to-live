@@ -28,7 +28,7 @@ const PlantsDashboard = () => {
 		setShow(true);
 		fetchApi(`admin/plant?token=${Cookies.get('admin')}&id=${id}`).then(
 			(data) => {
-				console.log(data);
+				console.log(data.data);
 				setSelectedPlant(data.data);
 			}
 		);
@@ -80,7 +80,7 @@ const PlantsDashboard = () => {
 								backgroundColor: 'var(--body)',
 								borderRadius: '2rem',
 							}}>
-							<SuggestPlant />
+							<SuggestPlant admin={true} />
 						</Box>
 					</Box>
 				</>
@@ -91,6 +91,7 @@ const PlantsDashboard = () => {
 					setAllPlants={setAllPlants}
 					suggestion={false}
 					isUser={false}
+					img={selectedPlant.img}
 					appropriateSeason={selectedPlant['appropriate_season']}
 					fertilizer={selectedPlant['fertilizer']}
 					fertilizerAmount={selectedPlant['fertilizer_amount']}
@@ -121,24 +122,32 @@ const PlantsDashboard = () => {
 						/>
 					</Grid> */}
 
-					{allPlants.map((plant) => (
-						<Grid
-							key={plant.id}
-							item
-							xs={12}
-							md={4}
-							lg={3}>
-							<PlantCard
-								img={plant.img || 'apple.png'}
-								name={plant.common_name}
-								restprops={{
-									onClick: () => {
-										handleClick(plant.id);
-									},
-								}}
-							/>
-						</Grid>
-					))}
+					{allPlants &&
+						allPlants.map((plant) => {
+							return (
+								plant &&
+								plant.img && (
+									<Grid
+										key={plant.id}
+										item
+										xs={12}
+										md={4}
+										lg={3}>
+										<PlantCard
+											img={plant.img}
+											// img={'apple.png'}
+											setAllPlants={setAllPlants}
+											name={plant.common_name}
+											restprops={{
+												onClick: () => {
+													handleClick(plant.id);
+												},
+											}}
+										/>
+									</Grid>
+								)
+							);
+						})}
 
 					<Grid
 						item

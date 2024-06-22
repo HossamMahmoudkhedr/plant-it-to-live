@@ -66,7 +66,7 @@ const Suggestions = () => {
 				{suggestions &&
 					suggestions.map((suggestion) => (
 						<Suggestion
-							user={'Plant'}
+							user={[suggestion.user.name]}
 							plant={suggestion['scientific_name']}
 							restprops={{
 								onClick: () => {

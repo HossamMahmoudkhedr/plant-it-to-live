@@ -7,12 +7,15 @@ import CustomSelect from '../utils/customSelect';
 import { fetchApi } from '../utils/fetchFromAPI';
 import Loading from '../utils/loading';
 import Dark from '../utils/dark';
+import AlertMessage from '../utils/alertMessage';
 
 const Signup = () => {
 	const [data, setData] = useState({});
 	const [loading, setLoading] = useState(false);
 	const [firstName, setFirstName] = useState('');
-	const [succesMessage, setSuccesMessage] = useState('');
+	const [message, setMessage] = useState('');
+	const [error, setError] = useState(false);
+	const [show, setShow] = useState(false);
 	const navigate = useNavigate();
 	const handleInput = (e) => {
 		let name = e.target.name;
@@ -42,31 +45,30 @@ const Signup = () => {
 			.then((data) => {
 				console.log(data);
 				setLoading(false);
-				setSuccesMessage(data.message);
+				setError(false);
+				setShow(true);
+				setMessage(data.message);
 			})
 			.catch((error) => {
 				console.log(error);
+				setMessage(
+					error.response.data.data[Object.keys(error.response.data.data)[0]] ||
+						'Something went worng, please try again!'
+				);
+				setError(true);
 				setLoading(false);
+				setShow(true);
 			});
 	};
 
 	return (
 		<>
-			{succesMessage && (
-				<>
-					<Dark />
-					<Alert
-						severity="success"
-						sx={{
-							position: 'fixed',
-							left: '50%',
-							top: '50%',
-							transform: 'translate(-50%, -50%)',
-							zIndex: 999,
-						}}>
-						{succesMessage}
-					</Alert>
-				</>
+			{show && (
+				<AlertMessage
+					error={error}
+					message={message}
+					setShow={setShow}
+				/>
 			)}
 			{loading && <Loading />}
 			<Stack

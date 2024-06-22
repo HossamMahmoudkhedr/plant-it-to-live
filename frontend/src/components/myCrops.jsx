@@ -1,4 +1,4 @@
-import { Grid, Stack, Typography } from '@mui/material';
+import { Box, Grid, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import PlantCard from '../utils/plantCard';
 import { fetchApi } from '../utils/fetchFromAPI';
@@ -8,9 +8,13 @@ const MyCrops = () => {
 	const [plants, setPlants] = useState([]);
 	const [selectedPlant, setSelectedPlant] = useState({});
 	const [show, setShow] = useState(false);
+	const [pagination, setPagination] = useState([]);
 	useEffect(() => {
 		fetchApi(`userplants?token=${Cookies.get('user')}`).then((data) => {
 			setPlants(data.data.data);
+			setPagination(
+				Array.from({ length: parseInt(data.data.total) }, (_, i) => i + 1)
+			);
 		});
 	}, [plants]);
 	const handleClick = (id) => {
@@ -115,6 +119,32 @@ const MyCrops = () => {
 					/>
 			</Grid> */}
 			</Grid>
+			<Stack
+				direction="row"
+				justifyContent={'center'}
+				gap="1rem"
+				alignItems="center"
+				margin="2rem 0">
+				{pagination.map((el) => (
+					<Box
+						sx={{
+							backgroundColor: '#aaa',
+							padding: '1rem',
+							cursor: 'pointer',
+						}}
+						onClick={() => {
+							fetchApi(
+								`userplants?token=${Cookies.get('user')}&page=${el}`
+							).then((data) => {
+								setPlants(data.data.data);
+
+								console.log(data.data.total);
+							});
+						}}>
+						{el}
+					</Box>
+				))}
+			</Stack>
 		</>
 	);
 };

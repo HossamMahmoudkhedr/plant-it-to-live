@@ -16,11 +16,15 @@ const PlantsDashboard = () => {
 	const [show, setShow] = useState(false);
 	const [showAddPlant, setShowAddPlant] = useState(false);
 	const [selectedPlant, setSelectedPlant] = useState({});
+	const [pagination, setPagination] = useState([]);
 	useEffect(() => {
 		fetchApi(`admin/plants?token=${Cookies.get('admin')}&page=1`).then(
 			(data) => {
 				console.log(data.data.data);
 				setAllPlants(data.data.data);
+				setPagination(
+					Array.from({ length: parseInt(data.data.total) }, (_, i) => i + 1)
+				);
 			}
 		);
 	}, []);
@@ -235,6 +239,32 @@ const PlantsDashboard = () => {
 							</Button>
 						</Grid>
 					</Grid>
+				</Stack>
+				<Stack
+					direction="row"
+					justifyContent={'center'}
+					gap="1rem"
+					alignItems="center"
+					margin="2rem 0">
+					{pagination.map((el) => (
+						<Box
+							sx={{
+								backgroundColor: '#aaa',
+								padding: '1rem',
+								cursor: 'pointer',
+							}}
+							onClick={() => {
+								fetchApi(
+									`admin/plants?token=${Cookies.get('admin')}&page=${el}`
+								).then((data) => {
+									setAllPlants(data.data.data);
+
+									console.log(data.data.total);
+								});
+							}}>
+							{el}
+						</Box>
+					))}
 				</Stack>
 			</Container>
 		</>

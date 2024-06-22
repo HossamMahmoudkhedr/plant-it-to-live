@@ -7,15 +7,22 @@ import PlantDetails from '../utils/plantDetails';
 import { useScroll } from 'framer-motion';
 import { fetchApi } from '../utils/fetchFromAPI';
 import Cookies from 'js-cookie';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const PlantsDetails = () => {
 	const [allPlants, setAllPlants] = useState([]);
 	const [plants, setPlants] = useState([]);
 	const [userData, setUserData] = useState({});
 	const [selectedPlant, setSelectedPlant] = useState({});
+	const [pagination, setPagination] = useState([]);
+	const [page, setPage] = useState(1);
 	const [show, setShow] = useState(false);
+	const navigate = useNavigate();
 	useEffect(() => {
+		if (!Cookies.get('user')) {
+			// navigate('/login');
+			window.location.href = '/';
+		}
 		if (Cookies.get('user')) {
 			fetchApi(`user?token=${Cookies.get('user')}`)
 				.then((data) => {
@@ -26,9 +33,13 @@ const PlantsDetails = () => {
 					console.log(error);
 				});
 		}
-		fetchApi('allplants').then((data) => {
+		fetchApi(`allplants?page=1`).then((data) => {
 			setPlants(data.data.data);
 			setAllPlants(data.data.data);
+			setPagination(
+				Array.from({ length: parseInt(data.data.total) }, (_, i) => i + 1)
+			);
+			console.log(data.data.total);
 		});
 	}, []);
 
@@ -191,6 +202,31 @@ const PlantsDetails = () => {
 						/>
 					</Grid> */}
 				</Grid>
+			</Stack>
+			<Stack
+				direction="row"
+				justifyContent={'center'}
+				gap="1rem"
+				alignItems="center"
+				margin="2rem 0">
+				{pagination.map((el) => (
+					<Box
+						sx={{
+							backgroundColor: '#aaa',
+							padding: '1rem',
+							cursor: 'pointer',
+						}}
+						onClick={() => {
+							fetchApi(`allplants?page=${el}`).then((data) => {
+								setPlants(data.data.data);
+								setAllPlants(data.data.data);
+
+								console.log(data.data.total);
+							});
+						}}>
+						{el}
+					</Box>
+				))}
 			</Stack>
 		</Container>
 	);

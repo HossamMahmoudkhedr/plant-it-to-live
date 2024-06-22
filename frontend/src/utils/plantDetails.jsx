@@ -263,6 +263,7 @@ const PlantDetails = ({
 		fetchApi(`admin/acceptsuggestion?token=${Cookies.get('admin')}&id=${id}`)
 			.then((data) => {
 				console.log(data);
+				setShow(false);
 			})
 			.catch((error) => {
 				console.log(error);
@@ -302,7 +303,7 @@ const PlantDetails = ({
 					borderRadius: '1.25rem',
 					zIndex: '9',
 					height: '90vh',
-					width: '70%',
+					width: '90%',
 					overflowY: 'scroll',
 				}}>
 				<Stack
@@ -446,7 +447,7 @@ const PlantDetails = ({
 						xs={12}
 						md={6}>
 						<Stack
-							direction="row"
+							direction={{ xs: 'column', lg: 'row' }}
 							alignItems="center"
 							gap="1rem">
 							<Typography
@@ -471,7 +472,7 @@ const PlantDetails = ({
 						xs={12}
 						md={6}>
 						<Stack
-							direction="row"
+							direction={{ xs: 'column', lg: 'row' }}
 							alignItems="center"
 							gap="1rem">
 							<Typography
@@ -496,7 +497,7 @@ const PlantDetails = ({
 						xs={12}
 						md={6}>
 						<Stack
-							direction="row"
+							direction={{ xs: 'column', lg: 'row' }}
 							gap="1rem">
 							<Typography
 								component="p"
@@ -521,7 +522,7 @@ const PlantDetails = ({
 						xs={12}
 						md={6}>
 						<Stack
-							direction="row"
+							direction={{ xs: 'column', lg: 'row' }}
 							gap="1rem">
 							<Typography
 								variant="body1"
@@ -544,7 +545,7 @@ const PlantDetails = ({
 						item
 						xs={12}
 						md={6}>
-						<Stack direction="row">
+						<Stack direction={{ xs: 'column', lg: 'row' }}>
 							<Typography
 								variant="body1"
 								sx={{ fontWeight: 'bold', width: '60%' }}>
@@ -567,7 +568,7 @@ const PlantDetails = ({
 						xs={12}
 						md={6}>
 						<Stack
-							direction="row"
+							direction={{ xs: 'column', lg: 'row' }}
 							gap="1rem">
 							<Typography
 								variant="body1"
@@ -590,7 +591,7 @@ const PlantDetails = ({
 						item
 						xs={12}
 						md={6}>
-						<Stack direction="row">
+						<Stack direction={{ xs: 'column', lg: 'row' }}>
 							<Typography
 								variant="body1"
 								sx={{ fontWeight: 'bold' }}>
@@ -613,7 +614,7 @@ const PlantDetails = ({
 						xs={12}
 						md={6}>
 						<Stack
-							direction="row"
+							direction={{ xs: 'column', lg: 'row' }}
 							gap="1rem">
 							<Typography
 								variant="body1"
@@ -637,7 +638,7 @@ const PlantDetails = ({
 						xs={12}
 						md={6}>
 						<Stack
-							direction="row"
+							direction={{ xs: 'column', lg: 'row' }}
 							gap="1rem">
 							<Typography
 								variant="body1"
@@ -661,7 +662,7 @@ const PlantDetails = ({
 						xs={12}
 						md={6}>
 						<Stack
-							direction="row"
+							direction={{ xs: 'column', lg: 'row' }}
 							gap="1rem">
 							<Typography
 								variant="body1"
@@ -684,7 +685,7 @@ const PlantDetails = ({
 						item
 						xs={12}
 						md={6}>
-						<Stack direction="row">
+						<Stack direction={{ xs: 'column', lg: 'row' }}>
 							<Typography
 								variant="body1"
 								sx={{ fontWeight: 'bold', width: '60%' }}>
@@ -747,7 +748,7 @@ const PlantDetails = ({
 				)}
 				{!isUser && !suggestion && (
 					<Stack
-						direction="row"
+						direction={{ xs: 'column', lg: 'row' }}
 						justifyContent="space-between"
 						alignItems="center">
 						<Box sx={{ fontWeight: 'bold' }}>
@@ -789,7 +790,7 @@ const PlantDetails = ({
 				)}
 				{!isUser && suggestion && (
 					<Stack
-						direction="row"
+						direction={{ xs: 'column', lg: 'row' }}
 						justifyContent="space-between"
 						alignItems="center"
 						sx={{ fontSize: 'bold' }}>

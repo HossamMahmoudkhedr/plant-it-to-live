@@ -33,18 +33,22 @@ const StyledBox = styled(Box)`
 const UserProfile = () => {
 	const [currPage, setCurrPage] = useState(0);
 	const [userData, setUserData] = useState({});
+	const [showSide, setShowSide] = useState(false);
 	const navigate = useNavigate();
 	useEffect(() => {
-		if (Cookies.get('user')) {
-			fetchApi(`user?token=${Cookies.get('user')}`)
-				.then((data) => {
-					console.log(data);
-					setUserData(data.data);
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+		if (!Cookies.get('user')) {
+			navigate('/login');
+			window.location.reload();
 		}
+		fetchApi(`user?token=${Cookies.get('user')}`)
+			.then((data) => {
+				console.log(data);
+				setUserData(data.data);
+			})
+			.catch((error) => {
+				console.log(error);
+				navigate('/login');
+			});
 	}, []);
 
 	const handleLogout = () => {
@@ -58,12 +62,41 @@ const UserProfile = () => {
 		<Box>
 			<Box
 				sx={{
-					width: '20%',
+					position: 'absolute',
+					left: '20px',
+					top: '20px',
+					zIndex: '99',
+					display: { xs: 'block', lg: 'none' },
+				}}>
+				<Button
+					variant="containted"
+					sx={{
+						background: '#aaa',
+						borderRadius: '1rem',
+						'&:hover': { background: '#aaa' },
+					}}
+					onClick={() => {
+						setShowSide(!showSide);
+					}}>
+					{icons.menu}
+				</Button>
+			</Box>
+			<Box
+				sx={{
+					width: { xs: '80%', lg: '20%' },
 					float: 'left',
 					backgroundColor: 'white',
 					position: 'fixed',
 					left: 0,
 					height: '100vh',
+					// position: { xs: 'fixed', lg: 'unset' },
+					left: { xs: 0, lg: 'unset' },
+					transform: {
+						xs: `${showSide ? 'translateX(0%)' : 'translateX(-180%)'}`,
+						lg: 'unset',
+					},
+
+					zIndex: 9,
 				}}>
 				<Stack
 					sx={{
@@ -208,7 +241,11 @@ const UserProfile = () => {
 					</Button>
 				</Stack>
 			</Box>
-			<Box sx={{ width: '80%', float: 'right' }}>
+			<Box
+				sx={{
+					width: { xs: '100%', lg: '80%' },
+					float: { xs: 'unset', lg: 'right' },
+				}}>
 				<Stack
 					direction="row"
 					sx={{
@@ -226,16 +263,35 @@ const UserProfile = () => {
 							style={{ padding: '0rem 1rem 0rem 0rem', height: '35px' }}>
 							{icons.home}
 						</Link>
-						<Typography
-							variant="body1"
-							sx={{
-								color: 'var(--dark-green)',
-								fontWeight: 'bold',
-								padding: '0rem 0rem 0rem 1rem',
-								borderLeft: '1px dotted black',
-							}}>
-							{userData ? userData.name : 'User'}
-						</Typography>
+						<Stack
+							direction={{ xs: 'column', lg: 'row-reverse' }}
+							sx={{ alignItems: 'center', gap: '1rem' }}>
+							{userData.picture && (
+								<Box
+									sx={{
+										width: '60px',
+										height: '60px',
+										overflow: 'hidden',
+										borderRadius: '50%',
+									}}>
+									<img
+										style={{ width: '100%', objectFit: 'cover' }}
+										src={require(`../assets/images/${userData.picture}`)}
+										alt=""
+									/>
+								</Box>
+							)}
+							<Typography
+								variant="body1"
+								sx={{
+									color: 'var(--dark-green)',
+									fontWeight: 'bold',
+									padding: '0rem 0rem 0rem 1rem',
+									borderLeft: { xs: 'unset', lg: '1px dotted black' },
+								}}>
+								{userData ? userData.name : 'User'}
+							</Typography>
+						</Stack>
 					</Stack>
 				</Stack>
 				<Stack sx={{ padding: '2rem 3rem 1rem 3rem' }}>

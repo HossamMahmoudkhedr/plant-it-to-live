@@ -4,6 +4,7 @@ import CustomInput from '../utils/customInput';
 import CustomButton from '../utils/customButton';
 import { fetchApi } from '../utils/fetchFromAPI';
 import AlertMessage from '../utils/alertMessage';
+import Loading from '../utils/loading';
 
 const ForgotPassword = () => {
 	const [isUser, setIsUser] = useState();
@@ -12,6 +13,7 @@ const ForgotPassword = () => {
 	const [error, setError] = useState(false);
 	const [email, setEmail] = useState('');
 	const [show, setShow] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const handleInput = (e) => {
 		let value = e.target.value;
 		setEmail(value);
@@ -26,17 +28,20 @@ const ForgotPassword = () => {
 	}, [email]);
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		setLoading(true);
 		if (isUser) {
 			fetchApi(`forgetpassword/?email=${email}`)
 				.then((data) => {
 					console.log(data);
 					setMessage(data.data);
 					setShow(true);
+					setLoading(false);
 				})
 				.catch((error) => {
 					console.log(error);
 					setMessage(error.message);
 					setError(true);
+					setLoading(false);
 				});
 		} else {
 			fetchApi(`admin/forgetpassword?email=${email}`)
@@ -44,16 +49,19 @@ const ForgotPassword = () => {
 					console.log(data);
 					setMessage(data.data);
 					setShow(true);
+					setLoading(false);
 				})
 				.catch((error) => {
 					console.log(error);
 					setMessage(error.message);
 					setError(true);
+					setLoading(false);
 				});
 		}
 	};
 	return (
 		<>
+			{loading && <Loading />}
 			{show && (
 				<AlertMessage
 					setShow={setShow}

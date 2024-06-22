@@ -91,9 +91,11 @@ class UserController extends Controller
 
             $picture = $request->file('picture');
             $fileName = time() . '_' .Str::random(10). rand(1,1000) . '.' . $picture->getClientOriginalExtension();
-            $picture->move(public_path('pictures'), $fileName);
-             $filepath = 'C:\\xampp\\htdocs\\plant-it-to-live\\backend\\plant_it_to_live\\public\\pictures\\' . $fileName;
-             $user->picture = $filepath;
+            //$picture->move(public_path('pictures'), $fileName);
+             //$filepath = 'C:\\xampp\\htdocs\\plant-it-to-live\\backend\\plant_it_to_live\\public\\pictures\\' . $fileName;
+             $finalPath = 'C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images';
+             $picture->move($finalPath, $fileName);
+             $user->picture = $fileName;
         }
 
         if($user->save())
@@ -135,13 +137,16 @@ class UserController extends Controller
          if(isset($request->picture)) {
              if($user->picture!=null&&$user->google_id==null)
              {
-                 unlink($user->picture);
+                 unlink('C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images/'.$user->picture);
              }
              $picture = $request->file('picture');
              $fileName = time() . '_' .Str::random(10). rand(1,1000) . '.' . $picture->getClientOriginalExtension();
-             $picture->move(public_path('pictures'), $fileName);
-             $filepath = 'C:\\xampp\\htdocs\\plant-it-to-live\\backend\\plant_it_to_live\\public\\pictures\\' . $fileName;
-             $user->picture = $filepath;
+            // $picture->move(public_path('pictures'), $fileName);
+             //$filepath = 'C:\\xampp\\htdocs\\plant-it-to-live\\backend\\plant_it_to_live\\public\\pictures\\' . $fileName;
+             //$user->picture = $filepath;
+             $finalPath = 'C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images';
+             $picture->move($finalPath, $fileName);
+             $user->picture = $fileName;
         }
         if($user->save())
         {
@@ -169,11 +174,23 @@ class UserController extends Controller
         if (!$user) {
             return $this->failed('User not found');
         }
-         $user->plants()->detach();
-         $user->suggestions()->delete();
          if($user->picture!=null&&$user->google_id==null)
          {
-             unlink($user->picture);
+             unlink('C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images/'.$user->picture);
+         }
+         $user->plants()->detach();
+         $plants=$user->suggestions;
+
+         if($plants)
+         {
+             foreach($plants as $plant)
+             {
+                 if($plant->img!=null)
+                 {
+                     unlink('C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images/'.$plant->img);
+                     $plant->delete();
+                 }
+             }
          }
          if($user->delete())
         {
@@ -424,9 +441,11 @@ class UserController extends Controller
         $plant->appropriate_season=$request->appropriate_season;
         $img=$request->file('img');
         $filename=time().'.'.$img->getClientOriginalExtension();
-        $img->move(public_path('plantImges'),$filename);
-        $filepath = 'C:\\xampp\\htdocs\\plant-it-to-live\\backend\\plant_it_to_live\\public\\plantImges\\' . $filename;
-        $plant->img = $filepath;
+       // $img->move(public_path('plantImges'),$filename);
+        //$filepath = 'C:\\xampp\\htdocs\\plant-it-to-live\\backend\\plant_it_to_live\\public\\plantImges\\' . $filename;
+        $finalPath = 'C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images';
+        $img->move($finalPath, $filename);
+        $plant->img = $filename;
         $plant->user_id=Auth()->user()->id;
         $plant->save();
         return $this->SuccessResponse();

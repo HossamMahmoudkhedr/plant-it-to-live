@@ -13,7 +13,7 @@ import { fetchApi } from '../utils/fetchFromAPI';
 
 const pages = [
 	{ name: 'My profile', component: <MyProfile /> },
-	{ name: 'Security', component: <Security /> },
+	{ name: 'Security', component: <Security isUser={true} /> },
 	{ name: 'My crops', component: <MyCrops /> },
 	{ name: 'Help us', component: <SuggestPlant admin={false} /> },
 ];

@@ -109,7 +109,9 @@ const PlantDetails = ({
 				formData.append('fertilizer', plant.fertilizer);
 				formData.append('sunlight', plant.sunlight);
 				formData.append('pruning', plant.pruning);
-				formData.append('img', file);
+				if (file) {
+					formData.append('img', file);
+				}
 				formData.append('water_amount', plant.waterAmount);
 				formData.append('fertilizer_amount', plant.fertilizerAmount);
 				formData.append('sun_per_day', plant.sunPerDay);
@@ -121,28 +123,39 @@ const PlantDetails = ({
 						`admin/editplant?token=${Cookies.get('admin')}&id=${id}`,
 						'POST',
 						formData
-					).then((data) => {
-						console.log(data);
-						fetchApi(`admin/plants?token=${Cookies.get('admin')}&page=1`).then(
-							(data) => {
+					)
+						.then((data) => {
+							console.log(data);
+							setEditImg(false);
+							fetchApi(
+								`admin/plants?token=${Cookies.get('admin')}&page=1`
+							).then((data) => {
 								console.log(data.data.data);
 								setAllPlants(data.data.data);
-							}
-						);
-					});
+								setEditImg(false);
+							});
+						})
+						.catch((error) => {
+							console.log(error);
+						});
 				} else if (suggestion) {
 					fetchApi(
 						`admin/editsuggestion?token=${Cookies.get('admin')}&id=${id}`,
 						'POST',
 						formData
-					).then((data) => {
-						console.log(data);
-						fetchApi(`admin/allsuggestions?token=${Cookies.get('admin')}`).then(
-							(data) => {
+					)
+						.then((data) => {
+							console.log(data);
+							setEditImg(false);
+							fetchApi(
+								`admin/allsuggestions?token=${Cookies.get('admin')}`
+							).then((data) => {
 								setSuggestions(data.data.data);
-							}
-						);
-					});
+							});
+						})
+						.catch((error) => {
+							setEditImg(false);
+						});
 				}
 				const reader = new FileReader();
 				reader.onload = (e) => {

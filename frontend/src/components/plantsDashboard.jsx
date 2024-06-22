@@ -80,7 +80,11 @@ const PlantsDashboard = () => {
 								backgroundColor: 'var(--body)',
 								borderRadius: '2rem',
 							}}>
-							<SuggestPlant admin={true} />
+							<SuggestPlant
+								admin={true}
+								setAllPlants={setAllPlants}
+								setShowAddPlant={setShowAddPlant}
+							/>
 						</Box>
 					</Box>
 				</>
@@ -168,6 +172,7 @@ const PlantsDashboard = () => {
 								color: 'black',
 								gap: '1rem',
 								stroke: 'black',
+								height: '250px',
 								'&:hover': {
 									backgroundColor: 'var(--very-dark-green)',
 									color: 'white',

@@ -42,10 +42,10 @@ const PlantCard = ({ img, name, setAllPlants, restprops }) => {
 				sx={{ overflow: 'hidden', borderRadius: '1.25rem', height: '222px' }}>
 				{imageURL !== 'grape.png' && (
 					<img
-						width="100%"
 						style={{
 							objectFit: 'cover !important',
 							transition: 'all 0.3s linear',
+							width: '100%',
 						}}
 						src={
 							// require('../../../backend/plant_it_to_live/public/plantImges/1718951011.png') ||

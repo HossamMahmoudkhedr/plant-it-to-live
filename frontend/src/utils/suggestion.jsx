@@ -1,7 +1,7 @@
 import { Stack, Typography } from '@mui/material';
 import React from 'react';
 
-const Suggestion = ({ user, plant }) => {
+const Suggestion = ({ user, plant, restprops }) => {
 	return (
 		<Stack
 			direction="row"
@@ -13,7 +13,8 @@ const Suggestion = ({ user, plant }) => {
 				borderRadius: '0.8rem',
 				cursor: 'pointer',
 				'&:hover': { backgroundColor: 'var(--very-light-gray)' },
-			}}>
+			}}
+			{...restprops}>
 			<Stack
 				direction="row"
 				alignItems={'center'}

@@ -6,7 +6,7 @@ import CustomButton from '../utils/customButton';
 import { fetchApi } from '../utils/fetchFromAPI';
 import Cookies from 'js-cookie';
 
-const SuggestPlant = ({ admin }) => {
+const SuggestPlant = ({ admin, setAllPlants, setShowAddPlant }) => {
 	const formData = new FormData();
 	const handleInput = (e) => {
 		let name = e.target.name;
@@ -39,16 +39,19 @@ const SuggestPlant = ({ admin }) => {
 			fetchApi(`admin/addplant?token=${Cookies.get('admin')}`, 'POST', formData)
 				.then((data) => {
 					console.log(data);
+					setShowAddPlant(false);
+					fetchApi(`admin/plants?token=${Cookies.get('admin')}&page=1`).then(
+						(data) => {
+							console.log(data.data.data);
+							setAllPlants(data.data.data);
+						}
+					);
 				})
 				.catch((error) => {
 					console.log(error);
 				});
 		} else {
-			fetchApi(
-				`admin/addsuggestion?token=${Cookies.get('user')}`,
-				'POST',
-				formData
-			)
+			fetchApi(`addsuggestion?token=${Cookies.get('user')}`, 'POST', formData)
 				.then((data) => {
 					console.log(data);
 				})

@@ -25,6 +25,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use App\Exports\PlantsExport;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use function Laravel\Prompts\select;
+
 class AdminController extends Controller
 {
     //
@@ -377,7 +379,7 @@ class AdminController extends Controller
     }
     public function allsuggestions()
     {
-        $suggestions=Suggested_plant::paginate(50);
+        $suggestions = Suggested_plant::with(['user:id,name'])->paginate(50);
         if($suggestions)
         {
             $suggestions->makeHidden(['admin_id','user_id']);

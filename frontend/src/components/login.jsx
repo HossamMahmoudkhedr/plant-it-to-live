@@ -5,7 +5,7 @@ import CustomInput from '../utils/customInput';
 import { icons } from '../utils/icons';
 import { fetchApi } from '../utils/fetchFromAPI';
 import Loading from '../utils/loading';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 const Login = () => {
@@ -162,16 +162,16 @@ const Login = () => {
 							</Stack>
 						</Stack>
 						<Stack alignItems="center">
-							<a
+							<Link
 								style={{
 									textDecoration: 'underline',
 									color: 'var(--very-light-green)',
 									fontWeight: '600',
 									fontSize: { xs: '1rem', md: '1.25rem' },
 								}}
-								href="">
+								to={`/forgotPassword?user=true`}>
 								Forget Password?
-							</a>
+							</Link>
 						</Stack>
 					</Stack>
 				</Box>

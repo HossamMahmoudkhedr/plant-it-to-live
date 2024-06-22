@@ -1,9 +1,11 @@
-import { Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import Suggestion from '../utils/suggestion';
 import { fetchApi } from '../utils/fetchFromAPI';
 import Cookies from 'js-cookie';
 import PlantDetails from '../utils/plantDetails';
+import CustomButton from '../utils/customButton';
+import axios from 'axios';
 
 const Suggestions = () => {
 	const [suggestions, setSuggestions] = useState([]);
@@ -28,6 +30,42 @@ const Suggestions = () => {
 	};
 	return (
 		<>
+			<Box sx={{ position: 'fixed', right: '20px', bottom: '20px', zIndex: 9 }}>
+				<CustomButton
+					background="var(--very-dark-green)"
+					borderradius="0.5rem"
+					color="white"
+					padding="0.8rem 2rem "
+					text={'Print'}
+					restprops={{
+						onClick: () => {
+							axios({
+								url: `http://127.0.0.1:8000/api/admin/exportsuggest?token=${Cookies.get(
+									'admin'
+								)}`,
+								method: 'GET',
+								responseType: 'blob', // Important for file download
+							})
+								.then((response) => {
+									const url = window.URL.createObjectURL(
+										new Blob([response.data])
+									);
+									const a = document.createElement('a');
+									a.style.display = 'none';
+									a.href = url;
+									a.download = 'Suggestions.csv'; // Change the file name and extension as needed
+									document.body.appendChild(a);
+									a.click();
+									window.URL.revokeObjectURL(url);
+									document.body.removeChild(a);
+								})
+								.catch((error) => {
+									console.error('Error downloading the file:', error);
+								});
+						},
+					}}
+				/>
+			</Box>
 			{show && (
 				<PlantDetails
 					setShow={setShow}

@@ -108,16 +108,16 @@ const Security = ({ isUser }) => {
 							restprops={{ onChange: handleInput }}
 						/>
 						<Stack alignItems="center">
-							<a
+							<Link
+								to={`/forgotPassword?user=${isUser}`}
 								style={{
 									textDecoration: 'underline',
 									color: 'var(--very-light-green)',
 									fontWeight: '600',
 									fontSize: { xs: '1rem', md: '1.25rem' },
-								}}
-								href="">
+								}}>
 								Forgot your password?
-							</a>
+							</Link>
 						</Stack>
 					</Stack>
 				</Stack>

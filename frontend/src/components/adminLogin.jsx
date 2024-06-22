@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import CustomButton from '../utils/customButton';
 import { fetchApi } from '../utils/fetchFromAPI';
 import Cookies from 'js-cookie';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const StyledInput = styled.input`
 	padding: 1rem 0.3rem;
@@ -140,16 +140,16 @@ const AdminLogin = () => {
 									justifyContent: 'center',
 									gap: { xs: '1rem', lg: 'unset' },
 								}}>
-								<a
+								<Link
+									to={`/forgotPassword?user=false`}
 									style={{
 										textDecoration: 'underline',
 										color: '#555555',
 										fontWeight: '600',
 										fontSize: { xs: '1rem', md: '1.25rem' },
-									}}
-									href="">
+									}}>
 									Forgot your password?
-								</a>
+								</Link>
 							</Stack>
 							<Box
 								width="100%"

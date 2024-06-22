@@ -19,6 +19,8 @@ import AdminLogin from './components/adminLogin';
 import PlantsDetails from './components/plantsDetails';
 import AdminDashboard from './components/adminDashboard';
 import Activate from './components/activate';
+import ForgotPassword from './components/forgotPassword';
+import ForgetPasswordSecond from './components/forgetPasswordSecond';
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -72,6 +74,14 @@ const router = createBrowserRouter(
 			<Route
 				path="/activate"
 				element={<Activate />}
+			/>
+			<Route
+				path="/forgotPassword"
+				element={<ForgotPassword />}
+			/>
+			<Route
+				path="/forgotPasswordSecond"
+				element={<ForgetPasswordSecond />}
 			/>
 			<Route
 				path="*"

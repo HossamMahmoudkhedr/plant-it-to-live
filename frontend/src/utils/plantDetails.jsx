@@ -28,6 +28,7 @@ const PlantDetails = ({
 	watering,
 	setShow,
 	setAllPlants,
+	setSuggestions,
 }) => {
 	const [edit, setEdit] = useState(false);
 	const [textToUser, setTextToUser] = useState('');
@@ -47,7 +48,7 @@ const PlantDetails = ({
 	});
 	const [image, setImage] = useState('');
 	const fileUploadRef = useRef(null);
-
+	const [editImg, setEditImg] = useState(false);
 	useEffect(() => {
 		setPlant({
 			name,
@@ -61,7 +62,6 @@ const PlantDetails = ({
 			sunlight,
 			waterAmount,
 			watering,
-			img,
 		});
 	}, [
 		name,
@@ -93,13 +93,57 @@ const PlantDetails = ({
 		);
 	};
 
+	const [suggestedImg, setSuggestedImg] = useState();
+	const [uploadedImg, setUpoloadedImg] = useState(false);
 	const handleUploadChange = (e) => {
-		if (edit) {
+		if (editImg) {
 			const file = e.target.files[0];
 			console.log(file);
 			if (file) {
-				// setImage(file.name);
+				setSuggestedImg(file);
+				setUpoloadedImg(true);
+				const formData = new FormData();
+				formData.append('common_name', plant.name);
+				formData.append('scientific_name', plant.scientificName);
+				formData.append('watering', plant.watering);
+				formData.append('fertilizer', plant.fertilizer);
+				formData.append('sunlight', plant.sunlight);
+				formData.append('pruning', plant.pruning);
+				formData.append('img', file);
+				formData.append('water_amount', plant.waterAmount);
+				formData.append('fertilizer_amount', plant.fertilizerAmount);
+				formData.append('sun_per_day', plant.sunPerDay);
+				formData.append('soil_salinty', plant.soilSalinty);
+				formData.append('appropriate_season', plant.appropriateSeason);
 
+				if (!suggestion) {
+					fetchApi(
+						`admin/editplant?token=${Cookies.get('admin')}&id=${id}`,
+						'POST',
+						formData
+					).then((data) => {
+						console.log(data);
+						fetchApi(`admin/plants?token=${Cookies.get('admin')}&page=1`).then(
+							(data) => {
+								console.log(data.data.data);
+								setAllPlants(data.data.data);
+							}
+						);
+					});
+				} else if (suggestion) {
+					fetchApi(
+						`admin/editsuggestion?token=${Cookies.get('admin')}&id=${id}`,
+						'POST',
+						formData
+					).then((data) => {
+						console.log(data);
+						fetchApi(`admin/allsuggestions?token=${Cookies.get('admin')}`).then(
+							(data) => {
+								setSuggestions(data.data.data);
+							}
+						);
+					});
+				}
 				const reader = new FileReader();
 				reader.onload = (e) => {
 					setImage(e.target.result);
@@ -129,7 +173,9 @@ const PlantDetails = ({
 		formData.append('fertilizer', fertilizer);
 		formData.append('sunlight', sunlight);
 		formData.append('pruning', pruning);
-		formData.append('img', img);
+		// if (editImg) {
+		// 	formData.append('img', img);
+		// }
 		formData.append('water_amount', waterAmount);
 		formData.append('fertilizer_amount', fertilizerAmount);
 		formData.append('sun_per_day', sunPerDay);
@@ -140,22 +186,40 @@ const PlantDetails = ({
 				formData.set(key, plant[key]);
 			}
 		}
-		if (plant.img) {
-			formData.set('img', plant.img);
+		// if (plant.img && !suggestion && editImg) {
+		// 	formData.set('img', suggestedImg);
+		// }
+		// if (suggestion && suggestedImg && editImg) {
+		// 	formData.set('img', suggestedImg);
+		// }
+		if (!suggestion) {
+			fetchApi(
+				`admin/editplant?token=${Cookies.get('admin')}&id=${id}`,
+				'POST',
+				formData
+			).then((data) => {
+				console.log(data);
+				fetchApi(`admin/plants?token=${Cookies.get('admin')}&page=1`).then(
+					(data) => {
+						console.log(data.data.data);
+						setAllPlants(data.data.data);
+					}
+				);
+			});
+		} else if (suggestion) {
+			fetchApi(
+				`admin/editsuggestion?token=${Cookies.get('admin')}&id=${id}`,
+				'POST',
+				formData
+			).then((data) => {
+				console.log(data);
+				fetchApi(`admin/allsuggestions?token=${Cookies.get('admin')}`).then(
+					(data) => {
+						setSuggestions(data.data.data);
+					}
+				);
+			});
 		}
-		fetchApi(
-			`admin/editplant?token=${Cookies.get('admin')}&id=${id}`,
-			'POST',
-			formData
-		).then((data) => {
-			console.log(data);
-			fetchApi(`admin/plants?token=${Cookies.get('admin')}&page=1`).then(
-				(data) => {
-					console.log(data.data.data);
-					setAllPlants(data.data.data);
-				}
-			);
-		});
 	};
 
 	useEffect(() => {
@@ -193,6 +257,32 @@ const PlantDetails = ({
 				setTextToUser('Save to my profile');
 			});
 		}
+	};
+
+	const handleApprove = (id) => {
+		fetchApi(`admin/acceptsuggestion?token=${Cookies.get('admin')}&id=${id}`)
+			.then((data) => {
+				console.log(data);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
+
+	const handleDeny = (id) => {
+		fetchApi(`admin/deletesuggestion?token=${Cookies.get('admin')}&id=${id}`)
+			.then((data) => {
+				console.log(data);
+				setShow(false);
+				fetchApi(`admin/allsuggestions?token=${Cookies.get('admin')}`).then(
+					(data) => {
+						setSuggestions(data.data.data);
+					}
+				);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	};
 
 	return (
@@ -250,7 +340,27 @@ const PlantDetails = ({
 							height: '222px',
 							position: 'relative',
 							width: '100%',
+							position: 'relative',
 						}}>
+						{!editImg && (
+							<Button
+								variant="contained"
+								sx={{
+									position: 'absolute',
+									left: '20px',
+
+									top: '20px',
+									zIndex: '2',
+									color: 'white',
+									backgroundColor: 'var(--very-dark-green)',
+									'&:hover': { backgroundColor: 'var(--very-dark-green)' },
+								}}
+								onClick={() => {
+									setEditImg(true);
+								}}>
+								Edit Image
+							</Button>
+						)}
 						<input
 							ref={fileUploadRef}
 							onChange={handleUploadChange}
@@ -259,7 +369,7 @@ const PlantDetails = ({
 							accept="image/*"
 							style={{ display: 'none' }}
 						/>
-						{edit && (
+						{editImg && (
 							<Button
 								variant="contained"
 								sx={{
@@ -273,7 +383,7 @@ const PlantDetails = ({
 									'&:hover': { backgroundColor: 'var(--very-dark-green)' },
 								}}
 								onClick={() => {
-									if (edit) {
+									if (editImg) {
 										fileUploadRef.current.click();
 									}
 									// setEdit(false);
@@ -666,6 +776,11 @@ const PlantDetails = ({
 							icon={icons.check}
 							icHeight={'22px'}
 							padding={'1.25rem'}
+							restprops={{
+								onClick: () => {
+									handleApprove(id);
+								},
+							}}
 						/>
 						<CustomButton
 							text={'Deny'}
@@ -675,15 +790,28 @@ const PlantDetails = ({
 							padding={'1rem 1.5rem'}
 							icon={icons.circleX}
 							icHeight="22px"
+							restprops={{
+								onClick: () => {
+									handleDeny(id);
+								},
+							}}
 						/>
 						<CustomButton
-							text={'Edit'}
+							text={edit ? 'Save' : 'Edit'}
 							background="black"
 							borderradius={'0.8rem'}
 							color="white"
 							padding={'1rem 1.5rem'}
 							icon={icons.linedEdit}
 							icHeight={'22px'}
+							restprops={{
+								onClick: () => {
+									setEdit(!edit);
+									if (edit) {
+										handleSubmit(id);
+									}
+								},
+							}}
 						/>
 					</Stack>
 				)}

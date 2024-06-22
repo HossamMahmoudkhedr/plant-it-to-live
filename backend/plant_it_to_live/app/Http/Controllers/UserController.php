@@ -272,7 +272,6 @@ class UserController extends Controller
        DB::table('password_reset_tokens')->where('email',$user->email)->delete();
        $token= JWTAuth::fromUser($user);
        return $this->SuccessResponse(['token'=>$token],"Password Saved successfully.");
-
     }
     public function changepassword(Request $request)
     {

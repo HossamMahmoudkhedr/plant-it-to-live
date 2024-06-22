@@ -6,6 +6,7 @@ import CustomButton from '../utils/customButton';
 import Result from '../utils/result';
 import { fetchApi } from '../utils/fetchFromAPI';
 import useMutation from 'use-mutation';
+import Loading from '../utils/loading';
 
 const DetectDiseases = () => {
 	const formData = new FormData();
@@ -14,6 +15,7 @@ const DetectDiseases = () => {
 	const [disease, setDisease] = useState('');
 	const [showResult, setShowResult] = useState(true);
 	const [image, setImage] = useState('');
+	const [loading, setLoading] = useState(false);
 	const handleClick = () => {
 		formData.forEach((el) => {
 			formData.delete(el);
@@ -21,6 +23,7 @@ const DetectDiseases = () => {
 		fileUploadRef.current.click();
 	};
 	const handleUploadChange = (e) => {
+		setLoading(true);
 		const file = e.target.files[0];
 		console.log(file);
 		if (file) {
@@ -30,10 +33,12 @@ const DetectDiseases = () => {
 				.then((data) => {
 					setDisease(data.data.prediction);
 					console.log(data);
+					setLoading(false);
 				})
 				.catch((error) => {
-					setErrorMessage(error.response.data.massage);
+					setErrorMessage('Something went wrong, please try again');
 					console.log(error);
+					setLoading(false);
 				});
 			const reader = new FileReader();
 			reader.onload = (e) => {
@@ -48,6 +53,7 @@ const DetectDiseases = () => {
 	};
 	return (
 		<>
+			{loading && <Loading />}
 			{disease && showResult && (
 				<Result
 					title="Detecting Result"

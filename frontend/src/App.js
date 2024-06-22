@@ -21,6 +21,7 @@ import AdminDashboard from './components/adminDashboard';
 import Activate from './components/activate';
 import ForgotPassword from './components/forgotPassword';
 import ForgetPasswordSecond from './components/forgetPasswordSecond';
+import UserSuggestions from './components/userSuggestions';
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -82,6 +83,10 @@ const router = createBrowserRouter(
 			<Route
 				path="/forgotPasswordSecond"
 				element={<ForgetPasswordSecond />}
+			/>
+			<Route
+				path="/userSuggestions"
+				element={<UserSuggestions />}
 			/>
 			<Route
 				path="*"

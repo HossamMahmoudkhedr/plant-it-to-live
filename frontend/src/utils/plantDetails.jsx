@@ -109,7 +109,9 @@ const PlantDetails = ({
 				formData.append('fertilizer', plant.fertilizer);
 				formData.append('sunlight', plant.sunlight);
 				formData.append('pruning', plant.pruning);
-				formData.append('img', file);
+				if (file) {
+					formData.append('img', file);
+				}
 				formData.append('water_amount', plant.waterAmount);
 				formData.append('fertilizer_amount', plant.fertilizerAmount);
 				formData.append('sun_per_day', plant.sunPerDay);
@@ -121,28 +123,39 @@ const PlantDetails = ({
 						`admin/editplant?token=${Cookies.get('admin')}&id=${id}`,
 						'POST',
 						formData
-					).then((data) => {
-						console.log(data);
-						fetchApi(`admin/plants?token=${Cookies.get('admin')}&page=1`).then(
-							(data) => {
+					)
+						.then((data) => {
+							console.log(data);
+							setEditImg(false);
+							fetchApi(
+								`admin/plants?token=${Cookies.get('admin')}&page=1`
+							).then((data) => {
 								console.log(data.data.data);
 								setAllPlants(data.data.data);
-							}
-						);
-					});
+								setEditImg(false);
+							});
+						})
+						.catch((error) => {
+							console.log(error);
+						});
 				} else if (suggestion) {
 					fetchApi(
 						`admin/editsuggestion?token=${Cookies.get('admin')}&id=${id}`,
 						'POST',
 						formData
-					).then((data) => {
-						console.log(data);
-						fetchApi(`admin/allsuggestions?token=${Cookies.get('admin')}`).then(
-							(data) => {
+					)
+						.then((data) => {
+							console.log(data);
+							setEditImg(false);
+							fetchApi(
+								`admin/allsuggestions?token=${Cookies.get('admin')}`
+							).then((data) => {
 								setSuggestions(data.data.data);
-							}
-						);
-					});
+							});
+						})
+						.catch((error) => {
+							setEditImg(false);
+						});
 				}
 				const reader = new FileReader();
 				reader.onload = (e) => {
@@ -263,6 +276,7 @@ const PlantDetails = ({
 		fetchApi(`admin/acceptsuggestion?token=${Cookies.get('admin')}&id=${id}`)
 			.then((data) => {
 				console.log(data);
+				setShow(false);
 			})
 			.catch((error) => {
 				console.log(error);
@@ -302,7 +316,7 @@ const PlantDetails = ({
 					borderRadius: '1.25rem',
 					zIndex: '9',
 					height: '90vh',
-					width: '70%',
+					width: '90%',
 					overflowY: 'scroll',
 				}}>
 				<Stack
@@ -446,7 +460,7 @@ const PlantDetails = ({
 						xs={12}
 						md={6}>
 						<Stack
-							direction="row"
+							direction={{ xs: 'column', lg: 'row' }}
 							alignItems="center"
 							gap="1rem">
 							<Typography
@@ -471,7 +485,7 @@ const PlantDetails = ({
 						xs={12}
 						md={6}>
 						<Stack
-							direction="row"
+							direction={{ xs: 'column', lg: 'row' }}
 							alignItems="center"
 							gap="1rem">
 							<Typography
@@ -496,7 +510,7 @@ const PlantDetails = ({
 						xs={12}
 						md={6}>
 						<Stack
-							direction="row"
+							direction={{ xs: 'column', lg: 'row' }}
 							gap="1rem">
 							<Typography
 								component="p"
@@ -521,7 +535,7 @@ const PlantDetails = ({
 						xs={12}
 						md={6}>
 						<Stack
-							direction="row"
+							direction={{ xs: 'column', lg: 'row' }}
 							gap="1rem">
 							<Typography
 								variant="body1"
@@ -544,7 +558,7 @@ const PlantDetails = ({
 						item
 						xs={12}
 						md={6}>
-						<Stack direction="row">
+						<Stack direction={{ xs: 'column', lg: 'row' }}>
 							<Typography
 								variant="body1"
 								sx={{ fontWeight: 'bold', width: '60%' }}>
@@ -567,7 +581,7 @@ const PlantDetails = ({
 						xs={12}
 						md={6}>
 						<Stack
-							direction="row"
+							direction={{ xs: 'column', lg: 'row' }}
 							gap="1rem">
 							<Typography
 								variant="body1"
@@ -590,7 +604,7 @@ const PlantDetails = ({
 						item
 						xs={12}
 						md={6}>
-						<Stack direction="row">
+						<Stack direction={{ xs: 'column', lg: 'row' }}>
 							<Typography
 								variant="body1"
 								sx={{ fontWeight: 'bold' }}>
@@ -613,7 +627,7 @@ const PlantDetails = ({
 						xs={12}
 						md={6}>
 						<Stack
-							direction="row"
+							direction={{ xs: 'column', lg: 'row' }}
 							gap="1rem">
 							<Typography
 								variant="body1"
@@ -637,7 +651,7 @@ const PlantDetails = ({
 						xs={12}
 						md={6}>
 						<Stack
-							direction="row"
+							direction={{ xs: 'column', lg: 'row' }}
 							gap="1rem">
 							<Typography
 								variant="body1"
@@ -661,7 +675,7 @@ const PlantDetails = ({
 						xs={12}
 						md={6}>
 						<Stack
-							direction="row"
+							direction={{ xs: 'column', lg: 'row' }}
 							gap="1rem">
 							<Typography
 								variant="body1"
@@ -684,7 +698,7 @@ const PlantDetails = ({
 						item
 						xs={12}
 						md={6}>
-						<Stack direction="row">
+						<Stack direction={{ xs: 'column', lg: 'row' }}>
 							<Typography
 								variant="body1"
 								sx={{ fontWeight: 'bold', width: '60%' }}>
@@ -747,7 +761,7 @@ const PlantDetails = ({
 				)}
 				{!isUser && !suggestion && (
 					<Stack
-						direction="row"
+						direction={{ xs: 'column', lg: 'row' }}
 						justifyContent="space-between"
 						alignItems="center">
 						<Box sx={{ fontWeight: 'bold' }}>
@@ -789,7 +803,7 @@ const PlantDetails = ({
 				)}
 				{!isUser && suggestion && (
 					<Stack
-						direction="row"
+						direction={{ xs: 'column', lg: 'row' }}
 						justifyContent="space-between"
 						alignItems="center"
 						sx={{ fontSize: 'bold' }}>

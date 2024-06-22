@@ -31,8 +31,8 @@ const Login = () => {
 				setLoading(false);
 			})
 			.catch((error) => {
-				console.log(error.response.data?.massage);
-				setErrorMessage(error.response.data?.massage);
+				console.log(error.response.data.message);
+				setErrorMessage(error.response.data?.message);
 				setLoading(false);
 			});
 	};
@@ -102,18 +102,6 @@ const Login = () => {
 									Login to your account
 								</Typography>
 							</Box>
-							<CustomButton
-								background="white"
-								borderradius={'1rem'}
-								width={{ xs: '70%', md: '40%' }}
-								padding={'0.5rem 0'}
-								boxshadow={'0 0 9px 0px rgba(0,0,0,0.25)'}
-								color="black"
-								text={`Continue with Google`}
-								icon={icons.google}
-								icHeight={'28px'}
-								border="1px solid var(--peach)"
-							/>
 						</Stack>
 						<Stack
 							component="form"
@@ -125,14 +113,22 @@ const Login = () => {
 									name="email"
 									placeholder="Enter your email"
 									type="email"
-									restprops={{ required: true, onChange: handleInput }}
+									restprops={{
+										required: true,
+										onChange: handleInput,
+										required: true,
+									}}
 								/>
 								<CustomInput
 									label="Password"
 									name="password"
 									placeholder="Enter your password"
 									type="password"
-									restprops={{ required: true, onChange: handleInput }}
+									restprops={{
+										required: true,
+										onChange: handleInput,
+										required: true,
+									}}
 								/>
 								<Stack
 									direction="row"

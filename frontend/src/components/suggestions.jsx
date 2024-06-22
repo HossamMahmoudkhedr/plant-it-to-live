@@ -10,11 +10,15 @@ import axios from 'axios';
 const Suggestions = () => {
 	const [suggestions, setSuggestions] = useState([]);
 	const [selectedPlant, setSelectedPlant] = useState({});
+	const [pagination, setPagination] = useState([]);
 	const [show, setShow] = useState(false);
 	useEffect(() => {
 		fetchApi(`admin/allsuggestions?token=${Cookies.get('admin')}`).then(
 			(data) => {
 				setSuggestions(data.data.data);
+				setPagination(
+					Array.from({ length: parseInt(data.data.total) }, (_, i) => i + 1)
+				);
 			}
 		);
 	}, []);
@@ -102,17 +106,46 @@ const Suggestions = () => {
 					</Stack>
 				)}
 				{suggestions &&
-					suggestions.map((suggestion) => (
-						<Suggestion
-							user={[suggestion.user.name]}
-							plant={suggestion['common_name']}
-							restprops={{
-								onClick: () => {
-									handleClick(suggestion.id);
-								},
-							}}
-						/>
-					))}
+					suggestions.map(
+						(suggestion) =>
+							suggestion.approved === 0 && (
+								<Suggestion
+									user={[suggestion.user.name]}
+									plant={suggestion['common_name']}
+									restprops={{
+										onClick: () => {
+											handleClick(suggestion.id);
+										},
+									}}
+								/>
+							)
+					)}
+			</Stack>
+			<Stack
+				direction="row"
+				justifyContent={'center'}
+				gap="1rem"
+				alignItems="center"
+				margin="2rem 0">
+				{pagination.map((el) => (
+					<Box
+						sx={{
+							backgroundColor: '#aaa',
+							padding: '1rem',
+							cursor: 'pointer',
+						}}
+						onClick={() => {
+							fetchApi(
+								`admin/allsuggestions?token=${Cookies.get('admin')}&page=${el}`
+							).then((data) => {
+								setSuggestions(data.data.data);
+
+								console.log(data.data.total);
+							});
+						}}>
+						{el}
+					</Box>
+				))}
 			</Stack>
 		</>
 	);

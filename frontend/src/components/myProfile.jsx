@@ -7,11 +7,17 @@ import { fetchApi } from '../utils/fetchFromAPI';
 import Cookies from 'js-cookie';
 import CustomSelect from '../utils/customSelect';
 import { useNavigate } from 'react-router-dom';
+import Loading from '../utils/loading';
+import AlertMessage from '../utils/alertMessage';
 
 const MyProfile = () => {
 	const [edit, setEdit] = useState(false);
 	const [userData, setUserData] = useState({});
 	const [changedImage, setChangedImage] = useState(false);
+	const [loading, setLoading] = useState(false);
+	const [message, setMessage] = useState('');
+	const [error, setError] = useState(false);
+	const [show, setShow] = useState(false);
 	const navigate = useNavigate();
 	const formatDate = (dateString) => {
 		const date = new Date(dateString);
@@ -51,6 +57,7 @@ const MyProfile = () => {
 	};
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		setLoading(true);
 		const formData = new FormData();
 		for (let key in userData) {
 			if (key !== 'picture') {
@@ -62,16 +69,39 @@ const MyProfile = () => {
 			setChangedImage(false);
 		}
 
-		fetchApi(`edit?token=${Cookies.get('user')}`, 'POST', formData).then(
-			(data) => {
+		fetchApi(`edit?token=${Cookies.get('user')}`, 'POST', formData)
+			.then((data) => {
 				console.log(data);
 				setEdit(false);
-				fetchApi(`user?token=${Cookies.get('user')}`).then((data) => {
-					const formattedDate = formatDate(data.data.b_date);
-					setUserData({ ...data.data, b_date: formattedDate });
-				});
-			}
-		);
+				setError(false);
+				setShow(true);
+				setMessage(data.message);
+				fetchApi(`user?token=${Cookies.get('user')}`)
+					.then((data) => {
+						const formattedDate = formatDate(data.data.b_date);
+						setLoading(false);
+						setError(false);
+						setUserData({ ...data.data, b_date: formattedDate });
+						window.location.reload();
+					})
+					.catch((error) => {
+						console.log(error);
+						setLoading(false);
+						setError(true);
+						setShow(true);
+						setMessage('Something went worng, please try again');
+					});
+			})
+			.catch((error) => {
+				console.log(error);
+				setMessage(
+					error.response.data.data[Object.keys(error.response.data.data)[0]] ||
+						'Something went worng, please try again!'
+				);
+				setError(true);
+				setLoading(false);
+				setShow(true);
+			});
 	};
 
 	const handleDeleteUser = () => {
@@ -82,188 +112,198 @@ const MyProfile = () => {
 		});
 	};
 	return (
-		<Stack
-			gap="1rem"
-			onSubmit={handleSubmit}
-			component="form"
-			encType="multipart/form-data">
+		<>
+			{show && (
+				<AlertMessage
+					error={error}
+					message={message}
+					setShow={setShow}
+				/>
+			)}
+			{loading && <Loading />}
 			<Stack
-				sx={{
-					padding: '2rem',
-					borderRadius: '1.25rem',
-					gap: '2rem',
-					backgroundColor: 'white',
-				}}>
+				gap="1rem"
+				onSubmit={handleSubmit}
+				component="form"
+				encType="multipart/form-data">
+				<Stack
+					sx={{
+						padding: '2rem',
+						borderRadius: '1.25rem',
+						gap: '2rem',
+						backgroundColor: 'white',
+					}}>
+					<Stack
+						direction="row"
+						sx={{ justifyContent: 'space-between' }}>
+						<Typography
+							variant="h3"
+							sx={{ fontSize: '1.25rem', fontWeight: 'bold' }}>
+							Personal information
+						</Typography>
+						<Button
+							variant="text"
+							onClick={() => {
+								setEdit(!edit);
+							}}
+							sx={{
+								textTransform: 'capitalize',
+								fontWeight: '600',
+								color: edit ? 'black' : '#CFCAB6',
+							}}>
+							<Box
+								component="span"
+								sx={{ marginRight: '5px', stroke: edit ? 'black' : '#CFCAB6' }}>
+								{icons.edit}
+							</Box>
+							Edit
+						</Button>
+					</Stack>
+
+					<Grid
+						container
+						columnSpacing={8}
+						rowSpacing={3}>
+						<Grid
+							item
+							xs={12}
+							md={6}>
+							<CustomInput
+								label="Full Name"
+								name="name"
+								placeholder="Full Name"
+								type="text"
+								background="#fff9e374"
+								restprops={{
+									value: userData.name,
+									onChange: handleInput,
+									disabled: !edit,
+								}}
+							/>
+						</Grid>
+
+						<Grid
+							item
+							xs={12}
+							md={6}>
+							<CustomInput
+								label="Email"
+								name="email"
+								placeholder="Email"
+								type="email"
+								background="#fff9e374"
+								restprops={{
+									value: userData.email,
+									onChange: handleInput,
+									disabled: !edit,
+								}}
+							/>
+						</Grid>
+						<Grid
+							item
+							xs={12}
+							md={6}>
+							<CustomInput
+								label="Phone Number"
+								name="phone"
+								placeholder="Phone Number"
+								type="text"
+								background="#fff9e374"
+								restprops={{
+									value: userData.phone,
+									onChange: handleInput,
+									disabled: !edit,
+								}}
+							/>
+						</Grid>
+						<Grid
+							item
+							xs={12}
+							md={6}>
+							<CustomSelect
+								label="Gender"
+								labelcolor="white"
+								name="gender"
+								staticOption={{
+									name: 'Choose your gender',
+									value: 'gender',
+								}}
+								options={[
+									{ name: 'Male', value: 'male' },
+									{ name: 'Female', value: 'female' },
+								]}
+								background="#fff9e374"
+								restprops={{ onChange: handleInput, value: userData.gender }}
+							/>
+						</Grid>
+						<Grid
+							item
+							xs={12}
+							md={6}>
+							<CustomInput
+								label="BirthDate"
+								name="b_date"
+								placeholder="BirthDate"
+								type="date"
+								background="#fff9e374"
+								restprops={{
+									value: userData['b_date'],
+									onChange: handleInput,
+									disabled: !edit,
+								}}
+							/>
+						</Grid>
+						<Grid
+							item
+							xs={12}
+							md={6}>
+							<CustomInput
+								label="Picture"
+								name="picture"
+								placeholder="Upload your image"
+								type="file"
+								padding="1.1rem"
+								background="#fff9e374"
+								restprops={{
+									accept: 'image/*',
+									onChange: handleUploadImage,
+									disabled: !edit,
+								}}
+							/>
+						</Grid>
+					</Grid>
+				</Stack>
+				<Box
+					width="100%"
+					sx={{ fontSize: '1.25rem' }}>
+					<CustomButton
+						background="var(--very-dark-green)"
+						text="Save Changes"
+						color="white"
+						borderradius="0.8rem"
+						padding="1rem"
+						width="100%"
+						restprops={{ type: 'submit', disabled: !edit }}
+					/>
+				</Box>
 				<Stack
 					direction="row"
-					sx={{ justifyContent: 'space-between' }}>
-					<Typography
-						variant="h3"
-						sx={{ fontSize: '1.25rem', fontWeight: 'bold' }}>
-						Personal information
-					</Typography>
+					justifyContent="flex-end">
 					<Button
 						variant="text"
-						onClick={() => {
-							setEdit(!edit);
-						}}
+						onClick={handleDeleteUser}
 						sx={{
 							textTransform: 'capitalize',
+							textDecoration: 'underline',
+							fontSize: '1rem',
 							fontWeight: '600',
-							color: edit ? 'black' : '#CFCAB6',
+							color: 'var(--dark-green)',
 						}}>
-						<Box
-							component="span"
-							sx={{ marginRight: '5px', stroke: edit ? 'black' : '#CFCAB6' }}>
-							{icons.edit}
-						</Box>
-						Edit
+						Delete Account
 					</Button>
 				</Stack>
-
-				<Grid
-					container
-					columnSpacing={8}
-					rowSpacing={3}>
-					<Grid
-						item
-						xs={12}
-						md={6}>
-						<CustomInput
-							label="Full Name"
-							name="name"
-							placeholder="Full Name"
-							type="text"
-							background="#fff9e374"
-							restprops={{
-								value: userData.name,
-								onChange: handleInput,
-								disabled: !edit,
-							}}
-						/>
-					</Grid>
-
-					<Grid
-						item
-						xs={12}
-						md={6}>
-						<CustomInput
-							label="Email"
-							name="email"
-							placeholder="Email"
-							type="email"
-							background="#fff9e374"
-							restprops={{
-								value: userData.email,
-								onChange: handleInput,
-								disabled: !edit,
-							}}
-						/>
-					</Grid>
-					<Grid
-						item
-						xs={12}
-						md={6}>
-						<CustomInput
-							label="Phone Number"
-							name="phone"
-							placeholder="Phone Number"
-							type="text"
-							background="#fff9e374"
-							restprops={{
-								value: userData.phone,
-								onChange: handleInput,
-								disabled: !edit,
-							}}
-						/>
-					</Grid>
-					<Grid
-						item
-						xs={12}
-						md={6}>
-						<CustomSelect
-							label="Gender"
-							labelcolor="white"
-							name="gender"
-							staticOption={{
-								name: 'Choose your gender',
-								value: 'gender',
-							}}
-							options={[
-								{ name: 'Male', value: 'male' },
-								{ name: 'Female', value: 'female' },
-							]}
-							background="#fff9e374"
-							restprops={{ onChange: handleInput, value: userData.gender }}
-						/>
-					</Grid>
-					<Grid
-						item
-						xs={12}
-						md={6}>
-						<CustomInput
-							label="BirthDate"
-							name="b_date"
-							placeholder="BirthDate"
-							type="date"
-							background="#fff9e374"
-							restprops={{
-								value: userData['b_date'],
-								onChange: handleInput,
-								disabled: !edit,
-							}}
-						/>
-					</Grid>
-					<Grid
-						item
-						xs={12}
-						md={6}>
-						<CustomInput
-							label="Picture"
-							name="picture"
-							placeholder="Upload your image"
-							type="file"
-							padding="1.1rem"
-							background="#fff9e374"
-							restprops={{
-								accept: 'image/*',
-								onChange: handleUploadImage,
-								disabled: !edit,
-							}}
-						/>
-					</Grid>
-				</Grid>
 			</Stack>
-			<Box
-				width="100%"
-				sx={{ fontSize: '1.25rem' }}>
-				<CustomButton
-					background="var(--very-dark-green)"
-					text="Save Changes"
-					color="white"
-					borderradius="0.8rem"
-					padding="1rem"
-					width="100%"
-					restprops={{ type: 'submit', disabled: !edit }}
-				/>
-			</Box>
-			<Stack
-				direction="row"
-				justifyContent="flex-end">
-				<Button
-					variant="text"
-					onClick={handleDeleteUser}
-					sx={{
-						textTransform: 'capitalize',
-						textDecoration: 'underline',
-						fontSize: '1rem',
-						fontWeight: '600',
-						color: 'var(--dark-green)',
-					}}>
-					Delete Account
-				</Button>
-			</Stack>
-		</Stack>
+		</>
 	);
 };
 

@@ -1,5 +1,7 @@
 import {
+	Box,
 	Paper,
+	Stack,
 	Table,
 	TableBody,
 	TableCell,
@@ -29,6 +31,7 @@ const Users = () => {
 	const [rows, setRows] = useState([]);
 	const [show, setShow] = useState(false);
 	const [deleted, setDeleted] = useState(false);
+	const [pagination, setPagination] = useState([]);
 	const [selectedUserData, setSelectedUserData] = useState({});
 	const handleClick = (id) => {
 		const selectedUser = rows.filter((user) => user.id === id);
@@ -40,6 +43,12 @@ const Users = () => {
 			.then((data) => {
 				console.log(data);
 				setRows(data.data.users.data);
+				setPagination(
+					Array.from(
+						{ length: parseInt(data.data.users.total) },
+						(_, i) => i + 1
+					)
+				);
 			})
 			.catch((error) => {
 				console.log(error);
@@ -112,6 +121,32 @@ const Users = () => {
 					</TableBody>
 				</Table>
 			</TableContainer>
+			<Stack
+				direction="row"
+				justifyContent={'center'}
+				gap="1rem"
+				alignItems="center"
+				margin="2rem 0">
+				{pagination.map((el) => (
+					<Box
+						sx={{
+							backgroundColor: '#aaa',
+							padding: '1rem',
+							cursor: 'pointer',
+						}}
+						onClick={() => {
+							fetchApi(
+								`admin/users?token=${Cookies.get('admin')}&page=${el}`
+							).then((data) => {
+								setRows(data.data.users.data);
+
+								console.log(data.data.total);
+							});
+						}}>
+						{el}
+					</Box>
+				))}
+			</Stack>
 		</>
 	);
 };

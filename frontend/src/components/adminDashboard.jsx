@@ -55,14 +55,22 @@ const pages = [
 ];
 
 const AdminDashboard = () => {
+	const [showSide, setShowSide] = useState(false);
 	const [adminData, setAdminData] = useState({});
 	const [currPage, setCurrPage] = useState(0);
 	const navigate = useNavigate();
 	useEffect(() => {
-		fetchApi(`admin/home?token=${Cookies.get('admin')}`, 'GET').then((data) => {
-			setAdminData(data.data);
-			console.log(data);
-		});
+		if (!Cookies.get('admin')) {
+			navigate('/adminLogin');
+		}
+		fetchApi(`admin/home?token=${Cookies.get('admin')}`, 'GET')
+			.then((data) => {
+				setAdminData(data.data);
+				console.log(data);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	}, []);
 
 	const handleLogout = () => {
@@ -80,12 +88,39 @@ const AdminDashboard = () => {
 			{/* <UserDetails /> */}
 			<Box
 				sx={{
-					width: '20%',
+					position: 'absolute',
+					left: '20px',
+					top: '20px',
+					zIndex: '9',
+					display: { xs: 'block', lg: 'none' },
+				}}>
+				<Button
+					variant="containted"
+					sx={{
+						background: '#aaa',
+						borderRadius: '1rem',
+						'&:hover': { background: '#aaa' },
+					}}
+					onClick={() => {
+						setShowSide(!showSide);
+					}}>
+					{icons.menu}
+				</Button>
+			</Box>
+			<Box
+				sx={{
+					width: { xs: '80%', lg: '20%' },
 					float: 'left',
 					backgroundColor: 'white',
 					position: 'fixed',
 					left: 0,
 					height: '100vh',
+					// position: { xs: 'absolute', lg: 'unset' },
+					left: { xs: 0, lg: 'unset' },
+					transform: {
+						xs: `${showSide ? 'translateX(0%)' : 'translateX(-180%)'}`,
+						lg: 'unset',
+					},
 				}}>
 				<Stack
 					sx={{
@@ -225,18 +260,26 @@ const AdminDashboard = () => {
 					</Button>
 				</Stack>
 			</Box>
-			<Box sx={{ width: '80%', float: 'right' }}>
+			<Box
+				sx={{
+					width: { xs: '100%', lg: '80%' },
+					float: { xs: 'unset', lg: 'right' },
+				}}>
 				<Stack
-					direction="row"
+					direction={{ xs: 'column-reverse', lg: 'row' }}
 					sx={{
 						alignItems: 'center',
 						padding: '2rem',
 						justifyContent: 'space-between',
+						gap: { xs: '1rem', lg: 'unset' },
 					}}>
 					<Heading text={pages[currPage].name} />
 					<Stack
-						direction="row"
-						sx={{ alignItems: 'center', gap: '1rem' }}>
+						direction={{ xs: 'column-reverse', lg: 'row' }}
+						sx={{
+							alignItems: 'center',
+							gap: '1rem',
+						}}>
 						<Typography
 							variant="body1"
 							sx={{
@@ -249,7 +292,7 @@ const AdminDashboard = () => {
 						<Box
 							component="span"
 							sx={{ padding: '0rem 1rem 0rem 0rem', height: '50px' }}>
-							{icons.avatar}
+							{adminData.picture || icons.avatar}
 						</Box>
 					</Stack>
 				</Stack>

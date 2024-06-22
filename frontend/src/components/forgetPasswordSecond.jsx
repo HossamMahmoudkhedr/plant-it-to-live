@@ -4,6 +4,7 @@ import CustomInput from '../utils/customInput';
 import CustomButton from '../utils/customButton';
 import { fetchApi } from '../utils/fetchFromAPI';
 import AlertMessage from '../utils/alertMessage';
+import Loading from '../utils/loading';
 
 const ForgetPasswordSecond = () => {
 	const [token, setToken] = useState('');
@@ -13,6 +14,7 @@ const ForgetPasswordSecond = () => {
 	const [error, setError] = useState(false);
 	const [passwordData, setPasswordData] = useState({});
 	const [show, setShow] = useState(false);
+	const [loading, setLoading] = useState(false);
 
 	const handleInput = (e) => {
 		const { name, value } = e.target;
@@ -33,6 +35,7 @@ const ForgetPasswordSecond = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		setLoading(true);
 		console.log(token, isUser);
 		const formData = new FormData();
 		formData.append('password', passwordData['password']);
@@ -44,11 +47,13 @@ const ForgetPasswordSecond = () => {
 					console.log(data);
 					setMessage(data.data.message || 'Password reset successful');
 					setShow(true);
+					setLoading(false);
 				})
 				.catch((error) => {
 					console.log(error);
 					setMessage(error.message || 'An error occurred');
 					setError(true);
+					setLoading(false);
 				});
 		} else {
 			formData.append('access_Key', passwordData['access_Key']);
@@ -57,17 +62,20 @@ const ForgetPasswordSecond = () => {
 					console.log(data);
 					setMessage(data.data.message || 'Password reset successful');
 					setShow(true);
+					setLoading(false);
 				})
 				.catch((error) => {
 					console.log(error);
 					setMessage(error.message || 'An error occurred');
 					setError(true);
+					setLoading(false);
 				});
 		}
 	};
 
 	return (
 		<>
+			{loading && <Loading />}
 			{show && (
 				<AlertMessage
 					setShow={setShow}

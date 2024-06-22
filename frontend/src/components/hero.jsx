@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Container, Grid, Stack, Typography } from '@mui/material';
 import ImageFrame from '../utils/imageFrame';
 import RoseCircle from '../utils/roseCircle';
@@ -39,6 +39,10 @@ const opacityVariants = {
 };
 
 const Hero = () => {
+	const [showDropDown, setShowDropDown] = useState(false);
+	const handleClick = () => {
+		setShowDropDown(!showDropDown);
+	};
 	return (
 		<Container maxWidth="xl">
 			<Navbar />
@@ -186,16 +190,77 @@ const Hero = () => {
 								initial="hidden"
 								animate="visible"
 								fontWeight="bold"
+								position={'relative'}
 								fontSize={'1.25rem'}>
-								<Link to="/plantsDetails">
-									<CustomButton
-										background="var(--linear-background)"
-										color="white"
-										text="Start Planting"
-										padding="0.5rem 2rem"
-										borderradius="40px 0 40px 0"
-									/>
-								</Link>
+								{/* <Link to="/plantsDetails"> */}
+								<CustomButton
+									background="var(--linear-background)"
+									color="white"
+									text="Start Planting"
+									padding="0.5rem 2rem"
+									borderradius="40px 0 40px 0"
+									restprops={{ onClick: handleClick }}
+								/>
+								{/* </Link> */}
+								{showDropDown && (
+									<Stack
+										sx={{
+											position: 'absolute',
+											top: '110%',
+											left: '50%',
+											transform: 'translateX(-50%)',
+											backgroundColor: 'var(--lighter-green)',
+											alignItems: 'center',
+											gap: '1rem',
+											borderRadius: '0.5rem',
+											padding: '1rem 1.5rem',
+											zIndex: '4',
+											width: '200%',
+										}}>
+										<Box
+											component={motion.div}
+											initial={{
+												backgroundColor: 'transparent',
+												color: 'black',
+											}}
+											whileHover={{ backgroundColor: '#aaa', color: 'white' }}
+											sx={{ padding: '1rem 1.5rem', borderRadius: '0.5rem' }}>
+											<Link
+												style={{ color: 'inherit' }}
+												to={'/plantsDetails'}>
+												Get Information About Plant
+											</Link>
+										</Box>
+										<Box
+											component={motion.div}
+											initial={{
+												backgroundColor: 'transparent',
+												color: 'black',
+											}}
+											whileHover={{ backgroundColor: '#aaa', color: 'white' }}
+											sx={{ padding: '1rem 1.5rem', borderRadius: '0.5rem' }}>
+											<Link
+												style={{ color: 'inherit' }}
+												to={'/cropRecommendation'}>
+												Crop Recommendation
+											</Link>
+										</Box>
+										<Box
+											component={motion.div}
+											initial={{
+												backgroundColor: 'transparent',
+												color: 'black',
+											}}
+											whileHover={{ backgroundColor: '#aaa', color: 'white' }}
+											sx={{ padding: '1rem 1.5rem', borderRadius: '0.5rem' }}>
+											<Link
+												style={{ color: 'inherit' }}
+												to={'detectDiseases'}>
+												Plant Diseases
+											</Link>
+										</Box>
+									</Stack>
+								)}
 							</Box>
 						</Stack>
 					</Grid>

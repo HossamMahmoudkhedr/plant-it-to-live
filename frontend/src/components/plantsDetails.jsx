@@ -91,27 +91,54 @@ const PlantsDetails = () => {
 					alignItems: 'center',
 					padding: '1rem 2rem',
 				}}>
-				<Box sx={{ width: '10%' }}>
-					<img
-						style={{ objectFit: 'cover' }}
-						src={require(`../assets/images/plant-it-to-live-high-resolution-logo-icon 1.png`)}
-						alt=""
-					/>
-				</Box>
+				<Link to={'/'}>
+					<Box sx={{ width: '10%' }}>
+						<img
+							style={{ objectFit: 'cover' }}
+							src={require(`../assets/images/plant-it-to-live-high-resolution-logo-icon 1.png`)}
+							alt=""
+						/>
+					</Box>
+				</Link>
 				<Link
 					to={'/userProfile'}
 					style={{
 						display: 'flex',
-						flexDirection: 'row',
+						flexDirection: 'row-reverse',
 						gap: '1rem',
 						alignItems: 'center',
 					}}>
+					{!userData.picture && (
+						<Box
+							component="span"
+							height="55px">
+							{icons.avatar}
+						</Box>
+					)}
+					{userData.picture && (
+						<Box
+							sx={{
+								width: '60px',
+								height: '60px',
+								overflow: 'hidden',
+								borderRadius: '50%',
+							}}>
+							<img
+								style={{ width: '100%', objectFit: 'cover' }}
+								src={require(`../assets/images/${userData.picture}`)}
+								alt=""
+							/>
+						</Box>
+					)}
 					<Typography
 						variant="body1"
-						sx={{ fontWeight: 'bold', color: 'var(--very-dark-green)' }}>
+						sx={{
+							fontWeight: 'bold',
+							fontSize: '1rem',
+							color: 'var(--very-dark-green)',
+						}}>
 						{userData.name}
 					</Typography>
-					<Box>{icons.avatar}</Box>
 				</Link>
 			</Stack>
 			<Stack

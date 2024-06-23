@@ -65,7 +65,7 @@ const UserProfile = () => {
 					position: 'absolute',
 					left: '20px',
 					top: '20px',
-					zIndex: '99',
+					zIndex: '9999',
 					display: { xs: 'block', lg: 'none' },
 				}}>
 				<Button
@@ -96,7 +96,7 @@ const UserProfile = () => {
 						lg: 'unset',
 					},
 
-					zIndex: 9,
+					zIndex: 999,
 				}}>
 				<Stack
 					sx={{

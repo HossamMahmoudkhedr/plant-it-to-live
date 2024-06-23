@@ -91,7 +91,7 @@ const AdminDashboard = () => {
 					position: 'absolute',
 					left: '20px',
 					top: '20px',
-					zIndex: '9',
+					zIndex: '9999',
 					display: { xs: 'block', lg: 'none' },
 				}}>
 				<Button
@@ -121,6 +121,7 @@ const AdminDashboard = () => {
 						xs: `${showSide ? 'translateX(0%)' : 'translateX(-180%)'}`,
 						lg: 'unset',
 					},
+					zIndex: 999,
 				}}>
 				<Stack
 					sx={{

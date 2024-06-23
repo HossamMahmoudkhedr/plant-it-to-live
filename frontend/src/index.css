@@ -52,7 +52,9 @@
 	box-sizing: border-box;
 	/* color: var(--black); */
 }
-
+html {
+	scroll-behavior: smooth;
+}
 h1,
 h2,
 h3,

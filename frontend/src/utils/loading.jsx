@@ -13,7 +13,7 @@ const Loading = () => {
 					height: '100%',
 					backgroundColor: 'black',
 					opacity: '0.3',
-					zIndex: 2,
+					zIndex: 999,
 				}}></Box>
 			<CircularProgress
 				color="success"

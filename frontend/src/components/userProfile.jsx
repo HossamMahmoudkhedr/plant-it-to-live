@@ -87,7 +87,7 @@ const UserProfile = () => {
 					float: 'left',
 					backgroundColor: 'white',
 					position: 'fixed',
-					left: 0,
+
 					height: '100vh',
 					// position: { xs: 'fixed', lg: 'unset' },
 					left: { xs: 0, lg: 'unset' },
@@ -109,12 +109,14 @@ const UserProfile = () => {
 							sx={{
 								alignItems: 'center',
 							}}>
-							<Box>
-								<img
-									src={require('../assets/images/plant-it-to-live-high-resolution-logo-icon 1.png')}
-									alt="Plant it to live"
-								/>
-							</Box>
+							<Link to="/">
+								<Box>
+									<img
+										src={require('../assets/images/plant-it-to-live-high-resolution-logo-icon 1.png')}
+										alt="Plant it to live"
+									/>
+								</Box>
+							</Link>
 						</Stack>
 						<Stack sx={{ alignItems: 'center' }}>
 							<Stack
@@ -136,7 +138,6 @@ const UserProfile = () => {
 									<Typography
 										variant="body1"
 										sx={{
-											color: 'var(--dark-green)',
 											color: currPage === 0 ? 'var(--dark-green)' : '#CFCAB6',
 										}}>
 										My profile
@@ -158,7 +159,6 @@ const UserProfile = () => {
 									<Typography
 										variant="body1"
 										sx={{
-											color: '#CFCAB6',
 											color: currPage === 1 ? 'var(--dark-green)' : '#CFCAB6',
 										}}>
 										Security
@@ -180,7 +180,6 @@ const UserProfile = () => {
 									<Typography
 										variant="body1"
 										sx={{
-											color: '#CFCAB6',
 											color: currPage === 2 ? 'var(--dark-green)' : '#CFCAB6',
 										}}>
 										My crops
@@ -202,7 +201,6 @@ const UserProfile = () => {
 									<Typography
 										variant="body1"
 										sx={{
-											color: '#CFCAB6',
 											color: currPage === 3 ? 'var(--dark-green)' : '#CFCAB6',
 										}}>
 										Help Us
@@ -266,6 +264,13 @@ const UserProfile = () => {
 						<Stack
 							direction={{ xs: 'column', lg: 'row-reverse' }}
 							sx={{ alignItems: 'center', gap: '1rem' }}>
+							{!userData.picture && (
+								<Box
+									component="span"
+									height="55px">
+									{icons.avatar}
+								</Box>
+							)}
 							{userData.picture && (
 								<Box
 									sx={{

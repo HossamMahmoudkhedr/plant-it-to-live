@@ -5,6 +5,7 @@ import Heading from '../utils/heading';
 const Team = () => {
 	return (
 		<Container
+			id="team"
 			maxWidth="xl"
 			className="cont-padd">
 			<Stack sx={{ alignItems: 'center', gap: '2rem' }}>

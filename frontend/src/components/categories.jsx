@@ -20,6 +20,7 @@ const opacityVariants = {
 const Categories = () => {
 	return (
 		<Container
+			id="categories"
 			maxWidth="xl"
 			className="cont-padd"
 			sx={{ padding: { xs: '0', md: '0 16px' } }}>

@@ -53,7 +53,7 @@ const Navbar = () => {
 					direction={{ xs: 'column', lg: 'row' }}
 					sx={{
 						alignItems: 'center',
-						width: { xs: '80%', lg: '63.5%' },
+						width: { xs: '80%', lg: '65.5%' },
 						position: { xs: 'fixed', lg: 'unset' },
 						left: { xs: show ? '0%' : '-100%', lg: 'unset' },
 						top: { xs: '0', lg: 'unset' },
@@ -89,28 +89,35 @@ const Navbar = () => {
 						<li>
 							<a
 								style={{ color: 'black' }}
-								href="#">
+								href="#about">
 								About us
 							</a>
 						</li>
 						<li>
 							<a
 								style={{ color: 'black' }}
-								href="#">
+								href="#categories">
 								Categories
 							</a>
 						</li>
 						<li>
 							<a
 								style={{ color: 'black' }}
-								href="#">
+								href="#features">
 								Features
 							</a>
 						</li>
 						<li>
 							<a
 								style={{ color: 'black' }}
-								href="#">
+								href="#team">
+								Team
+							</a>
+						</li>
+						<li>
+							<a
+								style={{ color: 'black' }}
+								href="#contact">
 								Contact
 							</a>
 						</li>

@@ -314,7 +314,7 @@ const PlantDetails = ({
 					backgroundColor: 'white',
 					padding: '2rem 3rem',
 					borderRadius: '1.25rem',
-					zIndex: '9',
+					zIndex: '99999',
 					height: '90vh',
 					width: '90%',
 					overflowY: 'scroll',
@@ -763,6 +763,7 @@ const PlantDetails = ({
 					<Stack
 						direction={{ xs: 'column', lg: 'row' }}
 						justifyContent="space-between"
+						gap={{ xs: '1rem', lg: 'unset' }}
 						alignItems="center">
 						<Box sx={{ fontWeight: 'bold' }}>
 							<CustomButton
@@ -792,6 +793,7 @@ const PlantDetails = ({
 								restprops={{
 									onClick: () => {
 										setEdit(!edit);
+										setEditImg(false);
 										if (edit) {
 											handleSubmit(id);
 										}
@@ -805,6 +807,7 @@ const PlantDetails = ({
 					<Stack
 						direction={{ xs: 'column', lg: 'row' }}
 						justifyContent="space-between"
+						gap={{ xs: '1rem', lg: 'unset' }}
 						alignItems="center"
 						sx={{ fontSize: 'bold' }}>
 						<CustomButton
@@ -846,6 +849,7 @@ const PlantDetails = ({
 							restprops={{
 								onClick: () => {
 									setEdit(!edit);
+									setEditImg(false);
 									if (edit) {
 										handleSubmit(id);
 									}

@@ -20,7 +20,7 @@ const Result = ({ title, desc, setShowResult }) => {
 					top: '50%',
 					transform: 'translate(-50%,-50%)',
 					gap: '1rem',
-					zIndex: '9',
+					zIndex: '99999',
 				}}>
 				<Stack
 					onClick={handleCloseResult}

@@ -17,7 +17,7 @@ const Dark = ({ setShow }) => {
 				position: 'fixed',
 				left: '0',
 				top: '0',
-				zIndex: '99',
+				zIndex: '9999',
 				cursor: 'pointer',
 			}}></Box>
 	);

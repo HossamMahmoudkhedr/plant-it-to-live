@@ -2,8 +2,20 @@ import { Box, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 const StyledStack = styled(Stack)`
+	& div {
+		position: relative;
+	}
+	& div img {
+		// transform: scale(1.1);
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		width: 100%;
+		height: 100%;
+		transform: translate(-50%, -50%);
+	}
 	&&:hover div img {
-		transform: rotate(5deg) scale(1.25);
+		transform: translate(-50%, -50%) rotate(5deg) scale(1.3);
 	}
 `;
 
@@ -37,15 +49,19 @@ const PlantCard = ({ img, name, setAllPlants, restprops }) => {
 			gap="1rem"
 			alignItems="center"
 			{...restprops}
-			sx={{ cursor: 'pointer' }}>
+			sx={{ cursor: 'pointer', width: '100%' }}>
 			<Box
-				sx={{ overflow: 'hidden', borderRadius: '1.25rem', height: '222px' }}>
+				sx={{
+					overflow: 'hidden',
+					borderRadius: '1.25rem',
+					minHeight: '222px',
+					width: '100%',
+				}}>
 				{imageURL !== 'grape.png' && (
 					<img
 						style={{
-							objectFit: 'cover !important',
+							objectFit: 'cover',
 							transition: 'all 0.3s linear',
-							width: '100%',
 						}}
 						src={
 							// require('../../../backend/plant_it_to_live/public/plantImges/1718951011.png') ||

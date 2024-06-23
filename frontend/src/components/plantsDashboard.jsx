@@ -87,13 +87,13 @@ const PlantsDashboard = () => {
 						<Dark setShow={setShowAddPlant} />
 						<Box
 							sx={{
-								position: 'fixed',
+								position: 'absolute',
 								left: '50%',
-								top: '50%',
+								top: { xs: '105%', lg: '55%' },
 								transform: 'translate(-50%, -50%)',
 								width: 'fit-contnet',
 								height: 'fit-contnet',
-								zIndex: 999,
+								zIndex: 9999,
 								margin: '8rem 0',
 							}}>
 							<Box

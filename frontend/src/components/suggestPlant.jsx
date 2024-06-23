@@ -283,18 +283,23 @@ const SuggestPlant = ({ admin, setAllPlants, setShowAddPlant }) => {
 						restprops={{ type: 'submit' }}
 					/>
 				</Box>
-				<Stack
-					direction="row"
-					width="100%"
-					justifyContent="center">
-					<Link to="/userSuggestions">
-						<Typography
-							variant="body1"
-							sx={{ color: 'var(--light-green)', textDecoration: 'underline' }}>
-							My Suggestions
-						</Typography>
-					</Link>
-				</Stack>
+				{!admin && (
+					<Stack
+						direction="row"
+						width="100%"
+						justifyContent="center">
+						<Link to="/userSuggestions">
+							<Typography
+								variant="body1"
+								sx={{
+									color: 'var(--light-green)',
+									textDecoration: 'underline',
+								}}>
+								My Suggestions
+							</Typography>
+						</Link>
+					</Stack>
+				)}
 			</Stack>
 		</>
 	);

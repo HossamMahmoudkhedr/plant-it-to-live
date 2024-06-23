@@ -351,7 +351,7 @@ const PlantDetails = ({
 						sx={{
 							overflow: 'hidden',
 							borderRadius: '1.25rem',
-							height: '222px',
+							height: '400px',
 							position: 'relative',
 							width: '100%',
 							position: 'relative',
@@ -409,8 +409,9 @@ const PlantDetails = ({
 						{!edit && (
 							<img
 								width="100%"
+								height="100%"
 								style={{
-									objectFit: 'cover !important',
+									objectFit: 'cover',
 									transition: 'all 0.3s linear',
 								}}
 								src={

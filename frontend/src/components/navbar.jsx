@@ -124,11 +124,28 @@ const Navbar = () => {
 								gap: '1rem',
 								alignItems: 'center',
 							}}>
-							<Box
-								component="span"
-								height="55px">
-								{icons.avatar}
-							</Box>
+							{!userData.picture && (
+								<Box
+									component="span"
+									height="55px">
+									{icons.avatar}
+								</Box>
+							)}
+							{userData.picture && (
+								<Box
+									sx={{
+										width: '60px',
+										height: '60px',
+										overflow: 'hidden',
+										borderRadius: '50%',
+									}}>
+									<img
+										style={{ width: '100%', objectFit: 'cover' }}
+										src={require(`../assets/images/${userData.picture}`)}
+										alt=""
+									/>
+								</Box>
+							)}
 							<Typography
 								variant="body1"
 								sx={{

@@ -74,6 +74,7 @@ const MyProfile = () => {
 				console.log(data);
 				setEdit(false);
 				setError(false);
+				setLoading(false);
 				setShow(true);
 				setMessage(data.message);
 				fetchApi(`user?token=${Cookies.get('user')}`)

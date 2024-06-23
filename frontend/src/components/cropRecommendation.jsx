@@ -20,7 +20,6 @@ const CropRecommendation = () => {
 		setData({ ...data, [name]: value });
 	};
 	const handleSubmit = (e) => {
-		setLoading(true);
 		e.preventDefault();
 		if (
 			data.n &&
@@ -31,6 +30,7 @@ const CropRecommendation = () => {
 			data.R &&
 			data.T
 		) {
+			setLoading(true);
 			fetchApi('sendRequestToCropRecommendation', 'POST', data)
 				.then((data) => {
 					setPredectedPlant(data.data);

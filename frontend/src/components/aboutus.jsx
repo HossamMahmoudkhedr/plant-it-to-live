@@ -22,6 +22,7 @@ const opacityVariants = {
 const Aboutus = () => {
 	return (
 		<Container
+			id="about"
 			maxWidth="xl"
 			className="cont-padd">
 			<Stack sx={{ alignItems: 'center', gap: '2rem' }}>

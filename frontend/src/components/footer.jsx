@@ -12,6 +12,7 @@ const Footer = () => {
 	let year = new Date().getFullYear();
 	return (
 		<Container
+			id="contact"
 			maxWidth="xl"
 			sx={{ display: 'flex', justifyContent: 'center' }}>
 			<Stack
@@ -98,28 +99,35 @@ const Footer = () => {
 								gap={'1rem'}>
 								<li>
 									<a
-										href=""
+										href="#about"
 										style={{ color: 'white' }}>
 										About Us
 									</a>
 								</li>
 								<li>
 									<a
-										href=""
+										href="#categories"
 										style={{ color: 'white' }}>
 										Categories
 									</a>
 								</li>
 								<li>
 									<a
-										href=""
+										href="#features"
 										style={{ color: 'white' }}>
 										Features
 									</a>
 								</li>
 								<li>
 									<a
-										href=""
+										href="#team"
+										style={{ color: 'white' }}>
+										Team
+									</a>
+								</li>
+								<li>
+									<a
+										href="#contact"
 										style={{ color: 'white' }}>
 										Contact
 									</a>

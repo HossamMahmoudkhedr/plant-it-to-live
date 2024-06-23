@@ -31,6 +31,7 @@ const scaleVariants = {
 const Features = () => {
 	return (
 		<Container
+			id="features"
 			maxWidth="xl"
 			className="cont-padd">
 			<Stack sx={{ marginBottom: '2.5rem' }}>

@@ -9,26 +9,28 @@ import { Link } from 'react-router-dom';
 import AlertMessage from '../utils/alertMessage';
 
 const SuggestPlant = ({ admin, setAllPlants, setShowAddPlant }) => {
-	const formData = new FormData();
+	// const formData = new FormData();
+	const [data, setData] = useState({});
 	const [error, setError] = useState(false);
 	const [message, setMessage] = useState('');
 	const [show, setShow] = useState(false);
 	const handleInput = (e) => {
 		let name = e.target.name;
 		let value = e.target.value;
-
-		if (formData.has(name)) {
-			formData.set(name, value);
-		} else {
-			formData.append(name, value);
-		}
+		setData({ ...data, [name]: value });
+		// if (formData.has(name)) {
+		// 	formData.set(name, value);
+		// } else {
+		// 	formData.append(name, value);
+		// }
 	};
 
 	const handleImage = (e) => {
 		const file = e.target.files[0];
 		console.log(file);
 		if (file) {
-			formData.append('img', file);
+			// formData.append('img', file);
+			setData({ ...data, ['img']: file });
 			const reader = new FileReader();
 			reader.onload = (e) => {
 				console.log(e.target.result);
@@ -39,6 +41,10 @@ const SuggestPlant = ({ admin, setAllPlants, setShowAddPlant }) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		const formData = new FormData();
+		for (let key in data) {
+			formData.append(key, data[`${key}`]);
+		}
 		console.log('submitted');
 		if (admin) {
 			fetchApi(`admin/addplant?token=${Cookies.get('admin')}`, 'POST', formData)
@@ -49,11 +55,20 @@ const SuggestPlant = ({ admin, setAllPlants, setShowAddPlant }) => {
 						(data) => {
 							console.log(data.data.data);
 							setAllPlants(data.data.data);
+							setError(false);
+							setShow(false);
 						}
 					);
 				})
 				.catch((error) => {
 					console.log(error);
+					setMessage(
+						error.response.data.data[
+							Object.keys(error.response.data.data)[0]
+						] || 'Something went worng, please try again!'
+					);
+					setError(true);
+					setShow(true);
 				});
 		} else {
 			fetchApi(`addsuggestion?token=${Cookies.get('user')}`, 'POST', formData)

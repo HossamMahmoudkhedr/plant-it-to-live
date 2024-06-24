@@ -25,12 +25,21 @@ const PlantCard = ({ img, name, setAllPlants, restprops }) => {
 	useEffect(() => {
 		setImageURL('grape.png');
 		setTimeout(() => {
-			if (require(`../assets/images/${img}`)) {
-				setImageURL(img);
-			} else {
+			// if (require(`../assets/images/${img}`)) {
+			// 	setImageURL(img);
+			// } else {
+			// 	setImageURL('grape.png');
+			// }
+			try {
+				if (require(`../assets/images/${img}`)) {
+					setImageURL(img);
+				} else {
+					setImageURL('grape.png');
+				}
+			} catch (error) {
 				setImageURL('grape.png');
 			}
-		}, 1000);
+		}, 2000);
 	}, [setAllPlants, img]);
 	// if (img) {
 	// 	const reader = new FileReader();

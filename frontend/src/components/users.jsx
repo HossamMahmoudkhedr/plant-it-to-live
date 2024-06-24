@@ -45,7 +45,7 @@ const Users = () => {
 				setRows(data.data.users.data);
 				setPagination(
 					Array.from(
-						{ length: parseInt(data.data.users.total) },
+						{ length: parseInt(data.data.users['last_page']) },
 						(_, i) => i + 1
 					)
 				);

@@ -37,7 +37,10 @@ const PlantsDetails = () => {
 			setPlants(data.data.data);
 			setAllPlants(data.data.data);
 			setPagination(
-				Array.from({ length: parseInt(data.data.total) }, (_, i) => i + 1)
+				Array.from(
+					{ length: parseInt(data.data['last_page']) },
+					(_, i) => i + 1
+				)
 			);
 			console.log(data.data.total);
 		});

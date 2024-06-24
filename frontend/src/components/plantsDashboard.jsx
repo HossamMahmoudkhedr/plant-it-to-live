@@ -23,7 +23,10 @@ const PlantsDashboard = () => {
 				console.log(data.data.data);
 				setAllPlants(data.data.data);
 				setPagination(
-					Array.from({ length: parseInt(data.data.total) }, (_, i) => i + 1)
+					Array.from(
+						{ length: parseInt(data.data['last_page']) },
+						(_, i) => i + 1
+					)
 				);
 			}
 		);
@@ -184,7 +187,7 @@ const PlantsDashboard = () => {
 												img={plant.img}
 												// img={'apple.png'}
 												setAllPlants={setAllPlants}
-												name={plant.common_name}
+												name={plant['common_name']}
 												restprops={{
 													onClick: () => {
 														handleClick(plant.id);

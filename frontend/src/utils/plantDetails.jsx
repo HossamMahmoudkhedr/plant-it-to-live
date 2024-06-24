@@ -33,17 +33,17 @@ const PlantDetails = ({
 	const [edit, setEdit] = useState(false);
 	const [textToUser, setTextToUser] = useState('');
 	const [plant, setPlant] = useState({
-		name,
-		appropriateSeason,
-		fertilizer,
-		fertilizerAmount,
-		pruning,
-		scientificName,
-		soilSalinty,
-		sunPerDay,
-		sunlight,
-		waterAmount,
-		watering,
+		common_name: name,
+		appropriate_season: appropriateSeason,
+		fertilizer: fertilizer,
+		fertilizer_amount: fertilizerAmount,
+		pruning: pruning,
+		scientific_name: scientificName,
+		soil_salinty: soilSalinty,
+		sun_per_day: sunPerDay,
+		sunlight: sunlight,
+		water_amount: waterAmount,
+		watering: watering,
 		img,
 	});
 	const [image, setImage] = useState('');
@@ -51,17 +51,17 @@ const PlantDetails = ({
 	const [editImg, setEditImg] = useState(false);
 	useEffect(() => {
 		setPlant({
-			name,
-			appropriateSeason,
-			fertilizer,
-			fertilizerAmount,
-			pruning,
-			scientificName,
-			soilSalinty,
-			sunPerDay,
-			sunlight,
-			waterAmount,
-			watering,
+			common_name: name,
+			appropriate_season: appropriateSeason,
+			fertilizer: fertilizer,
+			fertilizer_amount: fertilizerAmount,
+			pruning: pruning,
+			scientific_name: scientificName,
+			soil_salinty: soilSalinty,
+			sun_per_day: sunPerDay,
+			sunlight: sunlight,
+			water_amount: waterAmount,
+			watering: watering,
 		});
 	}, [
 		name,
@@ -75,7 +75,6 @@ const PlantDetails = ({
 		sunlight,
 		waterAmount,
 		watering,
-		img,
 	]);
 
 	const handleRemove = (id) => {
@@ -103,8 +102,8 @@ const PlantDetails = ({
 				setSuggestedImg(file);
 				setUpoloadedImg(true);
 				const formData = new FormData();
-				formData.append('common_name', plant.name);
-				formData.append('scientific_name', plant.scientificName);
+				formData.append('common_name', plant['common_name']);
+				formData.append('scientific_name', plant['scientific_name']);
 				formData.append('watering', plant.watering);
 				formData.append('fertilizer', plant.fertilizer);
 				formData.append('sunlight', plant.sunlight);
@@ -112,11 +111,11 @@ const PlantDetails = ({
 				if (file) {
 					formData.append('img', file);
 				}
-				formData.append('water_amount', plant.waterAmount);
-				formData.append('fertilizer_amount', plant.fertilizerAmount);
-				formData.append('sun_per_day', plant.sunPerDay);
-				formData.append('soil_salinty', plant.soilSalinty);
-				formData.append('appropriate_season', plant.appropriateSeason);
+				formData.append('water_amount', plant['water_amount']);
+				formData.append('fertilizer_amount', plant['fertilizer_amount']);
+				formData.append('sun_per_day', plant['sun_per_day']);
+				formData.append('soil_salinty', plant['soil_salinty']);
+				formData.append('appropriate_season', plant['appropriate_season']);
 
 				if (!suggestion) {
 					fetchApi(
@@ -174,26 +173,26 @@ const PlantDetails = ({
 		const { name, value } = e.target;
 		console.log(value);
 
-		setPlant({ [e.target.name]: e.target.value });
-		console.log(name);
+		setPlant({ ...plant, [e.target.name]: e.target.value });
+		console.log(e.target.name);
 	};
 
 	const handleSubmit = (id) => {
 		const formData = new FormData();
-		formData.append('common_name', name);
-		formData.append('scientific_name', plant.scientificName);
-		formData.append('watering', watering);
-		formData.append('fertilizer', fertilizer);
-		formData.append('sunlight', sunlight);
-		formData.append('pruning', pruning);
+		formData.append('common_name', plant['common_name']);
+		formData.append('scientific_name', plant['scientific_name']);
+		formData.append('watering', plant['watering']);
+		formData.append('fertilizer', plant['fertilizer']);
+		formData.append('sunlight', plant['sunlight']);
+		formData.append('pruning', plant['pruning']);
 		// if (editImg) {
 		// 	formData.append('img', img);
 		// }
-		formData.append('water_amount', waterAmount);
-		formData.append('fertilizer_amount', fertilizerAmount);
-		formData.append('sun_per_day', sunPerDay);
-		formData.append('soil_salinty', soilSalinty);
-		formData.append('appropriate_season', appropriateSeason);
+		formData.append('water_amount', plant['water_amount']);
+		formData.append('fertilizer_amount', plant['fertilizer_amount']);
+		formData.append('sun_per_day', plant['sun_per_day']);
+		formData.append('soil_salinty', plant['soil_salinty']);
+		formData.append('appropriate_season', plant['appropriate_season']);
 		for (const key in plant) {
 			if (plant.hasOwnProperty(key)) {
 				formData.set(key, plant[key]);
@@ -472,7 +471,7 @@ const PlantDetails = ({
 
 							<NoStyleInput
 								type="text"
-								value={plant.name}
+								value={plant['common_name']}
 								name={'common_name'}
 								padding={edit ? '10px' : ''}
 								border={edit ? '1px solid black' : ''}
@@ -497,7 +496,7 @@ const PlantDetails = ({
 
 							<NoStyleInput
 								type="text"
-								value={plant.scientificName}
+								value={plant['scientific_name']}
 								name={'scientific_name'}
 								padding={edit ? '10px' : ''}
 								border={edit ? '1px solid black' : ''}
@@ -522,7 +521,7 @@ const PlantDetails = ({
 
 							<NoStyleInput
 								type="text"
-								value={plant.appropriateSeason}
+								value={plant['appropriate_season']}
 								name={'appropriate_season'}
 								padding={edit ? '10px' : ''}
 								border={edit ? '1px solid black' : ''}
@@ -546,7 +545,7 @@ const PlantDetails = ({
 
 							<NoStyleInput
 								type="text"
-								value={plant.fertilizer}
+								value={plant['fertilizer']}
 								name={'fertilizer'}
 								padding={edit ? '10px' : ''}
 								border={edit ? '1px solid black' : ''}
@@ -568,7 +567,7 @@ const PlantDetails = ({
 
 							<NoStyleTextarea
 								type="text"
-								value={plant.fertilizerAmount}
+								value={plant['fertilizer_amount']}
 								name={'fertilizer_amount'}
 								padding={edit ? '10px' : ''}
 								border={edit ? '1px solid black' : ''}
@@ -592,7 +591,7 @@ const PlantDetails = ({
 
 							<NoStyleTextarea
 								type="text"
-								value={plant.pruning}
+								value={plant['pruning']}
 								name={'pruning'}
 								padding={edit ? '10px' : ''}
 								border={edit ? '1px solid black' : ''}
@@ -614,7 +613,7 @@ const PlantDetails = ({
 
 							<NoStyleTextarea
 								type="text"
-								value={plant.soilSalinty}
+								value={plant['soil_salinty']}
 								name={'soil_salinty'}
 								padding={edit ? '10px' : ''}
 								border={edit ? '1px solid black' : ''}
@@ -638,7 +637,7 @@ const PlantDetails = ({
 
 							<NoStyleTextarea
 								type="text"
-								value={plant.sunPerDay}
+								value={plant['sun_per_day']}
 								name={'sun_per_day'}
 								padding={edit ? '10px' : ''}
 								border={edit ? '1px solid black' : ''}
@@ -662,7 +661,7 @@ const PlantDetails = ({
 
 							<NoStyleTextarea
 								type="text"
-								value={plant.sunlight}
+								value={plant['sunlight']}
 								name={'sunlight'}
 								padding={edit ? '10px' : ''}
 								border={edit ? '1px solid black' : ''}
@@ -686,7 +685,7 @@ const PlantDetails = ({
 
 							<NoStyleTextarea
 								type="text"
-								value={plant.waterAmount}
+								value={plant['water_amount']}
 								name={'water_amount'}
 								padding={edit ? '10px' : ''}
 								border={edit ? '1px solid black' : ''}
@@ -708,7 +707,7 @@ const PlantDetails = ({
 
 							<NoStyleTextarea
 								type="text"
-								value={plant.watering}
+								value={plant['watering']}
 								name={'watering'}
 								padding={edit ? '10px' : ''}
 								border={edit ? '1px solid black' : ''}

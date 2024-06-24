@@ -298,10 +298,12 @@ class AdminController extends Controller
             $suggested->plant_id=null;
             $suggested->save();
         }
+        $plant->users()->detach();
         if(!$plant->delete())
         {
             return $this->failed("try again");
         }
+
         if($filePath!=null)
             unlink('C:/xampp/htdocs/plant-it-to-live/frontend/src/assets/images/'.$plant->img);
         return $this->SuccessResponse();

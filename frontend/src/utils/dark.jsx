@@ -13,7 +13,7 @@ const Dark = ({ setShow }) => {
 			sx={{
 				backgroundColor: 'rgba(0,0,0,0.50)',
 				width: '100%',
-				height: '100vh',
+				height: '100%',
 				position: 'fixed',
 				left: '0',
 				top: '0',
